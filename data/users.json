@@ -1,0 +1,79 @@
+[
+  {
+    "id": 1,
+    "firstName": "Nguyễn",
+    "lastName": "Văn A",
+    "fullName": "Nguyễn Văn A",
+    "email": "demo@webbanhoa.com",
+    "phone": "0123456789",
+    "password": "12345678",
+    "avatar": "",
+    "addresses": [
+      {
+        "id": 1,
+        "name": "Nhà riêng",
+        "address": "123 Đường ABC, Phường 1",
+        "city": "TP. Hồ Chí Minh",
+        "district": "Quận 1",
+        "ward": "Phường 1",
+        "phone": "0123456789",
+        "isDefault": true
+      },
+      {
+        "id": 2,
+        "name": "Công ty",
+        "address": "456 Đường DEF, Phường 2",
+        "city": "TP. Hồ Chí Minh",
+        "district": "Quận 3",
+        "ward": "Phường 2",
+        "phone": "0987654321",
+        "isDefault": false
+      }
+    ],
+    "createdAt": "2024-01-01T00:00:00.000Z",
+    "lastLogin": "2024-01-15T10:30:00.000Z",
+    "isActive": true,
+    "role": "customer"
+  },
+  {
+    "id": 2,
+    "firstName": "Trần",
+    "lastName": "Thị B",
+    "fullName": "Trần Thị B",
+    "email": "user@example.com",
+    "phone": "0987654321",
+    "password": "password123",
+    "avatar": "",
+    "addresses": [
+      {
+        "id": 3,
+        "name": "Nhà",
+        "address": "789 Đường GHI, Phường 3",
+        "city": "Hà Nội",
+        "district": "Quận Ba Đình",
+        "ward": "Phường 3",
+        "phone": "0987654321",
+        "isDefault": true
+      }
+    ],
+    "createdAt": "2024-01-05T00:00:00.000Z",
+    "lastLogin": "2024-01-14T15:20:00.000Z",
+    "isActive": true,
+    "role": "customer"
+  },
+  {
+    "id": 3,
+    "firstName": "Lê",
+    "lastName": "Văn C",
+    "fullName": "Lê Văn C",
+    "email": "test@test.com",
+    "phone": "0369258147",
+    "password": "test123456",
+    "avatar": "",
+    "addresses": [],
+    "createdAt": "2024-01-10T00:00:00.000Z",
+    "lastLogin": null,
+    "isActive": true,
+    "role": "customer"
+  }
+]

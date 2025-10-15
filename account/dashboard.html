@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tài khoản - WebBanHoa</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="hotline">
+                        <i class="fas fa-phone"></i>
+                        <span>Hotline: 1900 1234</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="top-links">
+                        <a href="#" id="userMenu">Tài khoản</a>
+                        <a href="../cart.html">
+                            <i class="fas fa-shopping-cart"></i>
+                            Giỏ hàng
+                        </a>
+                        <a href="../checkout.html">
+                            <i class="fas fa-credit-card"></i>
+                            Thanh toán
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <!-- Social Icons -->
+                <div class="col-md-3">
+                    <div class="social-icons">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                
+                <!-- Logo -->
+                <div class="col-md-6 text-center">
+                    <div class="logo">
+                        <a href="../index.html">
+                            <img src="../assets/logo.png" alt="WebBanHoa Logo" class="img-fluid">
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Search & Cart -->
+                <div class="col-md-3">
+                    <div class="search-cart">
+                        <div class="search-box">
+                            <input type="text" placeholder="Tìm kiếm sản phẩm..." id="searchInput">
+                            <button type="button" class="search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <div class="cart-icon">
+                            <a href="../cart.html">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span class="cart-badge" id="cartBadge">0</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Account Content -->
+    <section class="account-section">
+        <div class="container">
+            <div class="row">
+                <!-- Sidebar -->
+                <div class="col-lg-3">
+                    <div class="account-sidebar">
+                        <div class="user-info">
+                            <div class="user-avatar">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                            <h5 id="userName">Tên người dùng</h5>
+                            <p id="userEmail">email@example.com</p>
+                        </div>
+                        
+                        <nav class="account-nav">
+                            <ul>
+                                <li><a href="dashboard.html" class="active"><i class="fas fa-tachometer-alt"></i> Tổng quan</a></li>
+                                <li><a href="orders.html"><i class="fas fa-shopping-bag"></i> Đơn hàng</a></li>
+                                <li><a href="profile.html"><i class="fas fa-user"></i> Thông tin cá nhân</a></li>
+                                <li><a href="addresses.html"><i class="fas fa-map-marker-alt"></i> Địa chỉ</a></li>
+                                <li><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a></li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                
+                <!-- Main Content -->
+                <div class="col-lg-9">
+                    <div class="account-content">
+                        <h2>Chào mừng bạn quay trở lại!</h2>
+                        
+                        <!-- Stats Cards -->
+                        <div class="row mb-4">
+                            <div class="col-md-4">
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-shopping-bag"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h4 id="totalOrders">0</h4>
+                                        <p>Tổng đơn hàng</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h4 id="pendingOrders">0</h4>
+                                        <p>Đang xử lý</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="stat-card">
+                                    <div class="stat-icon">
+                                        <i class="fas fa-check-circle"></i>
+                                    </div>
+                                    <div class="stat-info">
+                                        <h4 id="completedOrders">0</h4>
+                                        <p>Đã hoàn thành</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Orders -->
+                        <div class="dashboard-section">
+                            <h4>Đơn hàng gần đây</h4>
+                            <div class="recent-orders" id="recentOrders">
+                                <!-- Recent orders will be loaded here -->
+                            </div>
+                            <div class="text-center mt-3">
+                                <a href="orders.html" class="btn btn-outline-primary">Xem tất cả đơn hàng</a>
+                            </div>
+                        </div>
+                        
+                        <!-- Recent Viewed Products -->
+                        <div class="dashboard-section">
+                            <h4>Sản phẩm đã xem</h4>
+                            <div class="recent-products" id="recentProducts">
+                                <!-- Recent products will be loaded here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="footer-section">
+                        <h4>WebBanHoa</h4>
+                        <p>Cửa hàng hoa tươi uy tín với hơn 10 năm kinh nghiệm trong ngành.</p>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-instagram"></i></a>
+                            <a href="#"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="footer-section">
+                        <h4>Liên kết</h4>
+                        <ul>
+                            <li><a href="#">Về chúng tôi</a></li>
+                            <li><a href="#">Sản phẩm</a></li>
+                            <li><a href="#">Khuyến mãi</a></li>
+                            <li><a href="#">Liên hệ</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="footer-section">
+                        <h4>Thông tin</h4>
+                        <div class="contact-info">
+                            <p><i class="fas fa-map-marker-alt"></i> 123 Đường ABC, Quận 1, TP.HCM</p>
+                            <p><i class="fas fa-phone"></i> 1900 1234</p>
+                            <p><i class="fas fa-envelope"></i> info@webbanhoa.com</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/scripts.js"></script>
+    <script>
+        // Account dashboard specific script
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            if (!currentUser) {
+                window.location.href = '../auth/login.html';
+                return;
+            }
+            
+            // Load user info
+            document.getElementById('userName').textContent = currentUser.fullName || currentUser.firstName + ' ' + currentUser.lastName;
+            document.getElementById('userEmail').textContent = currentUser.email;
+            
+            // Load dashboard data
+            loadDashboardData();
+        });
+        
+        function loadDashboardData() {
+            const orders = JSON.parse(localStorage.getItem('orders') || '[]');
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            // Filter orders for current user
+            const userOrders = orders.filter(order => 
+                order.billing && order.billing.email === currentUser.email
+            );
+            
+            // Update stats
+            document.getElementById('totalOrders').textContent = userOrders.length;
+            document.getElementById('pendingOrders').textContent = userOrders.filter(o => o.status === 'pending').length;
+            document.getElementById('completedOrders').textContent = userOrders.filter(o => o.status === 'completed').length;
+            
+            // Load recent orders
+            loadRecentOrders(userOrders.slice(0, 3));
+            
+            // Load recent products (mock data)
+            loadRecentProducts();
+        }
+        
+        function loadRecentOrders(orders) {
+            const container = document.getElementById('recentOrders');
+            
+            if (orders.length === 0) {
+                container.innerHTML = '<p class="text-muted">Bạn chưa có đơn hàng nào.</p>';
+                return;
+            }
+            
+            container.innerHTML = orders.map(order => `
+                <div class="order-card">
+                    <div class="row align-items-center">
+                        <div class="col-md-3">
+                            <strong>Mã đơn: ${order.id}</strong>
+                            <br>
+                            <small class="text-muted">${formatDate(order.orderDate)}</small>
+                        </div>
+                        <div class="col-md-3">
+                            <span class="badge bg-${getStatusColor(order.status)}">${getStatusText(order.status)}</span>
+                        </div>
+                        <div class="col-md-3">
+                            <span>${order.items.length} sản phẩm</span>
+                        </div>
+                        <div class="col-md-3">
+                            <strong>${formatPrice(order.total)}</strong>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function loadRecentProducts() {
+            const container = document.getElementById('recentProducts');
+            const products = [
+                { id: 1, name: 'Hoa hồng đỏ', price: 150000, image: '../assets/placeholder-1.jpg' },
+                { id: 2, name: 'Hoa ly trắng', price: 200000, image: '../assets/placeholder-2.jpg' },
+                { id: 3, name: 'Hoa cúc vàng', price: 120000, image: '../assets/placeholder-3.jpg' }
+            ];
+            
+            container.innerHTML = products.map(product => `
+                <div class="product-card">
+                    <img src="${product.image}" alt="${product.name}" class="img-fluid">
+                    <div class="product-info">
+                        <h6>${product.name}</h6>
+                        <p class="price">${formatPrice(product.price)}</p>
+                        <a href="../product-detail.html?id=${product.id}" class="btn btn-sm btn-outline-primary">Xem lại</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function getStatusColor(status) {
+            switch(status) {
+                case 'pending': return 'warning';
+                case 'processing': return 'info';
+                case 'shipped': return 'primary';
+                case 'completed': return 'success';
+                case 'cancelled': return 'danger';
+                default: return 'secondary';
+            }
+        }
+        
+        function getStatusText(status) {
+            switch(status) {
+                case 'pending': return 'Chờ xử lý';
+                case 'processing': return 'Đang xử lý';
+                case 'shipped': return 'Đã giao hàng';
+                case 'completed': return 'Hoàn thành';
+                case 'cancelled': return 'Đã hủy';
+                default: return 'Không xác định';
+            }
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('vi-VN');
+        }
+        
+        function formatPrice(price) {
+            return new Intl.NumberFormat('vi-VN').format(price) + ' VNĐ';
+        }
+        
+        function logout() {
+            if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                localStorage.removeItem('currentUser');
+                window.location.href = '../index.html';
+            }
+        }
+    </script>
+</body>
+</html>

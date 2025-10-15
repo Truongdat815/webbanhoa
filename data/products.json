@@ -1,0 +1,230 @@
+[
+  {
+    "id": 1,
+    "name": "Hoa hồng đỏ",
+    "description": "Bó hoa hồng đỏ tươi thắm, tượng trưng cho tình yêu nồng nàn và lãng mạn. Hoa được chọn lọc kỹ càng, tươi mới và đẹp mắt.",
+    "price": 150000,
+    "salePrice": 120000,
+    "discount": 20,
+    "category": "love",
+    "image": "assets/placeholder-1.jpg",
+    "stock": 50,
+    "rating": 4.8,
+    "reviews": 128,
+    "tags": ["tình yêu", "lãng mạn", "hoa hồng", "đỏ"],
+    "features": [
+      "Hoa tươi 100%",
+      "Đóng gói đẹp mắt",
+      "Giao hàng nhanh",
+      "Bảo hành chất lượng"
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Hoa ly trắng",
+    "description": "Hoa ly trắng tinh khôi, mang ý nghĩa sự trong sáng và thuần khiết. Thích hợp cho các dịp sinh nhật, chúc mừng.",
+    "price": 200000,
+    "category": "birthday",
+    "image": "assets/placeholder-2.jpg",
+    "stock": 30,
+    "rating": 4.9,
+    "reviews": 95,
+    "tags": ["sinh nhật", "trắng", "hoa ly", "tinh khôi"],
+    "features": [
+      "Hoa tươi cao cấp",
+      "Hương thơm nhẹ nhàng",
+      "Bó đẹp sang trọng",
+      "Tặng kèm thiệp"
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Hoa cúc vàng",
+    "description": "Hoa cúc vàng rực rỡ, biểu tượng của sự may mắn và thịnh vượng. Mang lại năng lượng tích cực cho ngày mới.",
+    "price": 120000,
+    "salePrice": 100000,
+    "discount": 17,
+    "category": "birthday",
+    "image": "assets/placeholder-3.jpg",
+    "stock": 75,
+    "rating": 4.6,
+    "reviews": 156,
+    "tags": ["may mắn", "vàng", "hoa cúc", "thịnh vượng"],
+    "features": [
+      "Hoa tươi bền lâu",
+      "Màu sắc rực rỡ",
+      "Giá cả hợp lý",
+      "Phù hợp mọi lứa tuổi"
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Hoa lan tím",
+    "description": "Hoa lan tím quý phái, thể hiện sự sang trọng và quyền quý. Thích hợp cho các dịp khai trương, chúc mừng quan trọng.",
+    "price": 350000,
+    "category": "opening",
+    "image": "assets/placeholder-4.jpg",
+    "stock": 20,
+    "rating": 4.9,
+    "reviews": 67,
+    "tags": ["khai trương", "tím", "hoa lan", "sang trọng"],
+    "features": [
+      "Hoa lan cao cấp",
+      "Thiết kế sang trọng",
+      "Bền đẹp lâu dài",
+      "Phù hợp không gian lớn"
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Hoa tulip hồng",
+    "description": "Hoa tulip hồng dịu dàng, tượng trưng cho tình yêu lãng mạn và sự ngọt ngào. Là món quà ý nghĩa cho người yêu.",
+    "price": 180000,
+    "salePrice": 150000,
+    "discount": 17,
+    "category": "love",
+    "image": "assets/placeholder-5.jpg",
+    "stock": 40,
+    "rating": 4.7,
+    "reviews": 89,
+    "tags": ["tình yêu", "hồng", "hoa tulip", "lãng mạn"],
+    "features": [
+      "Hoa tulip nhập khẩu",
+      "Màu sắc tươi tắn",
+      "Thiết kế lãng mạn",
+      "Gói quà đẹp mắt"
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Hoa hướng dương",
+    "description": "Hoa hướng dương vàng rực, mang năng lượng tích cực và niềm vui. Thích hợp để tặng bạn bè, đồng nghiệp.",
+    "price": 100000,
+    "category": "birthday",
+    "image": "assets/placeholder-6.jpg",
+    "stock": 60,
+    "rating": 4.5,
+    "reviews": 112,
+    "tags": ["vui vẻ", "vàng", "hoa hướng dương", "năng lượng"],
+    "features": [
+      "Hoa tươi bền đẹp",
+      "Mang năng lượng tích cực",
+      "Giá cả phải chăng",
+      "Dễ chăm sóc"
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Kệ hoa khai trương lớn",
+    "description": "Kệ hoa khai trương sang trọng với nhiều loại hoa tươi đẹp. Tạo ấn tượng mạnh mẽ cho sự kiện khai trương.",
+    "price": 800000,
+    "salePrice": 650000,
+    "discount": 19,
+    "category": "opening",
+    "image": "assets/placeholder-7.jpg",
+    "stock": 10,
+    "rating": 4.9,
+    "reviews": 34,
+    "tags": ["khai trương", "kệ hoa", "sang trọng", "lớn"],
+    "features": [
+      "Thiết kế chuyên nghiệp",
+      "Nhiều loại hoa tươi",
+      "Kích thước lớn ấn tượng",
+      "Phù hợp không gian rộng"
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Hoa cưới cao cấp",
+    "description": "Bó hoa cưới sang trọng với hoa hồng và hoa baby trắng. Thiết kế tinh tế, phù hợp cho ngày cưới đặc biệt.",
+    "price": 450000,
+    "category": "wedding",
+    "image": "assets/placeholder-8.jpg",
+    "stock": 25,
+    "rating": 4.8,
+    "reviews": 56,
+    "tags": ["cưới", "cao cấp", "hoa hồng", "baby"],
+    "features": [
+      "Thiết kế riêng biệt",
+      "Hoa tươi cao cấp",
+      "Phù hợp ngày cưới",
+      "Đóng gói cẩn thận"
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Hoa hồng xanh",
+    "description": "Hoa hồng xanh độc đáo và hiếm có. Tượng trưng cho sự bí ẩn và khát vọng. Là món quà đặc biệt cho người đặc biệt.",
+    "price": 280000,
+    "salePrice": 220000,
+    "discount": 21,
+    "category": "love",
+    "image": "assets/placeholder-1.jpg",
+    "stock": 15,
+    "rating": 4.9,
+    "reviews": 78,
+    "tags": ["độc đáo", "xanh", "hoa hồng", "đặc biệt"],
+    "features": [
+      "Hoa hồng xanh hiếm",
+      "Thiết kế độc đáo",
+      "Ý nghĩa đặc biệt",
+      "Chất lượng cao cấp"
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Hoa viếng tang",
+    "description": "Kệ hoa viếng trang trọng và lịch sự. Thể hiện sự kính trọng và tưởng nhớ đến người đã khuất.",
+    "price": 400000,
+    "category": "funeral",
+    "image": "assets/placeholder-2.jpg",
+    "stock": 20,
+    "rating": 4.7,
+    "reviews": 45,
+    "tags": ["viếng", "trang trọng", "kính trọng", "tưởng nhớ"],
+    "features": [
+      "Thiết kế trang trọng",
+      "Hoa tươi chất lượng",
+      "Phù hợp nghi lễ",
+      "Đóng gói cẩn thận"
+    ]
+  },
+  {
+    "id": 11,
+    "name": "Bó hoa baby mix",
+    "description": "Bó hoa baby trắng kết hợp với các loại hoa khác. Tạo vẻ đẹp tinh tế và thanh lịch, phù hợp mọi dịp.",
+    "price": 160000,
+    "salePrice": 130000,
+    "discount": 19,
+    "category": "birthday",
+    "image": "assets/placeholder-3.jpg",
+    "stock": 45,
+    "rating": 4.6,
+    "reviews": 103,
+    "tags": ["baby", "trắng", "thanh lịch", "tinh tế"],
+    "features": [
+      "Kết hợp nhiều loại hoa",
+      "Thiết kế tinh tế",
+      "Màu sắc hài hòa",
+      "Phù hợp mọi dịp"
+    ]
+  },
+  {
+    "id": 12,
+    "name": "Hoa hồng 99 bông",
+    "description": "Bó hoa hồng đỏ 99 bông sang trọng. Tượng trưng cho tình yêu vĩnh cửu và bền chặt. Món quà ý nghĩa cho ngày đặc biệt.",
+    "price": 1200000,
+    "category": "love",
+    "image": "assets/placeholder-4.jpg",
+    "stock": 5,
+    "rating": 5.0,
+    "reviews": 28,
+    "tags": ["99 bông", "hoa hồng", "tình yêu", "vĩnh cửu"],
+    "features": [
+      "99 bông hoa hồng tươi",
+      "Thiết kế sang trọng",
+      "Ý nghĩa đặc biệt",
+      "Phù hợp ngày đặc biệt"
+    ]
+  }
+]
