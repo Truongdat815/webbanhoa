@@ -1,6 +1,10 @@
-# WebBanHoa - Flower Shop Website
+# Bloomora - Pure Blooms, Pure Joy
 
 Một website bán hoa tươi hoàn chỉnh với giao diện đẹp mắt và tính năng đầy đủ. Được xây dựng bằng HTML5, CSS3, JavaScript thuần và Bootstrap 5.
+
+## 🌸 Về Bloomora
+
+**Bloomora** - "Pure blooms, pure joy" là thương hiệu hoa tươi cao cấp, mang đến những bông hoa tươi đẹp nhất và trải nghiệm mua sắm tuyệt vời cho khách hàng.
 
 ## 🌸 Tính năng chính
 
@@ -43,7 +47,7 @@ python -m http.server 8000
 ## 📁 Cấu trúc thư mục
 
 ```
-webbanhoa/
+bloomora/
 ├── index.html                 # Trang chủ
 ├── product-grid.html          # Danh mục sản phẩm
 ├── product-detail.html        # Chi tiết sản phẩm
@@ -286,4 +290,4 @@ Dự án này được tạo cho mục đích học tập và demo. Bạn có th
 
 ---
 
-**WebBanHoa** - Website bán hoa tươi chuyên nghiệp 🌸
+**Bloomora** - Pure blooms, pure joy 🌸
