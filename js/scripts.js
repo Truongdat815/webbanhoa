@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initSlider();
     initCart();
     initAuth();
+    initAnimations();
     loadProducts();
     
     // Load user data if available
@@ -157,7 +158,15 @@ function addToCart(productId, quantity = 1) {
     
     // Update UI
     updateCartBadge();
-    showNotification(`${product.name} đã được thêm vào giỏ hàng!`, 'success');
+    
+    // Animate cart badge
+    const cartBadge = document.getElementById('cartBadge');
+    if (cartBadge) {
+        bounceElement(cartBadge);
+    }
+    
+    // Show animated notification
+    showAnimatedNotification(`${product.name} đã được thêm vào giỏ hàng!`, 'success');
 }
 
 function removeFromCart(productId) {
@@ -201,7 +210,7 @@ async function loadProducts() {
         
         // Render product grid if on product page
         if (document.getElementById('productGrid')) {
-            renderProductGrid();
+            renderProductGridWithAnimations();
         }
         
         // Load product detail if on detail page
@@ -679,6 +688,209 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// ===== ANIMATION FUNCTIONS =====
+function initAnimations() {
+    // Initialize AOS (Animate On Scroll)
+    if (typeof AOS !== 'undefined') {
+        AOS.init({
+            duration: 800,
+            easing: 'ease-in-out',
+            once: true,
+            offset: 100
+        });
+    }
+    
+    // Initialize page transitions
+    initPageTransitions();
+    
+    // Initialize stagger animations
+    initStaggerAnimations();
+    
+    // Initialize hover effects
+    initHoverEffects();
+}
+
+function initPageTransitions() {
+    const pageElements = document.querySelectorAll('.page-transition');
+    pageElements.forEach((element, index) => {
+        setTimeout(() => {
+            element.classList.add('loaded');
+        }, index * 100);
+    });
+}
+
+function initStaggerAnimations() {
+    const staggerItems = document.querySelectorAll('.stagger-item');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.classList.add('animate');
+                }, index * 150);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {
+        threshold: 0.1
+    });
+    
+    staggerItems.forEach(item => {
+        observer.observe(item);
+    });
+}
+
+function initHoverEffects() {
+    // Add hover effects to product cards
+    const productCards = document.querySelectorAll('.product-card');
+    productCards.forEach(card => {
+        card.classList.add('hover-lift');
+        
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-10px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+    
+    // Add floating animation to icons
+    const floatingIcons = document.querySelectorAll('.float');
+    floatingIcons.forEach(icon => {
+        icon.style.animationDelay = Math.random() * 2 + 's';
+    });
+}
+
+function animateElement(element, animation, delay = 0) {
+    setTimeout(() => {
+        element.classList.add(animation);
+        
+        // Remove animation class after animation completes
+        element.addEventListener('animationend', function() {
+            this.classList.remove(animation);
+        }, { once: true });
+    }, delay);
+}
+
+function staggerElements(elements, animation, staggerDelay = 100) {
+    elements.forEach((element, index) => {
+        animateElement(element, animation, index * staggerDelay);
+    });
+}
+
+function bounceElement(element) {
+    element.classList.add('bounce');
+    setTimeout(() => {
+        element.classList.remove('bounce');
+    }, 2000);
+}
+
+function wiggleElement(element) {
+    element.classList.add('wiggle');
+    setTimeout(() => {
+        element.classList.remove('wiggle');
+    }, 1000);
+}
+
+// Enhanced product rendering with animations
+function renderProductGridWithAnimations() {
+    const container = document.getElementById('productGrid');
+    if (!container) return;
+    
+    // Get filter parameters from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const category = urlParams.get('category');
+    const priceRange = urlParams.get('price');
+    
+    // Filter products
+    let filteredProducts = products;
+    
+    if (category) {
+        filteredProducts = products.filter(p => p.category === category);
+    }
+    
+    if (priceRange) {
+        const [min, max] = priceRange.split('-').map(Number);
+        filteredProducts = filteredProducts.filter(p => p.price >= min && p.price <= max);
+    }
+    
+    // Render products with animation classes
+    if (filteredProducts.length === 0) {
+        container.innerHTML = `
+            <div class="col-12 text-center py-5">
+                <i class="fas fa-search fa-3x text-muted mb-3 fade-in-up"></i>
+                <h4 class="fade-in-up" style="animation-delay: 0.2s">Không tìm thấy sản phẩm</h4>
+                <p class="text-muted fade-in-up" style="animation-delay: 0.4s">Thử thay đổi bộ lọc hoặc tìm kiếm khác</p>
+            </div>
+        `;
+        return;
+    }
+    
+    container.innerHTML = filteredProducts.map((product, index) => `
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-4 stagger-item" data-aos="fade-up" data-aos-delay="${index * 100}">
+            <div class="product-card hover-lift">
+                <div class="product-image">
+                    <img src="${product.image}" alt="${product.name}" loading="lazy" class="hover-scale">
+                    ${product.discount ? `<div class="product-badge pulse">-${product.discount}%</div>` : ''}
+                </div>
+                <div class="product-info">
+                    <h5 class="fade-in-up" style="animation-delay: 0.1s">${product.name}</h5>
+                    <p class="fade-in-up" style="animation-delay: 0.2s">${product.description}</p>
+                    <div class="product-price fade-in-up" style="animation-delay: 0.3s">
+                        <span class="price-new">${formatPrice(product.salePrice || product.price)}</span>
+                        ${product.salePrice ? `<span class="price-old">${formatPrice(product.price)}</span>` : ''}
+                    </div>
+                    <button class="btn-add-to-cart hover-glow fade-in-up" data-product-id="${product.id}" style="animation-delay: 0.4s">
+                        <span class="btn-text">ĐẶT HÀNG</span>
+                        <i class="fas fa-shopping-cart ms-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+    
+    // Initialize stagger animations for new elements
+    initStaggerAnimations();
+}
+
+// Enhanced notification with animations
+function showAnimatedNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed slide-in-up`;
+    notification.style.cssText = `
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 300px;
+        transform: translateX(100%);
+        transition: transform 0.3s ease-out;
+    `;
+    
+    notification.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'} me-2"></i>
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Animate in
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 100);
+    
+    // Auto remove after 4 seconds
+    setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 300);
+    }, 4000);
+}
+
 // ===== EXPORT FUNCTIONS FOR GLOBAL USE =====
 window.addToCart = addToCart;
 window.removeFromCart = removeFromCart;
@@ -686,4 +898,7 @@ window.updateCartQuantity = updateCartQuantity;
 window.changeQuantity = changeQuantity;
 window.logout = logout;
 window.formatPrice = formatPrice;
-window.showNotification = showNotification;
+window.showNotification = showAnimatedNotification;
+window.animateElement = animateElement;
+window.bounceElement = bounceElement;
+window.wiggleElement = wiggleElement;

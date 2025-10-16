@@ -1,0 +1,25 @@
+{
+  "name": "hsf_fe",
+  "version": "1.0.0",
+  "description": "Một website bán hoa tươi hoàn chỉnh với giao diện đẹp mắt và tính năng đầy đủ. Được xây dựng bằng HTML5, CSS3, JavaScript thuần và Bootstrap 5.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Truongdat815/webbanhoa.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Truongdat815/webbanhoa/issues"
+  },
+  "homepage": "https://github.com/Truongdat815/webbanhoa#readme",
+  "dependencies": {
+    "animate.css": "^4.1.1",
+    "aos": "^2.3.4"
+  }
+}
