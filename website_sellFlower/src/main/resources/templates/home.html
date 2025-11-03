@@ -47,7 +47,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="main-content">
+    <main class="main-content" th:attr="data-is-logged-in=${isLoggedIn}">
         <section class="hero-section">
             <h1 class="page-title">TẤT CẢ SẢN PHẨM</h1>
             <p class="page-subtitle">Được làm từ nguyên liệu tự nhiên và hữu cơ</p>
@@ -56,9 +56,74 @@
         <section class="products-section">
             <div class="products-grid">
                 <!-- Products -->
-                <div class="product-card" th:each="product : ${products}">
+                <div class="product-card" 
+                     th:each="product : ${products}"
+                     th:attr="data-product-id=${product.id},
+                              data-product-name=${product.productName},
+                              data-product-price=${product.price},
+                              data-product-image=${product.imageUrl}">
                     <div class="product-image-container">
-                        <img src="${product.imageUrl}" alt="${product.productName}" class="product-image">
+                        <img th:src="${product.imageUrl}" 
+                             th:alt="${product.productName}" 
+                             class="product-image">
+                        <div class="product-overlay">
+                            <button class="quick-view-btn">Xem nhanh</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name" th:text="${product.productName}">Product Name</h3>
+                        <p class="product-price" th:text="${product.price}">Product Price</p>
+                        <div class="quantity-selector">
+                            <button class="qty-btn minus-btn">-</button>
+                            <input type="number" value="1" min="1" class="qty-input">
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">
+                            <span>THÊM VÀO GIỎ</span>
+                            <i class="fas fa-shopping-bag"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="product-card" 
+                     th:each="product : ${products}"
+                     th:attr="data-product-id=${product.id},
+                              data-product-name=${product.productName},
+                              data-product-price=${product.price},
+                              data-product-image=${product.imageUrl}">
+                    <div class="product-image-container">
+                        <img th:src="${product.imageUrl}" 
+                             th:alt="${product.productName}" 
+                             class="product-image">
+                        <div class="product-overlay">
+                            <button class="quick-view-btn">Xem nhanh</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name" th:text="${product.productName}">Product Name</h3>
+                        <p class="product-price" th:text="${product.price}">Product Price</p>
+                        <div class="quantity-selector">
+                            <button class="qty-btn minus-btn">-</button>
+                            <input type="number" value="1" min="1" class="qty-input">
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">
+                            <span>THÊM VÀO GIỎ</span>
+                            <i class="fas fa-shopping-bag"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="product-card" 
+                     th:each="product : ${products}"
+                     th:attr="data-product-id=${product.id},
+                              data-product-name=${product.productName},
+                              data-product-price=${product.price},
+                              data-product-image=${product.imageUrl}">
+                    <div class="product-image-container">
+                        <img th:src="${product.imageUrl}" 
+                             th:alt="${product.productName}" 
+                             class="product-image">
                         <div class="product-overlay">
                             <button class="quick-view-btn">Xem nhanh</button>
                         </div>
@@ -136,6 +201,39 @@
     <div class="toast" id="toast">
         <i class="fas fa-check-circle"></i>
         <span>Đã thêm vào giỏ!</span>
+    </div>
+
+    <!-- Quick View Modal -->
+    <div class="quick-view-modal" id="quickViewModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close-btn" id="modalCloseBtn">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-body">
+                <div class="modal-product-image">
+                    <img id="modalProductImage" src="" alt="Sản phẩm">
+                </div>
+                <div class="modal-product-info">
+                    <h2 class="modal-product-name" id="modalProductName"></h2>
+                    <p class="modal-product-price" id="modalProductPrice"></p>
+                    <div class="modal-quantity-section">
+                        <label for="modalQuantity">Số lượng *</label>
+                        <div class="modal-quantity-selector">
+                            <button class="modal-qty-btn modal-minus-btn">-</button>
+                            <input type="number" id="modalQuantity" value="1" min="1" class="modal-qty-input">
+                            <button class="modal-qty-btn modal-plus-btn">+</button>
+                        </div>
+                    </div>
+                    <button class="modal-add-to-cart-btn" id="modalAddToCartBtn">
+                        Thêm vào giỏ hàng
+                    </button>
+                    <a href="#" class="modal-view-details-link" id="modalViewDetailsLink">
+                        Xem thêm chi tiết
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="/js/home.js"></script>
