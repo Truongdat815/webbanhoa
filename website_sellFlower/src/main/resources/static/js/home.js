@@ -57,7 +57,7 @@ document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
         }, 150);
 
         // Show toast notification
-        showToast('Added to cart!');
+        showToast('Đã thêm vào giỏ!');
 
         // Update cart count
         updateCartCount(parseInt(quantity));
@@ -99,7 +99,7 @@ document.querySelector('.newsletter-form').addEventListener('submit', function(e
     const email = this.querySelector('input[type="email"]').value;
     
     if (email) {
-        showToast('Subscribed successfully!');
+        showToast('Đăng ký thành công!');
         this.reset();
     }
 });

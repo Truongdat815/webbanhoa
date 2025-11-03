@@ -3,36 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang chủ - FRAIS</title>
+    <title>Trang chủ - BLOOMORA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/home.css">
 </head>
 <body>
     <!-- Top Banner -->
     <div class="top-banner">
-        <p>FREE SHIPPING ON ORDERS OVER 50$</p>
+        <p>MIỄN PHÍ VẬN CHUYỂN CHO ĐƠN HÀNG TRÊN 500.000₫</p>
     </div>
 
     <!-- Header -->
     <header class="header">
         <nav class="nav-links">
-            <a href="/home">SHOP ALL</a>
-            <a href="/home#body">FOR BODY</a>
-            <a href="/home#home">FOR HOME</a>
-            <a href="/about">ABOUT</a>
-            <a href="/contact">CONTACT</a>
+            <a href="/home">TẤT CẢ SẢN PHẨM</a>
+            <a href="/home#body">CHO CƠ THỂ</a>
+            <a href="/home#home">CHO GIA ĐÌNH</a>
+            <a href="/about">GIỚI THIỆU</a>
+            <a href="/contact">LIÊN HỆ</a>
         </nav>
         <div class="logo">
-            <div class="logo-box">FRAIS</div>
+            <div class="logo-box">BLOOMORA</div>
         </div>
         <div class="utility-nav">
             <div class="search-container">
-                <input type="text" placeholder="SEARCH..." class="search-input">
+                <input type="text" placeholder="Tìm kiếm..." class="search-input">
                 <i class="fas fa-search search-icon"></i>
             </div>
-            <a href="/account" class="user-link">
+            <!-- th:if="${!isLoggedIn}" là điều kiện để hiển thị link đăng nhập nếu người dùng chưa đăng nhập -->
+            <a href="/login" class="user-link" th:if="${!isLoggedIn}">
                 <i class="fas fa-user"></i>
-                <span>Log In</span>
+                <span>Đăng nhập</span>
+            </a>
+            <a href="/account" class="user-link" th:if="${isLoggedIn}">
+                <i class="fas fa-user"></i>
+                <span th:text="${userName}">Tên người dùng</span>
             </a>
             <a href="/cart" class="cart-link">
                 <i class="fas fa-shopping-bag"></i>
@@ -44,80 +49,35 @@
     <!-- Main Content -->
     <main class="main-content">
         <section class="hero-section">
-            <h1 class="page-title">ALL PRODUCTS</h1>
-            <p class="page-subtitle">Made of natural and organic ingredients</p>
+            <h1 class="page-title">TẤT CẢ SẢN PHẨM</h1>
+            <p class="page-subtitle">Được làm từ nguyên liệu tự nhiên và hữu cơ</p>
         </section>
 
         <section class="products-section">
             <div class="products-grid">
-                <!-- Product 1 -->
-                <div class="product-card">
+                <!-- Products -->
+                <div class="product-card" th:each="product : ${products}">
                     <div class="product-image-container">
-                        <img src="https://via.placeholder.com/400x400?text=Product+1" alt="Lemon Coco Candle" class="product-image">
+                        <img src="${product.imageUrl}" alt="${product.productName}" class="product-image">
                         <div class="product-overlay">
-                            <button class="quick-view-btn">Quick View</button>
+                            <button class="quick-view-btn">Xem nhanh</button>
                         </div>
                     </div>
                     <div class="product-info">
-                        <h3 class="product-name">Lemon Coco</h3>
-                        <p class="product-price">$15.00</p>
+                        <h3 class="product-name" th:text="${product.productName}">Product Name</h3>
+                        <p class="product-price" th:text="${product.price}">Product Price</p>
                         <div class="quantity-selector">
                             <button class="qty-btn minus-btn">-</button>
                             <input type="number" value="1" min="1" class="qty-input">
                             <button class="qty-btn plus-btn">+</button>
                         </div>
                         <button class="add-to-cart-btn">
-                            <span>ADD TO CART</span>
+                            <span>THÊM VÀO GIỎ</span>
                             <i class="fas fa-shopping-bag"></i>
                         </button>
                     </div>
                 </div>
 
-                <!-- Product 2 -->
-                <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="https://via.placeholder.com/400x400?text=Product+2" alt="Rose Water Candle" class="product-image">
-                        <div class="product-overlay">
-                            <button class="quick-view-btn">Quick View</button>
-                        </div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-name">Rose Water</h3>
-                        <p class="product-price">$15.00</p>
-                        <div class="quantity-selector">
-                            <button class="qty-btn minus-btn">-</button>
-                            <input type="number" value="1" min="1" class="qty-input">
-                            <button class="qty-btn plus-btn">+</button>
-                        </div>
-                        <button class="add-to-cart-btn">
-                            <span>ADD TO CART</span>
-                            <i class="fas fa-shopping-bag"></i>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Product 3 -->
-                <div class="product-card">
-                    <div class="product-image-container">
-                        <img src="https://via.placeholder.com/400x400?text=Product+3" alt="Honey Candle" class="product-image">
-                        <div class="product-overlay">
-                            <button class="quick-view-btn">Quick View</button>
-                        </div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-name">Honey</h3>
-                        <p class="product-price">$15.00</p>
-                        <div class="quantity-selector">
-                            <button class="qty-btn minus-btn">-</button>
-                            <input type="number" value="1" min="1" class="qty-input">
-                            <button class="qty-btn plus-btn">+</button>
-                        </div>
-                        <button class="add-to-cart-btn">
-                            <span>ADD TO CART</span>
-                            <i class="fas fa-shopping-bag"></i>
-                        </button>
-                    </div>
-                </div>
             </div>
         </section>
     </main>
@@ -126,38 +86,38 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-column">
-                <h4>FRAIS</h4>
+                <h4>BLOOMORA</h4>
                 <ul>
-                    <li><a href="/home">SHOP ALL</a></li>
-                    <li><a href="/home#body">FOR BODY</a></li>
-                    <li><a href="/home#home">FOR HOME</a></li>
-                    <li><a href="/about">ABOUT</a></li>
-                    <li><a href="/contact">CONTACT</a></li>
+                    <li><a href="/home">TẤT CẢ SẢN PHẨM</a></li>
+                    <li><a href="/home#body">CHO CƠ THỂ</a></li>
+                    <li><a href="/home#home">CHO GIA ĐÌNH</a></li>
+                    <li><a href="/about">GIỚI THIỆU</a></li>
+                    <li><a href="/contact">LIÊN HỆ</a></li>
                 </ul>
             </div>
             <div class="footer-column">
-                <h4>HELP</h4>
+                <h4>TRỢ GIÚP</h4>
                 <ul>
-                    <li><a href="/shipping">SHIPPING & RETURNS</a></li>
-                    <li><a href="/policy">STORE POLICY</a></li>
-                    <li><a href="/payment">PAYMENT METHODS</a></li>
-                    <li><a href="/faq">FAQ</a></li>
+                    <li><a href="/shipping">VẬN CHUYỂN & ĐỔI TRẢ</a></li>
+                    <li><a href="/policy">CHÍNH SÁCH CỬA HÀNG</a></li>
+                    <li><a href="/payment">PHƯƠNG THỨC THANH TOÁN</a></li>
+                    <li><a href="/faq">Câu hỏi thường gặp</a></li>
                 </ul>
             </div>
             <div class="footer-column">
-                <h4>CONTACT</h4>
+                <h4>LIÊN HỆ</h4>
                 <ul>
-                    <li><a href="tel:1234567890">123-456-7890</a></li>
-                    <li><a href="mailto:info@my-domain.com">INFO@MY-DOMAIN.COM</a></li>
+                    <li><a href="tel:19001234">1900 1234</a></li>
+                    <li><a href="mailto:info@bloomora.com">INFO@BLOOMORA.COM</a></li>
                 </ul>
             </div>
             <div class="footer-column">
-                <h4>NEWSLETTER</h4>
+                <h4>BẢN TIN</h4>
                 <form class="newsletter-form">
                     <label for="newsletter-email">Email</label>
-                    <input type="email" id="newsletter-email" placeholder="Enter Email *" required>
+                    <input type="email" id="newsletter-email" placeholder="Nhập Email *" required>
                     <button type="submit" class="subscribe-btn">
-                        <span>SUBSCRIBE</span>
+                        <span>ĐĂNG KÝ</span>
                     </button>
                 </form>
             </div>
@@ -168,14 +128,14 @@
                 <a href="#" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" class="social-icon" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
             </div>
-            <p class="copyright">© 2023 by Frais. Proudly created with Wix.com</p>
+            <p class="copyright">© 2024 by BLOOMORA. Thiết kế với tình yêu hoa</p>
         </div>
     </footer>
 
     <!-- Add to Cart Success Toast -->
     <div class="toast" id="toast">
         <i class="fas fa-check-circle"></i>
-        <span>Added to cart!</span>
+        <span>Đã thêm vào giỏ!</span>
     </div>
 
     <script src="/js/home.js"></script>
