@@ -235,7 +235,7 @@ body > * {
 
 .form-group input {
     width: 100%;
-    padding: 14px 16px;
+    padding: 14px 45px 14px 16px;
     border: 1px solid #d4d8d0;
     border-radius: 8px;
     font-size: 15px;

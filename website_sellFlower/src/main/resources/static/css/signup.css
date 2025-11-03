@@ -1,0 +1,60 @@
+/* Signup specific styles */
+
+/* Success message */
+.success-message {
+    background-color: #f0f9f0;
+    color: #4a7c4a;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    display: none;
+    border: 1px solid #c8e6c8;
+    font-weight: 400;
+}
+
+.success-message.show {
+    display: block;
+}
+
+/* Scrollable container for signup form */
+.login-container {
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.login-container::-webkit-scrollbar {
+    width: 6px;
+}
+
+.login-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.login-container::-webkit-scrollbar-thumb {
+    background: #a8b5a0;
+    border-radius: 10px;
+}
+
+.login-container::-webkit-scrollbar-thumb:hover {
+    background: #5a6b54;
+}
+
+/* Error input state */
+.form-group input.error {
+    border-color: #ff4757;
+}
+
+/* Error text */
+.form-group .error-text {
+    color: #ff4757;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+}
+
+.form-group .error-text.show {
+    display: block;
+}
+
