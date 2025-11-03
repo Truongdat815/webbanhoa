@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tài khoản - FRAIS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/account.css">
+</head>
+<body>
+    <!-- Top Banner -->
+    <div class="top-banner">
+        <p>FREE SHIPPING ON ORDERS OVER 50$</p>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-links">
+            <a href="/home">SHOP ALL</a>
+            <a href="/home#body">FOR BODY</a>
+            <a href="/home#home">FOR HOME</a>
+            <a href="/about">ABOUT</a>
+            <a href="/contact">CONTACT</a>
+        </nav>
+        <div class="logo">
+            <div class="logo-box">FRAIS</div>
+        </div>
+        <div class="utility-nav">
+            <div class="search-container">
+                <input type="text" placeholder="SEARCH..." class="search-input">
+                <i class="fas fa-search search-icon"></i>
+            </div>
+            <a href="/account" class="user-link active">
+                <i class="fas fa-user"></i>
+                <span>Account</span>
+            </a>
+            <a href="/cart" class="cart-link">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="account-container">
+            <div class="account-sidebar">
+                <div class="user-profile">
+                    <div class="avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <h2 class="user-name">John Doe</h2>
+                    <p class="user-email">john.doe@example.com</p>
+                </div>
+                <nav class="account-nav">
+                    <a href="#overview" class="nav-item active" data-section="overview">
+                        <i class="fas fa-home"></i>
+                        <span>Overview</span>
+                    </a>
+                    <a href="#orders" class="nav-item" data-section="orders">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>Orders</span>
+                    </a>
+                    <a href="#profile" class="nav-item" data-section="profile">
+                        <i class="fas fa-user-circle"></i>
+                        <span>Profile</span>
+                    </a>
+                    <a href="#addresses" class="nav-item" data-section="addresses">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Addresses</span>
+                    </a>
+                    <a href="#settings" class="nav-item" data-section="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                    <a href="/logout" class="nav-item logout">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Log Out</span>
+                    </a>
+                </nav>
+            </div>
+
+            <div class="account-content">
+                <!-- Overview Section -->
+                <div class="content-section active" id="overview">
+                    <h1 class="section-title">Account Overview</h1>
+                    <div class="overview-grid">
+                        <div class="overview-card">
+                            <div class="card-icon orders">
+                                <i class="fas fa-shopping-bag"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Total Orders</h3>
+                                <p class="card-value">12</p>
+                            </div>
+                        </div>
+                        <div class="overview-card">
+                            <div class="card-icon spending">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Total Spending</h3>
+                                <p class="card-value">$450.00</p>
+                            </div>
+                        </div>
+                        <div class="overview-card">
+                            <div class="card-icon points">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="card-content">
+                                <h3>Reward Points</h3>
+                                <p class="card-value">1,250</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="recent-orders">
+                        <h2 class="subsection-title">Recent Orders</h2>
+                        <div class="orders-list">
+                            <div class="order-item">
+                                <div class="order-info">
+                                    <span class="order-id">#ORD-2024-001</span>
+                                    <span class="order-date">Jan 15, 2024</span>
+                                </div>
+                                <div class="order-status completed">Completed</div>
+                                <div class="order-total">$45.00</div>
+                            </div>
+                            <div class="order-item">
+                                <div class="order-info">
+                                    <span class="order-id">#ORD-2024-002</span>
+                                    <span class="order-date">Jan 10, 2024</span>
+                                </div>
+                                <div class="order-status processing">Processing</div>
+                                <div class="order-total">$32.00</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orders Section -->
+                <div class="content-section" id="orders">
+                    <h1 class="section-title">My Orders</h1>
+                    <div class="orders-section">
+                        <div class="order-card">
+                            <div class="order-header">
+                                <div>
+                                    <span class="order-number">Order #ORD-2024-001</span>
+                                    <span class="order-date">Placed on Jan 15, 2024</span>
+                                </div>
+                                <span class="order-status-badge completed">Completed</span>
+                            </div>
+                            <div class="order-products">
+                                <div class="order-product">
+                                    <img src="https://via.placeholder.com/80x80?text=Product" alt="Product">
+                                    <div class="product-info">
+                                        <h4>Lemon Coco Candle</h4>
+                                        <p>Quantity: 2</p>
+                                    </div>
+                                    <div class="product-price">$30.00</div>
+                                </div>
+                                <div class="order-product">
+                                    <img src="https://via.placeholder.com/80x80?text=Product" alt="Product">
+                                    <div class="product-info">
+                                        <h4>Rose Water Candle</h4>
+                                        <p>Quantity: 1</p>
+                                    </div>
+                                    <div class="product-price">$15.00</div>
+                                </div>
+                            </div>
+                            <div class="order-footer">
+                                <div class="order-total-amount">
+                                    <span>Total: <strong>$45.00</strong></span>
+                                </div>
+                                <button class="view-details-btn">View Details</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Section -->
+                <div class="content-section" id="profile">
+                    <h1 class="section-title">Edit Profile</h1>
+                    <form class="profile-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="firstName">First Name</label>
+                                <input type="text" id="firstName" value="John" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastName">Last Name</label>
+                                <input type="text" id="lastName" value="Doe" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" value="john.doe@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" value="+1 234 567 8900">
+                        </div>
+                        <div class="form-group">
+                            <label for="birthday">Date of Birth</label>
+                            <input type="date" id="birthday" value="1990-01-01">
+                        </div>
+                        <button type="submit" class="save-btn">
+                            <span>Save Changes</span>
+                            <i class="fas fa-check"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Addresses Section -->
+                <div class="content-section" id="addresses">
+                    <h1 class="section-title">My Addresses</h1>
+                    <div class="addresses-grid">
+                        <div class="address-card">
+                            <div class="address-header">
+                                <h3>Default Address</h3>
+                                <span class="default-badge">Default</span>
+                            </div>
+                            <div class="address-content">
+                                <p>John Doe</p>
+                                <p>123 Main Street</p>
+                                <p>New York, NY 10001</p>
+                                <p>United States</p>
+                                <p>Phone: +1 234 567 8900</p>
+                            </div>
+                            <div class="address-actions">
+                                <button class="edit-btn">Edit</button>
+                                <button class="delete-btn">Delete</button>
+                            </div>
+                        </div>
+                        <div class="address-card add-address">
+                            <div class="add-address-content">
+                                <i class="fas fa-plus"></i>
+                                <span>Add New Address</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Section -->
+                <div class="content-section" id="settings">
+                    <h1 class="section-title">Account Settings</h1>
+                    <div class="settings-list">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>Email Notifications</h3>
+                                <p>Receive email updates about your orders</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>SMS Notifications</h3>
+                                <p>Receive SMS updates about your orders</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>Newsletter</h3>
+                                <p>Receive our weekly newsletter</p>
+                            </div>
+                            <label class="toggle-switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <h3>Change Password</h3>
+                                <p>Update your account password</p>
+                            </div>
+                            <button class="change-password-btn">Change Password</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>FRAIS</h4>
+                <ul>
+                    <li><a href="/home">SHOP ALL</a></li>
+                    <li><a href="/home#body">FOR BODY</a></li>
+                    <li><a href="/home#home">FOR HOME</a></li>
+                    <li><a href="/about">ABOUT</a></li>
+                    <li><a href="/contact">CONTACT</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>HELP</h4>
+                <ul>
+                    <li><a href="/shipping">SHIPPING & RETURNS</a></li>
+                    <li><a href="/policy">STORE POLICY</a></li>
+                    <li><a href="/payment">PAYMENT METHODS</a></li>
+                    <li><a href="/faq">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>CONTACT</h4>
+                <ul>
+                    <li><a href="tel:1234567890">123-456-7890</a></li>
+                    <li><a href="mailto:info@my-domain.com">INFO@MY-DOMAIN.COM</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>NEWSLETTER</h4>
+                <form class="newsletter-form">
+                    <label for="newsletter-email">Email</label>
+                    <input type="email" id="newsletter-email" placeholder="Enter Email *" required>
+                    <button type="submit" class="subscribe-btn">
+                        <span>SUBSCRIBE</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="social-icons">
+                <a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
+            </div>
+            <p class="copyright">© 2023 by Frais. Proudly created with Wix.com</p>
+        </div>
+    </footer>
+
+    <script src="/js/account.js"></script>
+</body>
+</html>
+
