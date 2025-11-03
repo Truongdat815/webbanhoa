@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng nhập - BLOOMORA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/login.css">
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <i class="fas fa-phone"></i>
+            <span>Hotline: 1900 1234</span>
+        </div>
+        <div class="top-bar-right">
+            <a href="/login"><i class="fas fa-user"></i> Đăng nhập</a>
+            <a href="/register"><i class="fas fa-user-plus"></i> Đăng ký</a>
+            <a href="/cart"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a>
+            <a href="/checkout"><i class="fas fa-credit-card"></i> Thanh toán</a>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-section">
+            <div class="social-icons">
+                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
+            </div>
+        </div>
+        <div style="text-align: center;">
+            <a href="/" class="logo">
+                <div class="logo-image">🌸</div>
+            </a>
+        </div>
+        <div style="width: 200px;"></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>Đăng nhập</h1>
+                <p>Chào mừng trở lại BLOOMORA</p>
+            </div>
+
+            <div class="error-message" id="errorMessage" th:if="${error}" th:text="${error}"></div>
+
+            <form class="login-form" th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label for="username">Tên đăng nhập</label>
+                    <input type="text" id="username" name="username" placeholder="Nhập tên đăng nhập" required>
+                    <i class="fas fa-user"></i>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mật khẩu</label>
+                    <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
+                    <i class="fas fa-lock"></i>
+                </div>
+
+                <div class="remember-forgot">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember-me">
+                        <span>Ghi nhớ đăng nhập</span>
+                    </label>
+                    <a href="/forgot-password" class="forgot-password">Quên mật khẩu?</a>
+                </div>
+
+                <button type="submit" class="login-button">
+                    Đăng nhập
+                </button>
+            </form>
+
+            <div class="divider">hoặc</div>
+
+            <div class="register-link">
+                Chưa có tài khoản? <a href="/register">Đăng ký ngay</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show error message if exists
+        if (document.getElementById('errorMessage').textContent.trim() !== '') {
+            document.getElementById('errorMessage').classList.add('show');
+        }
+
+        // Form validation
+        document.querySelector('.login-form').addEventListener('submit', function(e) {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            if (!username || !password) {
+                e.preventDefault();
+                const errorMsg = document.getElementById('errorMessage');
+                errorMsg.textContent = 'Vui lòng điền đầy đủ thông tin!';
+                errorMsg.classList.add('show');
+                return false;
+            }
+        });
+    </script>
+</body>
+</html>
