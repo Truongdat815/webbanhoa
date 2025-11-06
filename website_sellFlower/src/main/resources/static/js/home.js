@@ -1,3 +1,11 @@
+// Helper function để format giá tiền
+function formatPrice(price) {
+    // Convert to number if it's a string
+    const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+    // Format with thousands separator and add ₫
+    return '₫' + numPrice.toLocaleString('vi-VN');
+}
+
 // Header scroll effect
 window.addEventListener('scroll', function() {
     const header = document.querySelector('.header');
@@ -193,7 +201,7 @@ function openQuickViewModal(productCard) {
     // Fill modal with product data
     document.getElementById('modalProductImage').src = productImage;
     document.getElementById('modalProductName').textContent = productName;
-    document.getElementById('modalProductPrice').textContent = productPrice;
+    document.getElementById('modalProductPrice').textContent = formatPrice(productPrice);
     const modalQtyInput = document.getElementById('modalQuantity');
     modalQtyInput.value = '1';
 
