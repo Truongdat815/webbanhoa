@@ -662,12 +662,29 @@
             <div class="modal-body">
                 <div class="modal-product-image">
                     <img id="modalProductImage" src="" alt="Sản phẩm">
-                <p class="quick-view-label">Xem nhanh</p>
                 </div>
-                <div class="modal-product-info">
-                    <h2 class="modal-product-name" id="modalProductName"></h2>
-                    <p class="modal-product-price" id="modalProductPrice"></p>
+            <div class="modal-product-info">
+                <h2 class="modal-product-name" id="modalProductName"></h2>
+                <div class="modal-price-rating-row">
+                    <div class="modal-product-price-container">
+                        <p class="modal-product-price" id="modalProductPrice"></p>
+                    </div>
+                    <div class="modal-product-rating">
+                        <div class="rating-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="rating-text">(56 Reviews)</span>
+                    </div>
+                </div>
+                <div class="modal-product-description">
+                    <p id="modalProductDescription">Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo. Thích hợp trang trí nhà cửa, văn phòng hoặc làm quà tặng ý nghĩa cho người thân yêu.</p>
+                </div>
                     <div class="modal-quantity-section">
+                    <label class="modal-quantity-label">Số lượng:</label>
                     <div class="modal-quantity-selector" id="modalQuantitySelector">
                             <button class="modal-qty-btn modal-minus-btn">-</button>
                             <input type="number" id="modalQuantity" value="1" min="1" class="modal-qty-input">
@@ -675,6 +692,7 @@
                         </div>
                     </div>
                     <button class="modal-add-to-cart-btn" id="modalAddToCartBtn">
+                    <i class="fas fa-shopping-cart"></i>
                         Thêm vào giỏ hàng
                     </button>
                 </div>
