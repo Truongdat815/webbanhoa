@@ -8,16 +8,18 @@ public class CartItemDTO {
     private BigDecimal price;
     private Integer quantity;
     private String imageUrl;
+    private Integer stock;
 
     public CartItemDTO() {
     }
 
-    public CartItemDTO(Integer productId, String productName, BigDecimal price, Integer quantity, String imageUrl) {
+    public CartItemDTO(Integer productId, String productName, BigDecimal price, Integer quantity, String imageUrl, Integer stock) {
         this.productId = productId;
         this.productName = productName;
         this.price = price;
         this.quantity = quantity;
         this.imageUrl = imageUrl;
+        this.stock = stock;
     }
 
     public Integer getProductId() {
@@ -58,6 +60,14 @@ public class CartItemDTO {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public Integer getStock() {
+        return stock;
+    }
+
+    public void setStock(Integer stock) {
+        this.stock = stock;
     }
 
     public BigDecimal getTotal() {

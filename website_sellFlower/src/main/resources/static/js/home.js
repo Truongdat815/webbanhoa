@@ -56,7 +56,7 @@ document.querySelectorAll('.quantity-selector').forEach(selector => {
         let currentValue = parseInt(qtyInput.value);
         const max = parseInt(qtyInput.getAttribute('max'));
         if (max && currentValue >= max) {
-            showToast('Số lượng vượt quá tồn kho!', 'warning');
+            showToast(`Số lượng vượt quá tồn kho! Tồn kho hiện có: ${max}`, 'warning');
             return;
         }
         qtyInput.value = currentValue + 1;
@@ -71,7 +71,7 @@ document.querySelectorAll('.quantity-selector').forEach(selector => {
             this.value = min;
         } else if (max && this.value > max) {
             this.value = max;
-            showToast('Số lượng tối đa là ' + max, 'warning');
+            showToast(`Số lượng vượt quá tồn kho! Tồn kho hiện có: ${max}`, 'warning');
         }
     });
 });
@@ -142,9 +142,11 @@ function showToast(message, type = 'success') {
     // Remove existing type classes
     toast.classList.remove('warning', 'error', 'success');
 
-    // Add type class if not success
+    // Add type class
     if (type !== 'success') {
         toast.classList.add(type);
+    } else {
+        toast.classList.add('success');
     }
 
     toast.classList.add('show');
@@ -291,7 +293,7 @@ if (modalMinusBtn && modalPlusBtn && modalQtyInput) {
         let currentValue = parseInt(modalQtyInput.value);
         const max = parseInt(modalQtyInput.getAttribute('max'));
         if (max && currentValue >= max) {
-            showToast('Số lượng vượt quá tồn kho!', 'warning');
+            showToast(`Số lượng vượt quá tồn kho! Tồn kho hiện có: ${max}`, 'warning');
             return;
         }
         modalQtyInput.value = currentValue + 1;
@@ -306,7 +308,7 @@ if (modalMinusBtn && modalPlusBtn && modalQtyInput) {
             this.value = min;
         } else if (max && this.value > max) {
             this.value = max;
-            showToast('Số lượng tối đa là ' + max, 'warning');
+            showToast(`Số lượng vượt quá tồn kho! Tồn kho hiện có: ${max}`, 'warning');
         }
     });
 }

@@ -39,15 +39,15 @@
     <!-- Main Content -->
     <main class="main-content">
         <div class="cart-container">
-            <h1 class="cart-title">My cart</h1>
+            <h1 class="cart-title">Giỏ hàng của tôi</h1>
             
             <!-- Empty Cart State -->
             <div class="cart-empty" id="emptyCart">
                 <div class="empty-cart-icon">
                     <i class="fas fa-shopping-bag"></i>
                 </div>
-                <p class="empty-cart-message">Cart is empty</p>
-                <a href="/home" class="continue-browsing">Continue Browsing</a>
+                <p class="empty-cart-message">Giỏ hàng trống</p>
+                <a href="/home" class="continue-browsing">Tiếp tục mua sắm</a>
             </div>
 
             <!-- Cart with Items -->
@@ -60,34 +60,34 @@
                     <!-- Coupon and Update Cart Section -->
                     <div class="cart-actions">
                         <div class="coupon-section">
-                            <input type="text" id="couponCode" placeholder="Coupon code" class="coupon-input">
-                            <button class="apply-coupon-btn" id="applyCouponBtn">Apply Coupon</button>
+                            <input type="text" id="couponCode" placeholder="Mã giảm giá" class="coupon-input">
+                            <button class="apply-coupon-btn" id="applyCouponBtn">Áp dụng mã</button>
                         </div>
-                        <button class="update-cart-btn" id="updateCartBtn">Update Cart</button>
+                        <button class="update-cart-btn" id="updateCartBtn">Cập nhật giỏ hàng</button>
                     </div>
                 </div>
 
                 <div class="cart-summary">
-                    <h2 class="summary-title">Cart Totals</h2>
+                    <h2 class="summary-title">Tổng giỏ hàng</h2>
                     <div class="summary-row">
-                        <span>Cart Subtotal</span>
-                        <span class="subtotal">$0.00</span>
+                        <span>Tạm tính</span>
+                        <span class="subtotal">₫0</span>
                     </div>
                     <div class="summary-row">
-                        <span>Shipping and Handing</span>
-                        <span class="shipping">$15.00</span>
+                        <span>Phí vận chuyển</span>
+                        <span class="shipping">₫15.000</span>
                     </div>
                     <div class="summary-row">
-                        <span>Vat</span>
-                        <span class="vat">$00.00</span>
+                        <span>Thuế VAT</span>
+                        <span class="vat">₫0</span>
                     </div>
                     <div class="summary-divider"></div>
                     <div class="summary-row total-row">
-                        <span>Order Total</span>
-                        <span class="total">$0.00</span>
+                        <span>Tổng cộng</span>
+                        <span class="total">₫0</span>
                     </div>
                     <button class="checkout-btn" id="checkoutBtn">
-                        <span>Proceed to checkout</span>
+                        <span>Thanh toán</span>
                     </button>
                 </div>
             </div>
@@ -143,6 +143,12 @@
             <p class="copyright">© 2023 by Frais. Proudly created with Wix.com</p>
         </div>
     </footer>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span>Đã cập nhật!</span>
+    </div>
 
     <script src="/js/cart-utils.js"></script>
     <script src="/js/cart.js"></script>

@@ -713,7 +713,7 @@ body {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    background-color: #5a6b54;
+    background-color: #4caf50;
     color: #ffffff;
     padding: 15px 25px;
     border-radius: 8px;
@@ -755,7 +755,7 @@ body {
 }
 
 .toast.success {
-    background-color: #5a6b54;
+    background-color: #4caf50;
 }
 
 /* Quick View Modal */

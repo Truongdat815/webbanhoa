@@ -6,7 +6,7 @@
     <title>Chi tiết sản phẩm - Flower Shop</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/product.css">
+    <link rel="stylesheet" href="/css/detail.css">
 </head>
 <body>
     <!-- Top Banner -->
@@ -104,7 +104,7 @@
                             <label class="quantity-label">Số lượng:</label>
                             <div class="quantity-selector-detail">
                                 <button class="qty-btn-detail minus-btn-detail">-</button>
-                                <input type="number" id="productQuantity" value="1" min="1" max="50" class="qty-input-detail">
+                                <input type="number" id="productQuantity" value="1" min="1" class="qty-input-detail">
                                 <button class="qty-btn-detail plus-btn-detail">+</button>
                             </div>
                         </div>
@@ -203,8 +203,75 @@
         <span>Đã thêm vào giỏ!</span>
     </div>
 
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>Tài khoản của tôi</h4>
+                <ul>
+                    <li><a href="/account">Tài khoản của tôi</a></li>
+                    <li><a href="/checkout">Thanh toán</a></li>
+                    <li><a href="/contact">Liên hệ chúng tôi</a></li>
+                    <li><a href="/cart">Giỏ hàng</a></li>
+                    <li><a href="/wishlist">Yêu thích</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Liên kết nhanh</h4>
+                <ul>
+                    <li><a href="/location">Vị trí cửa hàng</a></li>
+                    <li><a href="/tracking">Theo dõi đơn hàng</a></li>
+                    <li><a href="/size-guide">Hướng dẫn kích thước</a></li>
+                    <li><a href="/account">Tài khoản của tôi</a></li>
+                    <li><a href="/faq">Câu hỏi thường gặp</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Thông tin</h4>
+                <ul>
+                    <li><a href="/privacy">Trang bảo mật</a></li>
+                    <li><a href="/about">Về chúng tôi</a></li>
+                    <li><a href="/careers">Tuyển dụng</a></li>
+                    <li><a href="/delivery">Thông tin giao hàng</a></li>
+                    <li><a href="/terms">Điều khoản & Điều kiện</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Dịch vụ khách hàng</h4>
+                <ul>
+                    <li><a href="/shipping">Chính sách vận chuyển</a></li>
+                    <li><a href="/contact">Trợ giúp & Liên hệ</a></li>
+                    <li><a href="/returns">Đổi trả & Hoàn tiền</a></li>
+                    <li><a href="/stores">Cửa hàng trực tuyến</a></li>
+                    <li><a href="/terms">Điều khoản và Điều kiện</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Về cửa hàng</h4>
+                <div class="footer-logo">FIAMA</div>
+                <p class="footer-description">Chuyên cung cấp hoa tươi chất lượng cao với dịch vụ giao hàng tận nơi nhanh chóng và chuyên nghiệp.</p>
+                <div class="footer-contact">
+                    <p><i class="fas fa-map-marker-alt"></i> Thành phố Hồ Chí Minh, Việt Nam</p>
+                    <p><i class="fas fa-phone"></i> +84 123 456 789</p>
+                    <p><i class="fas fa-envelope"></i> info@fiama.com</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="payment-methods">
+                <img src="https://via.placeholder.com/200x30?text=Phương+thức+thanh+toán" alt="Phương thức thanh toán" class="payment-image">
+            </div>
+            <p class="copyright">© - Dành cho bạn</p>
+            <div class="footer-links">
+                <a href="/terms">Điều khoản & Điều kiện</a>
+                <a href="/claim">Khiếu nại</a>
+                <a href="/privacy">Bảo mật & Chính sách</a>
+            </div>
+        </div>
+    </footer>
+
     <script src="/js/cart-utils.js"></script>
-    <script src="/js/product.js"></script>
+    <script src="/js/detail.js"></script>
 </body>
 </html>
 

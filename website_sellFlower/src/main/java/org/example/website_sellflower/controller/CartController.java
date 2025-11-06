@@ -1,6 +1,9 @@
 package org.example.website_sellflower.controller;
 
 import org.example.website_sellflower.dto.CartItemDTO;
+import org.example.website_sellflower.entity.Product;
+import org.example.website_sellflower.repository.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +18,9 @@ import java.util.Map;
 @Controller
 @RequestMapping("/cart")
 public class CartController {
+    
+    @Autowired(required = false)
+    private ProductRepository productRepository;
     
     @GetMapping
     public String showCartPage() {
@@ -34,6 +40,14 @@ public class CartController {
         Map<String, Object> response = new HashMap<>();
         
         try {
+            // Get product stock from database
+            Product product = null;
+            Integer stock = null;
+            if (productRepository != null) {
+                product = productRepository.findById(productId).orElse(null);
+                stock = product != null ? product.getStock() : null;
+            }
+            
             List<CartItemDTO> cart = getCartFromSession(session);
             
             // Check if product already exists in cart
@@ -42,12 +56,27 @@ public class CartController {
                     .findFirst()
                     .orElse(null);
             
+            int newQuantity = quantity;
+            if (existingItem != null) {
+                newQuantity = existingItem.getQuantity() + quantity;
+            }
+            
+            // Validate stock
+            if (stock != null && newQuantity > stock) {
+                response.put("success", false);
+                response.put("message", "Số lượng vượt quá tồn kho. Tồn kho hiện có: " + stock);
+                return ResponseEntity.badRequest().body(response);
+            }
+            
             if (existingItem != null) {
                 // Update quantity if product already exists
-                existingItem.setQuantity(existingItem.getQuantity() + quantity);
+                existingItem.setQuantity(newQuantity);
+                if (stock != null) {
+                    existingItem.setStock(stock);
+                }
             } else {
                 // Add new item to cart
-                CartItemDTO newItem = new CartItemDTO(productId, productName, price, quantity, imageUrl);
+                CartItemDTO newItem = new CartItemDTO(productId, productName, price, quantity, imageUrl, stock);
                 cart.add(newItem);
             }
             
@@ -71,6 +100,15 @@ public class CartController {
     @ResponseBody
     public ResponseEntity<List<CartItemDTO>> getCart(HttpSession session) {
         List<CartItemDTO> cart = getCartFromSession(session);
+        // Update stock from database for each item
+        if (productRepository != null) {
+            for (CartItemDTO item : cart) {
+                Product product = productRepository.findById(item.getProductId()).orElse(null);
+                if (product != null) {
+                    item.setStock(product.getStock());
+                }
+            }
+        }
         return ResponseEntity.ok(cart);
     }
 
@@ -95,6 +133,21 @@ public class CartController {
         Map<String, Object> response = new HashMap<>();
         
         try {
+            // Get product stock from database
+            Product product = null;
+            Integer stock = null;
+            if (productRepository != null) {
+                product = productRepository.findById(productId).orElse(null);
+                stock = product != null ? product.getStock() : null;
+            }
+            
+            // Validate stock
+            if (stock != null && quantity > stock) {
+                response.put("success", false);
+                response.put("message", "Số lượng vượt quá tồn kho. Tồn kho hiện có: " + stock);
+                return ResponseEntity.badRequest().body(response);
+            }
+            
             List<CartItemDTO> cart = getCartFromSession(session);
             
             CartItemDTO item = cart.stream()
@@ -107,6 +160,9 @@ public class CartController {
                     cart.remove(item);
                 } else {
                     item.setQuantity(quantity);
+                    if (stock != null) {
+                        item.setStock(stock);
+                    }
                 }
                 session.setAttribute("cart", cart);
                 
