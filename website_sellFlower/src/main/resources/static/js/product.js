@@ -190,6 +190,7 @@ function initProductInteractions() {
             const productName = productCard.getAttribute('data-product-name');
             const productPrice = parseFloat(productCard.getAttribute('data-product-price')) || 0;
             const productImage = productCard.getAttribute('data-product-image') || '';
+            const productStock = productCard.getAttribute('data-product-stock') ? parseInt(productCard.getAttribute('data-product-stock')) : null;
             const quantity = parseInt(productCard.querySelector('.qty-input').value);
             
             // Disable button during request
@@ -198,7 +199,7 @@ function initProductInteractions() {
             this.innerHTML = '<span>Đang thêm...</span>';
             
             try {
-                const result = await addToCart(productId, productName, productPrice, quantity, productImage);
+                const result = await addToCart(productId, productName, productPrice, quantity, productImage, productStock);
                 if (result.success) {
                     showToast(result.message || 'Đã thêm vào giỏ hàng!', 'success');
                 } else {
@@ -371,6 +372,7 @@ function initModalHandlers() {
             const productCard = document.querySelector(`[data-product-id="${productId}"]`);
             const productPrice = productCard ? parseFloat(productCard.getAttribute('data-product-price')) || 0 : 0;
             const productImage = productCard ? productCard.getAttribute('data-product-image') || '' : '';
+            const productStock = productCard ? (productCard.getAttribute('data-product-stock') ? parseInt(productCard.getAttribute('data-product-stock')) : null) : null;
             
             // Disable button during request
             const originalText = this.innerHTML;
@@ -379,7 +381,7 @@ function initModalHandlers() {
             
             try {
                 // Add to cart via API
-                const result = await addToCart(productId, productName, productPrice, quantity, productImage);
+                const result = await addToCart(productId, productName, productPrice, quantity, productImage, productStock);
                 
                 if (result.success) {
                     showToast(result.message || 'Đã thêm vào giỏ hàng!', 'success');

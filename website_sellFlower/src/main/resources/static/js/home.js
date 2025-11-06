@@ -99,6 +99,7 @@ document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
         const productName = productCard.getAttribute('data-product-name') || productCard.querySelector('.product-name').textContent;
         const productPrice = parseFloat(productCard.getAttribute('data-product-price')) || 0;
         const productImage = productCard.getAttribute('data-product-image') || '';
+        const productStock = productCard.getAttribute('data-product-stock') ? parseInt(productCard.getAttribute('data-product-stock')) : null;
         const quantity = parseInt(productCard.querySelector('.qty-input').value);
 
         // Disable button during request
@@ -114,7 +115,7 @@ document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
 
         try {
             // Add to cart via API
-            const result = await addToCart(productId, productName, productPrice, quantity, productImage);
+            const result = await addToCart(productId, productName, productPrice, quantity, productImage, productStock);
             
             if (result.success) {
                 showToast(result.message || 'Đã thêm vào giỏ!');
@@ -334,6 +335,7 @@ if (modalAddToCartBtn) {
         const productCard = document.querySelector(`[data-product-id="${productId}"]`);
         const productPrice = productCard ? parseFloat(productCard.getAttribute('data-product-price')) || 0 : 0;
         const productImage = productCard ? productCard.getAttribute('data-product-image') || '' : '';
+        const productStock = productCard ? (productCard.getAttribute('data-product-stock') ? parseInt(productCard.getAttribute('data-product-stock')) : null) : null;
 
         // Disable button during request
         const originalText = this.innerHTML;
@@ -348,7 +350,7 @@ if (modalAddToCartBtn) {
 
         try {
             // Add to cart via API
-            const result = await addToCart(productId, productName, productPrice, quantity, productImage);
+            const result = await addToCart(productId, productName, productPrice, quantity, productImage, productStock);
             
             if (result.success) {
                 showToast(result.message || 'Đã thêm vào giỏ!');

@@ -37,11 +37,16 @@ async function loadCartItems(skipAnimation = false) {
             cartItemsList.appendChild(cartItemElement);
         });
         
-        // Initialize quantity selectors and remove buttons
+        // Initialize cart item interactions
         initCartItemInteractions();
         
         // Update cart summary
         updateCartSummary(cartItems);
+        
+        // Validate and correct quantities after loading (async, runs after DOM is ready)
+        setTimeout(async () => {
+            await validateAndCorrectQuantities(cartItems);
+        }, 100);
     } catch (error) {
         console.error('Error loading cart items:', error);
     }
@@ -55,9 +60,23 @@ function createCartItemElement(item) {
     
     // Use price directly in VND
     const price = parseFloat(item.price);
-    const totalPrice = price * item.quantity;
-    const stock = item.stock || null;
-    const maxQuantity = stock || 999999; // Use stock as max, or very high number if no stock info
+    
+    // Sửa logic kiểm tra stock. Dùng !== null để giữ lại giá trị 0
+    const stock = (item.stock !== null && item.stock !== undefined) ? parseInt(item.stock) : null;
+    
+    // Nếu stock không phải là null (có thể là 0), dùng nó làm max. Nếu là null, dùng 999999
+    const maxQuantity = (stock !== null) ? stock : 999999;
+    
+    // Validate and adjust quantity if it exceeds stock
+    let quantity = item.quantity;
+    // Kiểm tra stock !== null trước
+    if (stock !== null && quantity > stock) {
+        quantity = stock;
+    }
+    
+    const totalPrice = price * quantity;
+    // Gán data-stock chính xác
+    const stockAttribute = (stock !== null) ? `data-stock="${stock}"` : '';
     
     cartItem.innerHTML = `
         <button class="remove-item-btn" data-product-id="${item.productId}">
@@ -72,7 +91,7 @@ function createCartItemElement(item) {
         </div>
         <div class="item-quantity">
             <button class="qty-btn minus-btn" data-product-id="${item.productId}">-</button>
-            <input type="number" value="${item.quantity}" min="1" max="${maxQuantity}" class="qty-input" data-product-id="${item.productId}" data-unit-price="${price}" data-stock="${stock || ''}">
+            <input type="number" value="${quantity}" min="1" max="${maxQuantity}" class="qty-input" data-product-id="${item.productId}" data-unit-price="${price}" ${stockAttribute}>
             <button class="qty-btn plus-btn" data-product-id="${item.productId}">+</button>
         </div>
         <div class="item-total">
@@ -93,13 +112,24 @@ function initCartItemInteractions() {
         const cartItem = quantitySelector.closest('.cart-item');
         const productId = parseInt(qtyInput.getAttribute('data-product-id'));
         const unitPrice = parseFloat(qtyInput.getAttribute('data-unit-price'));
-        const stock = qtyInput.getAttribute('data-stock') ? parseInt(qtyInput.getAttribute('data-stock')) : null;
+        
+        // Sửa logic đọc stock
+        const hasStock = qtyInput.hasAttribute('data-stock');
+        const stock = hasStock ? parseInt(qtyInput.getAttribute('data-stock')) : null;
+        
         const totalPriceElement = cartItem.querySelector('.total-price');
+
+        // Hàm helper để xác định max (bao gồm cả trường hợp stock = 0)
+        const getMax = () => {
+            return (stock !== null) ? stock : (parseInt(qtyInput.getAttribute('max')) || 999999);
+        };
 
         minusBtn.addEventListener('click', async function() {
             let currentValue = parseInt(qtyInput.value);
-            if (currentValue > 1) {
+            const min = parseInt(qtyInput.getAttribute('min')) || 1;
+            if (currentValue > min) {
                 qtyInput.value = currentValue - 1;
+                animateInput(qtyInput);
                 await updateCartItemQuantity(productId, parseInt(qtyInput.value));
                 updateItemTotal(parseInt(qtyInput.value), unitPrice, totalPriceElement);
                 await updateCartSummaryOnly(); // Only update summary, don't reload items
@@ -108,15 +138,16 @@ function initCartItemInteractions() {
 
         plusBtn.addEventListener('click', async function() {
             let currentValue = parseInt(qtyInput.value);
-            const max = stock || parseInt(qtyInput.getAttribute('max')) || 999999;
+            const max = getMax(); // Dùng hàm helper
             
-            if (max && currentValue >= max) {
+            if (currentValue >= max) { // Sửa: kiểm tra >=
                 showToast(`Số lượng vượt quá tồn kho! Tồn kho hiện có: ${max}`, 'warning');
-                qtyInput.value = max;
+                qtyInput.value = max; // Đảm bảo giá trị không vượt quá
                 return;
             }
             
             qtyInput.value = currentValue + 1;
+            animateInput(qtyInput);
             const result = await updateCartItemQuantity(productId, parseInt(qtyInput.value));
             if (result && result.success) {
                 updateItemTotal(parseInt(qtyInput.value), unitPrice, totalPriceElement);
@@ -132,26 +163,71 @@ function initCartItemInteractions() {
 
         qtyInput.addEventListener('change', async function() {
             const min = parseInt(this.getAttribute('min')) || 1;
-            const max = stock || parseInt(this.getAttribute('max')) || 999999;
-            
-            if (this.value < min) {
-                this.value = min;
-            } else if (max && this.value > max) {
-                this.value = max;
+            const max = getMax(); // Dùng hàm helper
+            let finalValue = parseInt(this.value) || min;
+
+            // Validate and correct value
+            if (finalValue < min) {
+                finalValue = min;
+            } else if (finalValue > max) { // Sửa: kiểm tra > max
+                finalValue = max;
                 showToast(`Số lượng vượt quá tồn kho! Tồn kho hiện có: ${max}`, 'warning');
             }
+            this.value = finalValue; // Cập nhật giá trị input ngay lập tức
             
-            const result = await updateCartItemQuantity(productId, parseInt(this.value));
-            if (result && result.success) {
-                updateItemTotal(parseInt(this.value), unitPrice, totalPriceElement);
-                await updateCartSummaryOnly(); // Only update summary, don't reload items
-            } else {
-                // Revert to previous value if update failed
-                const previousValue = this.getAttribute('data-previous-value') || min;
-                this.value = previousValue;
-                if (result && result.message) {
-                    showToast(result.message, 'warning');
+            // Only update cart if value is valid
+            if (finalValue >= min && finalValue <= max) {
+                const result = await updateCartItemQuantity(productId, finalValue);
+                if (result && result.success) {
+                    updateItemTotal(finalValue, unitPrice, totalPriceElement);
+                    await updateCartSummaryOnly(); // Only update summary, don't reload items
+                } else {
+                    // Revert to previous value if update failed
+                    const previousValue = this.getAttribute('data-previous-value') || min;
+                    this.value = previousValue;
+                    finalValue = parseInt(previousValue);
+                    updateItemTotal(finalValue, unitPrice, totalPriceElement);
+                    if (result && result.message) {
+                        showToast(result.message, 'warning');
+                    }
                 }
+            }
+        });
+        
+        // Also validate on input event to prevent invalid values (real-time validation)
+        qtyInput.addEventListener('input', function() {
+            const min = parseInt(this.getAttribute('min')) || 1;
+            const max = getMax(); // Dùng hàm helper
+            let value = parseInt(this.value);
+            
+            // Handle empty input
+            if (isNaN(value) || this.value === '') {
+                return; // Allow empty input temporarily
+            }
+            
+            if (value < min) {
+                this.value = min;
+                value = min;
+            } else if (value > max) { // Sửa: kiểm tra > max
+                this.value = max;
+                value = max;
+                showToast(`Số lượng vượt quá tồn kho! Tồn kho hiện có: ${max}`, 'warning');
+            }
+        });
+        
+        // Validate on blur to ensure final value is correct
+        qtyInput.addEventListener('blur', function() {
+            const min = parseInt(this.getAttribute('min')) || 1;
+            const max = getMax(); // Dùng hàm helper
+            let value = parseInt(this.value) || min;
+            
+            if (value < min) {
+                this.value = min;
+                value = min;
+            } else if (value > max) { // Sửa: kiểm tra > max
+                this.value = max;
+                value = max;
+                // Không cần toast ở đây vì 'change' event sẽ xử lý
             }
         });
         
@@ -174,6 +250,40 @@ function initCartItemInteractions() {
             }, 500);
         });
     });
+}
+
+// Validate and correct quantities that exceed stock
+async function validateAndCorrectQuantities(cartItems) {
+    let needsUpdate = false;
+    
+    for (const item of cartItems) {
+        // Sửa: Kiểm tra stock rõ ràng
+        const stock = (item.stock !== null && item.stock !== undefined) ? parseInt(item.stock) : null;
+        
+        if (stock !== null && item.quantity > stock) {
+            // Find the input element for this item
+            const qtyInput = document.querySelector(`.qty-input[data-product-id="${item.productId}"]`);
+            if (qtyInput) {
+                const cartItem = qtyInput.closest('.cart-item');
+                const unitPrice = parseFloat(qtyInput.getAttribute('data-unit-price'));
+                const totalPriceElement = cartItem.querySelector('.total-price');
+                
+                // Update quantity to stock limit
+                qtyInput.value = stock;
+                updateItemTotal(stock, unitPrice, totalPriceElement);
+                
+                // Update cart in backend
+                await updateCartItemQuantity(item.productId, stock);
+                needsUpdate = true;
+                
+                showToast(`Số lượng "${item.productName}" đã được điều chỉnh về ${stock} (tồn kho hiện có)`, 'warning');
+            }
+        }
+    }
+    
+    if (needsUpdate) {
+        await updateCartSummaryOnly();
+    }
 }
 
 // Update cart item quantity
@@ -234,6 +344,14 @@ function updateItemTotal(quantity, price, totalElement) {
     totalElement.textContent = formatPrice(total);
     
     // No animation to prevent jumping
+}
+
+// Animate input when quantity changes
+function animateInput(input) {
+    input.style.transform = 'scale(1.2)';
+    setTimeout(() => {
+        input.style.transform = 'scale(1)';
+    }, 200);
 }
 
 // Update cart summary only (without reloading items)

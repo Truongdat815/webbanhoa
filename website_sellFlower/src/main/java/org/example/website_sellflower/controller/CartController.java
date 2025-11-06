@@ -35,17 +35,28 @@ public class CartController {
             @RequestParam BigDecimal price,
             @RequestParam Integer quantity,
             @RequestParam String imageUrl,
+            @RequestParam(required = false) String stock,
             HttpSession session) {
         
         Map<String, Object> response = new HashMap<>();
         
         try {
-            // Get product stock from database
+            // Get product stock from database (priority) or from request parameter
             Product product = null;
-            Integer stock = null;
+            Integer productStock = null;
             if (productRepository != null) {
                 product = productRepository.findById(productId).orElse(null);
-                stock = product != null ? product.getStock() : null;
+                productStock = product != null ? product.getStock() : null;
+            }
+            
+            // Use stock from request if database stock is not available
+            Integer stockValue = productStock;
+            if (stockValue == null && stock != null && !stock.equals("null")) {
+                try {
+                    stockValue = Integer.parseInt(stock);
+                } catch (NumberFormatException e) {
+                    // Ignore invalid stock value
+                }
             }
             
             List<CartItemDTO> cart = getCartFromSession(session);
@@ -62,21 +73,21 @@ public class CartController {
             }
             
             // Validate stock
-            if (stock != null && newQuantity > stock) {
+            if (stockValue != null && newQuantity > stockValue) {
                 response.put("success", false);
-                response.put("message", "Số lượng vượt quá tồn kho. Tồn kho hiện có: " + stock);
+                response.put("message", "Số lượng vượt quá tồn kho. Tồn kho hiện có: " + stockValue);
                 return ResponseEntity.badRequest().body(response);
             }
             
             if (existingItem != null) {
                 // Update quantity if product already exists
                 existingItem.setQuantity(newQuantity);
-                if (stock != null) {
-                    existingItem.setStock(stock);
+                if (stockValue != null) {
+                    existingItem.setStock(stockValue);
                 }
             } else {
                 // Add new item to cart
-                CartItemDTO newItem = new CartItemDTO(productId, productName, price, quantity, imageUrl, stock);
+                CartItemDTO newItem = new CartItemDTO(productId, productName, price, quantity, imageUrl, stockValue);
                 cart.add(newItem);
             }
             

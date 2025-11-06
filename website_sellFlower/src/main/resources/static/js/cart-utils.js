@@ -23,14 +23,17 @@ async function updateCartCountInHeader() {
 }
 
 // Add item to cart
-async function addToCart(productId, productName, price, quantity, imageUrl) {
+async function addToCart(productId, productName, price, quantity, imageUrl, stock) {
     try {
+        // Đảm bảo stock là một số hoặc null
+        const validStock = (stock !== null && stock !== undefined) ? stock : 'null';
+        
         const response = await fetch('/cart/api/add', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: `productId=${productId}&productName=${encodeURIComponent(productName)}&price=${price}&quantity=${quantity}&imageUrl=${encodeURIComponent(imageUrl)}`
+            body: `productId=${productId}&productName=${encodeURIComponent(productName)}&price=${price}&quantity=${quantity}&imageUrl=${encodeURIComponent(imageUrl)}&stock=${validStock}`
         });
         
         if (!response.ok) throw new Error('Failed to add to cart');
