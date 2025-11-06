@@ -17,28 +17,10 @@
     display: block;
 }
 
-/* Scrollable container for signup form */
+/* Scrollable container for signup form - removed scrollbar */
 .login-container {
-    max-height: 90vh;
-    overflow-y: auto;
-}
-
-.login-container::-webkit-scrollbar {
-    width: 6px;
-}
-
-.login-container::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 10px;
-}
-
-.login-container::-webkit-scrollbar-thumb {
-    background: #a8b5a0;
-    border-radius: 10px;
-}
-
-.login-container::-webkit-scrollbar-thumb:hover {
-    background: #5a6b54;
+    max-height: none;
+    overflow-y: visible;
 }
 
 /* Error input state */
