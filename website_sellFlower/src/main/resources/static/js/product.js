@@ -206,36 +206,45 @@ function initQuantitySelector() {
 function initAddToCart() {
     const addToCartBtn = document.getElementById('addToCartBtn');
     
-    addToCartBtn.addEventListener('click', function() {
+    addToCartBtn.addEventListener('click', async function() {
         const productData = getProductDataFromURL();
         if (!productData) {
             showToast('Không tìm thấy sản phẩm!', 'warning');
             return;
         }
         
-        const quantity = document.getElementById('productQuantity').value;
+        const quantity = parseInt(document.getElementById('productQuantity').value);
         
-        console.log(`Added ${quantity} x ${productData.name} to cart`);
+        // Disable button during request
+        addToCartBtn.disabled = true;
+        addToCartBtn.textContent = 'Đang thêm...';
         
-        // Update cart count
-        updateCartCount(parseInt(quantity));
-        
-        // Show success toast
-        showToast('Đã thêm vào giỏ hàng!', 'success');
+        try {
+            // Add to cart via API
+            const result = await addToCart(
+                productData.id,
+                productData.name,
+                productData.price,
+                quantity,
+                productData.image || ''
+            );
+            
+            if (result.success) {
+                showToast(result.message || 'Đã thêm vào giỏ hàng!', 'success');
+                // Cart count will be updated automatically by cart-utils.js
+            } else {
+                showToast(result.message || 'Có lỗi xảy ra!', 'warning');
+            }
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+            showToast('Có lỗi xảy ra khi thêm vào giỏ hàng!', 'warning');
+        } finally {
+            // Re-enable button
+            addToCartBtn.disabled = false;
+            const icon = addToCartBtn.querySelector('i');
+            addToCartBtn.innerHTML = icon ? icon.outerHTML + ' Thêm vào giỏ hàng' : 'Thêm vào giỏ hàng';
+        }
     });
-}
-
-// Update cart count
-function updateCartCount(quantity) {
-    const cartCount = document.querySelector('.cart-count');
-    let currentCount = parseInt(cartCount.textContent) || 0;
-    cartCount.textContent = currentCount + quantity;
-    
-    // Animate cart count
-    cartCount.style.transform = 'scale(1.3)';
-    setTimeout(() => {
-        cartCount.style.transform = 'scale(1)';
-    }, 200);
 }
 
 // Show toast notification

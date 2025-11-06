@@ -85,7 +85,7 @@ function animateInput(input) {
 
 // Add to Cart functionality
 document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
+    btn.addEventListener('click', async function(e) {
         e.preventDefault();
 
         // Check if user is logged in
@@ -95,8 +95,16 @@ document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
         }
 
         const productCard = this.closest('.product-card');
-        const productName = productCard.querySelector('.product-name').textContent;
-        const quantity = productCard.querySelector('.qty-input').value;
+        const productId = parseInt(productCard.getAttribute('data-product-id'));
+        const productName = productCard.getAttribute('data-product-name') || productCard.querySelector('.product-name').textContent;
+        const productPrice = parseFloat(productCard.getAttribute('data-product-price')) || 0;
+        const productImage = productCard.getAttribute('data-product-image') || '';
+        const quantity = parseInt(productCard.querySelector('.qty-input').value);
+
+        // Disable button during request
+        const originalText = this.innerHTML;
+        this.disabled = true;
+        this.innerHTML = '<span>Đang thêm...</span>';
 
         // Animate button
         this.style.transform = 'scale(0.95)';
@@ -104,15 +112,24 @@ document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
             this.style.transform = '';
         }, 150);
 
-        // Show toast notification
-        showToast('Đã thêm vào giỏ!');
-
-        // Update cart count
-        updateCartCount(parseInt(quantity));
-
-        // Here you would typically send data to server
-        // For now, we'll just show visual feedback
-        console.log(`Added ${quantity} x ${productName} to cart`);
+        try {
+            // Add to cart via API
+            const result = await addToCart(productId, productName, productPrice, quantity, productImage);
+            
+            if (result.success) {
+                showToast(result.message || 'Đã thêm vào giỏ!');
+                // Cart count will be updated automatically by cart-utils.js
+            } else {
+                showToast(result.message || 'Có lỗi xảy ra!', 'warning');
+            }
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+            showToast('Có lỗi xảy ra khi thêm vào giỏ hàng!', 'warning');
+        } finally {
+            // Re-enable button
+            this.disabled = false;
+            this.innerHTML = originalText;
+        }
     });
 });
 
@@ -148,18 +165,7 @@ function showLoginRequiredMessage() {
     showToast('Vui lòng đăng nhập để tiếp tục', 'warning');
 }
 
-// Update cart count
-function updateCartCount(quantity) {
-    const cartCount = document.getElementById('cartCount');
-    let currentCount = parseInt(cartCount.textContent) || 0;
-    cartCount.textContent = currentCount + quantity;
-
-    // Animate cart count
-    cartCount.style.animation = 'none';
-    setTimeout(() => {
-        cartCount.style.animation = 'pulse 0.5s ease';
-    }, 10);
-}
+// Cart count is now handled by cart-utils.js
 
 // Newsletter form
 const newsletterForm = document.querySelector('.newsletter-form');
@@ -308,7 +314,7 @@ if (modalMinusBtn && modalPlusBtn && modalQtyInput) {
 // Modal Add to Cart button
 const modalAddToCartBtn = document.getElementById('modalAddToCartBtn');
 if (modalAddToCartBtn) {
-    modalAddToCartBtn.addEventListener('click', function(e) {
+    modalAddToCartBtn.addEventListener('click', async function(e) {
         e.preventDefault();
 
         // Check if user is logged in
@@ -318,9 +324,19 @@ if (modalAddToCartBtn) {
         }
 
         const modal = document.getElementById('quickViewModal');
-        const productId = modal.getAttribute('data-current-product-id');
-        const quantity = document.getElementById('modalQuantity').value;
+        const productId = parseInt(modal.getAttribute('data-current-product-id'));
+        const quantity = parseInt(document.getElementById('modalQuantity').value);
         const productName = document.getElementById('modalProductName').textContent;
+        
+        // Get product data from the product card that opened the modal
+        const productCard = document.querySelector(`[data-product-id="${productId}"]`);
+        const productPrice = productCard ? parseFloat(productCard.getAttribute('data-product-price')) || 0 : 0;
+        const productImage = productCard ? productCard.getAttribute('data-product-image') || '' : '';
+
+        // Disable button during request
+        const originalText = this.innerHTML;
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-shopping-cart"></i> Đang thêm...';
 
         // Animate button
         this.style.transform = 'scale(0.95)';
@@ -328,19 +344,29 @@ if (modalAddToCartBtn) {
             this.style.transform = '';
         }, 150);
 
-        // Show toast notification
-        showToast('Đã thêm vào giỏ!');
-
-        // Update cart count
-        updateCartCount(parseInt(quantity));
-
-        // Here you would typically send data to server
-        console.log(`Added ${quantity} x ${productName} (ID: ${productId}) to cart`);
-
-        // Close modal after adding to cart
-        setTimeout(() => {
-            closeQuickViewModal();
-        }, 500);
+        try {
+            // Add to cart via API
+            const result = await addToCart(productId, productName, productPrice, quantity, productImage);
+            
+            if (result.success) {
+                showToast(result.message || 'Đã thêm vào giỏ!');
+                // Cart count will be updated automatically by cart-utils.js
+                
+                // Close modal after adding to cart
+                setTimeout(() => {
+                    closeQuickViewModal();
+                }, 500);
+            } else {
+                showToast(result.message || 'Có lỗi xảy ra!', 'warning');
+            }
+        } catch (error) {
+            console.error('Error adding to cart:', error);
+            showToast('Có lỗi xảy ra khi thêm vào giỏ hàng!', 'warning');
+        } finally {
+            // Re-enable button
+            this.disabled = false;
+            this.innerHTML = originalText;
+        }
     });
 }
 

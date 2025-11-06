@@ -159,6 +159,12 @@ a {
     align-items: center;
     gap: 8px;
     color: #2c2c2c;
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.cart-icon-wrapper:hover {
+    color: #FF8FA3;
 }
 
 .cart-count {

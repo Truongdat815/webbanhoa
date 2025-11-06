@@ -155,35 +155,39 @@ function initProductInteractions() {
     // Add to cart buttons
     const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
     addToCartButtons.forEach(btn => {
-        btn.addEventListener('click', function(e) {
+        btn.addEventListener('click', async function(e) {
             e.stopPropagation();
             const productCard = this.closest('.product-card');
-            const productId = productCard.getAttribute('data-product-id');
+            const productId = parseInt(productCard.getAttribute('data-product-id'));
             const productName = productCard.getAttribute('data-product-name');
-            const quantity = productCard.querySelector('.qty-input').value;
+            const productPrice = parseFloat(productCard.getAttribute('data-product-price')) || 0;
+            const productImage = productCard.getAttribute('data-product-image') || '';
+            const quantity = parseInt(productCard.querySelector('.qty-input').value);
             
-            console.log(`Added ${quantity} x ${productName} to cart`);
+            // Disable button during request
+            const originalText = this.innerHTML;
+            this.disabled = true;
+            this.innerHTML = '<span>Đang thêm...</span>';
             
-            // Update cart count
-            updateCartCount(parseInt(quantity));
+            try {
+                const result = await addToCart(productId, productName, productPrice, quantity, productImage);
+                if (result.success) {
+                    alert('Đã thêm vào giỏ hàng!');
+                } else {
+                    alert(result.message || 'Có lỗi xảy ra!');
+                }
+            } catch (error) {
+                console.error('Error adding to cart:', error);
+                alert('Có lỗi xảy ra khi thêm vào giỏ hàng!');
+            } finally {
+                this.disabled = false;
+                this.innerHTML = originalText;
+            }
         });
     });
 }
 
-// Update cart count
-function updateCartCount(quantity) {
-    const cartCount = document.getElementById('cartCount') || document.querySelector('.cart-count');
-    if (cartCount) {
-        let currentCount = parseInt(cartCount.textContent) || 0;
-        cartCount.textContent = currentCount + quantity;
-        
-        // Animate cart count
-        cartCount.style.transform = 'scale(1.3)';
-        setTimeout(() => {
-            cartCount.style.transform = 'scale(1)';
-        }, 200);
-    }
-}
+// Cart count is now handled by cart-utils.js
 
 // Quick view modal function - opens modal instead of redirecting
 function openQuickViewModal(productCard) {
