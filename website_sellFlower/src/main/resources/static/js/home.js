@@ -8,6 +8,27 @@ window.addEventListener('scroll', function() {
     }
 });
 
+// Sync quantity selector width with product image width
+function syncQuantitySelectorWidth() {
+    document.querySelectorAll('.product-card').forEach(card => {
+        const imageContainer = card.querySelector('.product-image-container');
+        const quantitySelector = card.querySelector('.quantity-selector');
+
+        if (imageContainer && quantitySelector) {
+            const imageWidth = imageContainer.offsetWidth;
+            quantitySelector.style.width = imageWidth + 'px';
+            quantitySelector.style.maxWidth = imageWidth + 'px';
+        }
+    });
+}
+
+// Sync on page load
+window.addEventListener('load', syncQuantitySelectorWidth);
+// Sync on window resize
+window.addEventListener('resize', syncQuantitySelectorWidth);
+// Initial sync
+setTimeout(syncQuantitySelectorWidth, 100);
+
 // Quantity selector
 document.querySelectorAll('.quantity-selector').forEach(selector => {
     const minusBtn = selector.querySelector('.minus-btn');
@@ -37,7 +58,7 @@ document.querySelectorAll('.quantity-selector').forEach(selector => {
     qtyInput.addEventListener('change', function() {
         const min = parseInt(this.getAttribute('min')) || 1;
         const max = parseInt(this.getAttribute('max'));
-        
+
         if (this.value < min) {
             this.value = min;
         } else if (max && this.value > max) {
@@ -58,17 +79,17 @@ function animateInput(input) {
 document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
     btn.addEventListener('click', function(e) {
         e.preventDefault();
-        
+
         // Check if user is logged in
         if (!isUserLoggedIn()) {
             showLoginRequiredMessage();
             return;
         }
-        
+
         const productCard = this.closest('.product-card');
         const productName = productCard.querySelector('.product-name').textContent;
         const quantity = productCard.querySelector('.qty-input').value;
-        
+
         // Animate button
         this.style.transform = 'scale(0.95)';
         setTimeout(() => {
@@ -92,15 +113,15 @@ function showToast(message, type = 'success') {
     const toast = document.getElementById('toast');
     const toastSpan = toast.querySelector('span');
     toastSpan.textContent = message;
-    
+
     // Remove existing type classes
     toast.classList.remove('warning', 'error', 'success');
-    
+
     // Add type class if not success
     if (type !== 'success') {
         toast.classList.add(type);
     }
-    
+
     toast.classList.add('show');
 
     setTimeout(() => {
@@ -124,7 +145,7 @@ function updateCartCount(quantity) {
     const cartCount = document.getElementById('cartCount');
     let currentCount = parseInt(cartCount.textContent) || 0;
     cartCount.textContent = currentCount + quantity;
-    
+
     // Animate cart count
     cartCount.style.animation = 'none';
     setTimeout(() => {
@@ -133,15 +154,18 @@ function updateCartCount(quantity) {
 }
 
 // Newsletter form
-document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    const email = this.querySelector('input[type="email"]').value;
-    
-    if (email) {
-        showToast('Đăng ký thành công!');
-        this.reset();
-    }
-});
+const newsletterForm = document.querySelector('.newsletter-form');
+if (newsletterForm) {
+    newsletterForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = this.querySelector('input[type="email"]').value;
+
+        if (email) {
+            showToast('Đăng ký thành công!');
+            this.reset();
+        }
+    });
+}
 
 // Quick view button functionality
 document.querySelectorAll('.quick-view-btn').forEach(btn => {
@@ -155,34 +179,34 @@ document.querySelectorAll('.quick-view-btn').forEach(btn => {
 // Open Quick View Modal
 function openQuickViewModal(productCard) {
     const modal = document.getElementById('quickViewModal');
-    
+
     // Lấy dữ liệu từ data attributes để đảm bảo chính xác
     const productId = productCard.getAttribute('data-product-id');
     const productName = productCard.getAttribute('data-product-name');
     const productPrice = productCard.getAttribute('data-product-price');
     const productImage = productCard.getAttribute('data-product-image');
-    
+
     // Lấy max stock từ quantity input của product card
     const qtyInput = productCard.querySelector('.qty-input');
     const maxStock = qtyInput ? qtyInput.getAttribute('max') : null;
-    
+
     // Fill modal with product data
     document.getElementById('modalProductImage').src = productImage;
     document.getElementById('modalProductName').textContent = productName;
     document.getElementById('modalProductPrice').textContent = productPrice;
     const modalQtyInput = document.getElementById('modalQuantity');
     modalQtyInput.value = '1';
-    
+
     // Set max stock cho modal quantity input
     if (maxStock) {
         modalQtyInput.setAttribute('max', maxStock);
     } else {
         modalQtyInput.removeAttribute('max');
     }
-    
+
     // Lưu product ID vào modal để có thể dùng khi thêm vào giỏ hàng
     modal.setAttribute('data-current-product-id', productId);
-    
+
     // Show modal
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
@@ -192,7 +216,7 @@ function openQuickViewModal(productCard) {
 function closeQuickViewModal() {
     const modal = document.getElementById('quickViewModal');
     const modalBody = modal.querySelector('.modal-body');
-    
+
     // Reset modal body opacity for smooth close animation
     if (modalBody) {
         modalBody.style.animation = 'none';
@@ -200,10 +224,10 @@ function closeQuickViewModal() {
             modalBody.style.animation = '';
         }, 10);
     }
-    
+
     // Remove active class to trigger close animation
     modal.classList.remove('active');
-    
+
     // Wait for animation to complete before allowing body scroll
     setTimeout(() => {
         if (!modal.classList.contains('active')) {
@@ -263,7 +287,7 @@ if (modalMinusBtn && modalPlusBtn && modalQtyInput) {
     modalQtyInput.addEventListener('change', function() {
         const min = parseInt(this.getAttribute('min')) || 1;
         const max = parseInt(this.getAttribute('max'));
-        
+
         if (this.value < min) {
             this.value = min;
         } else if (max && this.value > max) {
@@ -278,18 +302,18 @@ const modalAddToCartBtn = document.getElementById('modalAddToCartBtn');
 if (modalAddToCartBtn) {
     modalAddToCartBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        
+
         // Check if user is logged in
         if (!isUserLoggedIn()) {
             showLoginRequiredMessage();
             return;
         }
-        
+
         const modal = document.getElementById('quickViewModal');
         const productId = modal.getAttribute('data-current-product-id');
         const quantity = document.getElementById('modalQuantity').value;
         const productName = document.getElementById('modalProductName').textContent;
-        
+
         // Animate button
         this.style.transform = 'scale(0.95)';
         setTimeout(() => {
@@ -304,7 +328,7 @@ if (modalAddToCartBtn) {
 
         // Here you would typically send data to server
         console.log(`Added ${quantity} x ${productName} (ID: ${productId}) to cart`);
-        
+
         // Close modal after adding to cart
         setTimeout(() => {
             closeQuickViewModal();
@@ -326,3 +350,147 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
+// Product Tabs Functionality
+document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const tabId = this.getAttribute('data-tab');
+
+        // Remove active class from all tabs
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+        // Add active class to clicked tab
+        this.classList.add('active');
+        document.getElementById(tabId).classList.add('active');
+
+        // Reset carousel position when switching tabs
+        if (tabId === 'new-arrival') {
+            resetNewArrivalCarousel();
+        }
+    });
+});
+
+// New Arrival Carousel Functionality
+function initNewArrivalCarousel() {
+    const track = document.getElementById('newArrivalTrack');
+    const prevBtn = document.getElementById('newArrivalPrev');
+    const nextBtn = document.getElementById('newArrivalNext');
+    const container = track?.closest('.carousel-container');
+    const grid = track?.querySelector('.carousel-grid');
+    const productCards = grid?.querySelectorAll('.product-card');
+
+    if (!track || !prevBtn || !nextBtn || !container || !productCards || productCards.length === 0) {
+        return;
+    }
+
+    const productsPerView = 3;
+    const totalProducts = productCards.length;
+    const maxSlide = Math.max(0, totalProducts - productsPerView);
+    let currentSlide = 0;
+
+    // Calculate slide distance (1 product card width + gap)
+    function calculateSlideDistance() {
+        if (productCards.length === 0) return 0;
+        // Wait for layout to complete
+        const cardWidth = productCards[0].offsetWidth;
+        const gap = 40; // gap from CSS
+        return cardWidth + gap;
+    }
+
+    function updateCarousel() {
+        const slideDistance = calculateSlideDistance();
+        const transformX = -currentSlide * slideDistance;
+        track.style.transform = `translateX(${transformX}px)`;
+
+        // Update button states
+        if (prevBtn && nextBtn) {
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide >= maxSlide;
+        }
+    }
+
+    function nextSlide() {
+        if (currentSlide < maxSlide) {
+            currentSlide++;
+            updateCarousel();
+        }
+    }
+
+    function prevSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            updateCarousel();
+        }
+    }
+
+    // Add event listeners (only once)
+    nextBtn.onclick = nextSlide;
+    prevBtn.onclick = prevSlide;
+
+    // Initialize
+    setTimeout(() => {
+        updateCarousel();
+    }, 100);
+
+    // Store functions for reset
+    window.newArrivalCarousel = {
+        reset: function() {
+            currentSlide = 0;
+            updateCarousel();
+        },
+        update: updateCarousel,
+        next: nextSlide,
+        prev: prevSlide
+    };
+}
+
+function resetNewArrivalCarousel() {
+    if (window.newArrivalCarousel && window.newArrivalCarousel.reset) {
+        window.newArrivalCarousel.reset();
+    }
+}
+
+// Initialize carousel on page load
+window.addEventListener('DOMContentLoaded', function() {
+    initNewArrivalCarousel();
+    
+    // Initialize hero banner carousel
+    initHeroBannerCarousel();
+});
+
+// Hero Banner Carousel
+function initHeroBannerCarousel() {
+    const slides = document.querySelectorAll('.hero-slide');
+    if (slides.length === 0) return;
+    
+    let currentSlide = 0;
+    
+    function showSlide(index) {
+        slides.forEach((slide, i) => {
+            slide.classList.remove('active');
+            if (i === index) {
+                slide.classList.add('active');
+            }
+        });
+    }
+    
+    function nextSlide() {
+        currentSlide = (currentSlide + 1) % slides.length;
+        showSlide(currentSlide);
+    }
+    
+    // Auto play every 5 seconds
+    setInterval(nextSlide, 5000);
+    
+    // Initialize first slide
+    showSlide(0);
+}
+
+// Reinitialize on window resize
+let resizeTimer;
+window.addEventListener('resize', function() {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function() {
+        initNewArrivalCarousel();
+    }, 250);
+});
