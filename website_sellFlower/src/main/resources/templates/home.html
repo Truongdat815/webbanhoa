@@ -1,81 +1,440 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang chủ - BLOOMORA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="/home.css">
+    <link rel="stylesheet" href="css/home.css">
 </head>
 <body>
-    <!-- Top Banner -->
-    <div class="top-banner">
-        <p>MIỄN PHÍ VẬN CHUYỂN CHO ĐƠN HÀNG TRÊN 500.000₫</p>
+
+
+<!-- Top Banner -->
+<div class="top-banner">
+    <p>MIỄN PHÍ VẬN CHUYỂN CHO ĐƠN HÀNG TRÊN 500.000₫</p>
+</div>
+
+<!-- Header -->
+<header class="header">
+    <div class="logo">
+        <div class="logo-box">BLOOMORA</div>
     </div>
-
-    <!-- Header -->
-    <header class="header">
-        <nav class="nav-links">
-            <a href="/home">TẤT CẢ SẢN PHẨM</a>
-            <a href="/home#body">CHO CƠ THỂ</a>
-            <a href="/home#home">CHO GIA ĐÌNH</a>
-            <a href="/about">GIỚI THIỆU</a>
-            <a href="/contact">LIÊN HỆ</a>
-        </nav>
-        <div class="logo">
-            <div class="logo-box">BLOOMORA</div>
+    <nav class="nav-links">
+        <a href="/home">Home</a>
+        <a href="/shop">Shop</a>
+        <a href="/about">About Us</a>
+        <a href="/news">News</a>
+        <a href="/contact">Contact</a>
+    </nav>
+    <div class="utility-nav">
+        <div class="search-container">
+            <input type="text" placeholder="Search..." class="search-input">
+            <i class="fas fa-search search-icon"></i>
         </div>
-        <div class="utility-nav">
-            <div class="search-container">
-                <input type="text" placeholder="Tìm kiếm..." class="search-input">
-                <i class="fas fa-search search-icon"></i>
+        <a href="/login" class="user-link">
+            <i class="fas fa-user"></i>
+            <span>Sign in</span>
+        </a>
+        <a href="/cart" class="cart-link">
+            <i class="fas fa-shopping-bag"></i>
+            <span class="cart-count" id="cartCount">0</span>
+        </a>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="main-content" data-is-logged-in="false">
+    <!-- Hero Banner Carousel -->
+    <section class="hero-banner-section">
+        <div class="hero-banner-carousel">
+            <div class="hero-slide active">
+                <div class="hero-content">
+                    <span class="hero-category">Flower & Gift</span>
+                    <h1 class="hero-title">Get Up To 75%</h1>
+                    <p class="hero-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
+                    <a href="#products" class="hero-shop-btn">Shop Now</a>
+                </div>
             </div>
-            <!-- th:if="${!isLoggedIn}" là điều kiện để hiển thị link đăng nhập nếu người dùng chưa đăng nhập -->
-            <a href="/login" class="user-link" th:if="${!isLoggedIn}">
-                <i class="fas fa-user"></i>
-                <span>Đăng nhập</span>
-            </a>
-            <a href="/account" class="user-link" th:if="${isLoggedIn}">
-                <i class="fas fa-user"></i>
-                <span th:text="${userName}">Tên người dùng</span>
-            </a>
-            <a href="/cart" class="cart-link">
-                <i class="fas fa-shopping-bag"></i>
-                <span class="cart-count" id="cartCount">0</span>
-            </a>
+            <div class="hero-slide">
+                <div class="hero-content">
+                    <span class="hero-category">Flower & Gift</span>
+                    <h1 class="hero-title">Get Up To 75%</h1>
+                    <p class="hero-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>
+                    <a href="#products" class="hero-shop-btn">Shop Now</a>
+                </div>
+            </div>
         </div>
-    </header>
+    </section>
 
-    <!-- Main Content -->
-    <main class="main-content" th:attr="data-is-logged-in=${isLoggedIn}">
-        <section class="hero-section">
-            <h1 class="page-title">TẤT CẢ SẢN PHẨM</h1>
-            <p class="page-subtitle">Được làm từ nguyên liệu tự nhiên và hữu cơ</p>
-        </section>
+    <!-- Product Tabs Section -->
+    <section class="product-tabs-section" id="products">
+        <div class="container">
+            <div class="section-header">
+                <div class="product-tabs">
+                    <button class="tab-btn active" data-tab="new-arrival">new arrival</button>
+                    <button class="tab-btn" data-tab="top-sales">top sales</button>
+                    <button class="tab-btn" data-tab="off-sales">off sales</button>
+                </div>
+            </div>
 
-        <section class="products-section">
+            <!-- New Arrival Tab -->
+            <div class="tab-content active" id="new-arrival">
+                <div class="product-carousel">
+                    <button class="carousel-nav-btn prev-btn" id="newArrivalPrev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="carousel-container">
+                        <div class="carousel-track" id="newArrivalTrack">
+                            <div class="products-grid carousel-grid">
+                                <!-- Product 1 -->
+                                <div class="product-card" data-product-id="1" data-product-name="Pink Flower Tree" data-product-price="180000" data-product-image="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400" data-product-stock="50">
+                                    <div class="product-badge">
+                                        <span class="badge-text">10%</span>
+                                    </div>
+                                    <div class="product-image-container">
+                                        <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400" alt="Pink Flower Tree" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Pink Flower Tree</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">$18.00</span>
+                                            <span class="product-price-old">$21.00</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="50" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Product 2 -->
+                                <div class="product-card" data-product-id="2" data-product-name="Premium Joyful" data-product-price="180000" data-product-image="https://images.unsplash.com/photo-1520763185298-1b434c919102?w=400" data-product-stock="30">
+                                    <div class="product-badge hot-badge">
+                                        <span class="badge-text">Hot</span>
+                                    </div>
+                                    <div class="product-image-container">
+                                        <img src="https://images.unsplash.com/photo-1520763185298-1b434c919102?w=400" alt="Premium Joyful" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Premium Joyful</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">$18.00</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="30" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Product 3 -->
+                                <div class="product-card" data-product-id="3" data-product-name="The White Rose" data-product-price="160000" data-product-image="https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=400" data-product-stock="40">
+                                    <div class="product-badge sale-badge">
+                                        <span class="badge-text">12%</span>
+                                    </div>
+                                    <div class="product-image-container">
+                                        <img src="https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=400" alt="The White Rose" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">The White Rose</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">$16.00</span>
+                                            <span class="product-price-old">$19.00</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="40" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Product 4 -->
+                                <div class="product-card" data-product-id="4" data-product-name="Red Rose Bouquet" data-product-price="200000" data-product-image="https://images.unsplash.com/photo-1563241529-0c3e8b3d3e3f?w=400" data-product-stock="25">
+                                    <div class="product-badge hot-badge">
+                                        <span class="badge-text">Hot</span>
+                                    </div>
+                                    <div class="product-image-container">
+                                        <img src="https://images.unsplash.com/photo-1563241529-0c3e8b3d3e3f?w=400" alt="Red Rose Bouquet" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Red Rose Bouquet</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">$20.00</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="25" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Product 5 -->
+                                <div class="product-card" data-product-id="5" data-product-name="Heart's Desire" data-product-price="150000" data-product-image="https://images.unsplash.com/photo-1606041008023-472dfb5e530f?w=400" data-product-stock="60">
+                                    <div class="product-badge hot-badge">
+                                        <span class="badge-text">Hot</span>
+                                    </div>
+                                    <div class="product-image-container">
+                                        <img src="https://images.unsplash.com/photo-1606041008023-472dfb5e530f?w=400" alt="Heart's Desire" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Heart's Desire</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">$15.00</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="60" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Product 6 -->
+                                <div class="product-card" data-product-id="6" data-product-name="Red Rose Bouquet" data-product-price="200000" data-product-image="https://images.unsplash.com/photo-1597848212624-e593b98b8c9a?w=400" data-product-stock="35">
+                                    <div class="product-badge hot-badge">
+                                        <span class="badge-text">Hot</span>
+                                    </div>
+                                    <div class="product-image-container">
+                                        <img src="https://images.unsplash.com/photo-1597848212624-e593b98b8c9a?w=400" alt="Red Rose Bouquet" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Red Rose Bouquet</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">$20.00</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="35" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Product 7 -->
+                                <div class="product-card" data-product-id="7" data-product-name="Heart's Desire" data-product-price="150000" data-product-image="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400" data-product-stock="20">
+                                    <div class="product-badge hot-badge">
+                                        <span class="badge-text">Hot</span>
+                                    </div>
+                                    <div class="product-image-container">
+                                        <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400" alt="Heart's Desire" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Heart's Desire</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">$15.00</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="20" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Product 8 -->
+                                <div class="product-card" data-product-id="8" data-product-name="Pink Flower Tree" data-product-price="180000" data-product-image="https://images.unsplash.com/photo-1518621012428-4ae49baa3d23?w=400" data-product-stock="28">
+                                    <div class="product-badge">
+                                        <span class="badge-text">10%</span>
+                                    </div>
+                                    <div class="product-image-container">
+                                        <img src="https://images.unsplash.com/photo-1518621012428-4ae49baa3d23?w=400" alt="Pink Flower Tree" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Pink Flower Tree</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">$18.00</span>
+                                            <span class="product-price-old">$21.00</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="28" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-nav-btn next-btn" id="newArrivalNext">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Top Sales Tab -->
+            <div class="tab-content" id="top-sales">
+                <div class="product-carousel">
+                    <button class="carousel-nav-btn prev-btn" id="topSalesPrev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="carousel-container">
+                        <div class="carousel-track" id="topSalesTrack">
+                            <div class="products-grid carousel-grid">
+                                <!-- Top Sales Products - Same structure as New Arrival -->
+                                <div class="product-card" data-product-id="9" data-product-name="Premium Joyful" data-product-price="180000" data-product-image="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400" data-product-stock="45">
+                                    <div class="product-badge hot-badge">
+                                        <span class="badge-text">Hot</span>
+                                    </div>
+                                    <div class="product-image-container">
+                                        <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400" alt="Premium Joyful" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Premium Joyful</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">$18.00</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="45" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Add more top sales products here -->
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-nav-btn next-btn" id="topSalesNext">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Off Sales Tab -->
+            <div class="tab-content" id="off-sales">
+                <div class="product-carousel">
+                    <button class="carousel-nav-btn prev-btn" id="offSalesPrev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="carousel-container">
+                        <div class="carousel-track" id="offSalesTrack">
+                            <div class="products-grid carousel-grid">
+                                <!-- Off Sales Products - Same structure -->
+                                <div class="product-card" data-product-id="10" data-product-name="The White Rose" data-product-price="160000" data-product-image="https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=400" data-product-stock="32">
+                                    <div class="product-badge sale-badge">
+                                        <span class="badge-text">12%</span>
+                                    </div>
+                                    <div class="product-image-container">
+                                        <img src="https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=400" alt="The White Rose" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">The White Rose</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">$16.00</span>
+                                            <span class="product-price-old">$19.00</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="32" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Add more off sales products here -->
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-nav-btn next-btn" id="offSalesNext">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Products Section -->
+    <section class="top-products-section">
+        <div class="container">
+            <h2 class="section-title">top products</h2>
             <div class="products-grid">
-                <!-- Products -->
-                <div class="product-card" 
-                     th:each="product : ${products}"
-                     th:attr="data-product-id=${product.id},
-                              data-product-name=${product.productName},
-                              data-product-price=${product.price},
-                              data-product-image=${product.imageUrl}">
+                <!-- Top Product 1 -->
+                <div class="product-card" data-product-id="11" data-product-name="Pink Flower Tree" data-product-price="180000" data-product-image="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400" data-product-stock="50">
+                    <div class="product-badge">
+                        <span class="badge-text">10%</span>
+                    </div>
                     <div class="product-image-container">
-                        <img th:src="${product.imageUrl}" 
-                             th:alt="${product.productName}" 
-                             class="product-image">
+                        <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400" alt="Pink Flower Tree" class="product-image">
                         <div class="product-overlay">
                             <button class="quick-view-btn">Xem nhanh</button>
                         </div>
                     </div>
                     <div class="product-info">
-                        <h3 class="product-name" th:text="${product.productName}">Product Name</h3>
-                        <p class="product-price" th:text="${product.price}">Product Price</p>
+                        <h3 class="product-name">Pink Flower Tree</h3>
+                        <div class="product-price-container">
+                            <span class="product-price">$18.00</span>
+                            <span class="product-price-old">$21.00</span>
+                        </div>
                         <div class="quantity-selector">
                             <button class="qty-btn minus-btn">-</button>
-                            <input type="number" value="1" min="1" class="qty-input">
+                            <input type="number" value="1" min="1" max="50" class="qty-input">
                             <button class="qty-btn plus-btn">+</button>
                         </div>
                         <button class="add-to-cart-btn">
@@ -84,98 +443,289 @@
                         </button>
                     </div>
                 </div>
-
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <div class="footer-column">
-                <h4>BLOOMORA</h4>
-                <ul>
-                    <li><a href="/home">TẤT CẢ SẢN PHẨM</a></li>
-                    <li><a href="/home#body">CHO CƠ THỂ</a></li>
-                    <li><a href="/home#home">CHO GIA ĐÌNH</a></li>
-                    <li><a href="/about">GIỚI THIỆU</a></li>
-                    <li><a href="/contact">LIÊN HỆ</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>TRỢ GIÚP</h4>
-                <ul>
-                    <li><a href="/shipping">VẬN CHUYỂN & ĐỔI TRẢ</a></li>
-                    <li><a href="/policy">CHÍNH SÁCH CỬA HÀNG</a></li>
-                    <li><a href="/payment">PHƯƠNG THỨC THANH TOÁN</a></li>
-                    <li><a href="/faq">Câu hỏi thường gặp</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>LIÊN HỆ</h4>
-                <ul>
-                    <li><a href="tel:19001234">1900 1234</a></li>
-                    <li><a href="mailto:info@bloomora.com">INFO@BLOOMORA.COM</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h4>BẢN TIN</h4>
-                <form class="newsletter-form">
-                    <label for="newsletter-email">Email</label>
-                    <input type="email" id="newsletter-email" placeholder="Nhập Email *" required>
-                    <button type="submit" class="subscribe-btn">
-                        <span>ĐĂNG KÝ</span>
-                    </button>
-                </form>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <div class="social-icons">
-                <a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social-icon" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
-            </div>
-            <p class="copyright">© 2024 by BLOOMORA. Thiết kế với tình yêu hoa</p>
-        </div>
-    </footer>
-
-    <!-- Add to Cart Success Toast -->
-    <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
-        <span>Đã thêm vào giỏ!</span>
-    </div>
-
-    <!-- Quick View Modal -->
-    <div class="quick-view-modal" id="quickViewModal">
-        <div class="modal-overlay"></div>
-        <div class="modal-content">
-            <button class="modal-close-btn" id="modalCloseBtn">
-                <i class="fas fa-times"></i>
-            </button>
-            <div class="modal-body">
-                <div class="modal-product-image">
-                    <img id="modalProductImage" src="" alt="Sản phẩm">
-                    <p class="quick-view-label">Quick View</p>
-                </div>
-                <div class="modal-product-info">
-                    <h2 class="modal-product-name" id="modalProductName"></h2>
-                    <p class="modal-product-price" id="modalProductPrice"></p>
-                    <div class="modal-quantity-section">
-                        <div class="modal-quantity-selector" id="modalQuantitySelector">
-                            <button class="modal-qty-btn modal-minus-btn">-</button>
-                            <input type="number" id="modalQuantity" value="1" min="1" class="modal-qty-input">
-                            <button class="modal-qty-btn modal-plus-btn">+</button>
+                <!-- Top Product 2 -->
+                <div class="product-card" data-product-id="12" data-product-name="Premium Joyful" data-product-price="180000" data-product-image="https://images.unsplash.com/photo-1520763185298-1b434c919102?w=400" data-product-stock="30">
+                    <div class="product-badge hot-badge">
+                        <span class="badge-text">Hot</span>
+                    </div>
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1520763185298-1b434c919102?w=400" alt="Premium Joyful" class="product-image">
+                        <div class="product-overlay">
+                            <button class="quick-view-btn">Xem nhanh</button>
                         </div>
                     </div>
-                    <button class="modal-add-to-cart-btn" id="modalAddToCartBtn">
-                        Thêm vào giỏ hàng
-                    </button>
+                    <div class="product-info">
+                        <h3 class="product-name">Premium Joyful</h3>
+                        <div class="product-price-container">
+                            <span class="product-price">$18.00</span>
+                        </div>
+                        <div class="quantity-selector">
+                            <button class="qty-btn minus-btn">-</button>
+                            <input type="number" value="1" min="1" max="30" class="qty-input">
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">
+                            <span>THÊM VÀO GIỎ</span>
+                            <i class="fas fa-shopping-bag"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- Top Product 3 -->
+                <div class="product-card" data-product-id="13" data-product-name="The White Rose" data-product-price="160000" data-product-image="https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=400" data-product-stock="40">
+                    <div class="product-badge sale-badge">
+                        <span class="badge-text">12%</span>
+                    </div>
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=400" alt="The White Rose" class="product-image">
+                        <div class="product-overlay">
+                            <button class="quick-view-btn">Xem nhanh</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">The White Rose</h3>
+                        <div class="product-price-container">
+                            <span class="product-price">$16.00</span>
+                            <span class="product-price-old">$19.00</span>
+                        </div>
+                        <div class="quantity-selector">
+                            <button class="qty-btn minus-btn">-</button>
+                            <input type="number" value="1" min="1" max="40" class="qty-input">
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">
+                            <span>THÊM VÀO GIỎ</span>
+                            <i class="fas fa-shopping-bag"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- Top Product 4 -->
+                <div class="product-card" data-product-id="14" data-product-name="Red Rose Bouquet" data-product-price="200000" data-product-image="https://images.unsplash.com/photo-1563241529-0c3e8b3d3e3f?w=400" data-product-stock="25">
+                    <div class="product-badge hot-badge">
+                        <span class="badge-text">Hot</span>
+                    </div>
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1563241529-0c3e8b3d3e3f?w=400" alt="Red Rose Bouquet" class="product-image">
+                        <div class="product-overlay">
+                            <button class="quick-view-btn">Xem nhanh</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Red Rose Bouquet</h3>
+                        <div class="product-price-container">
+                            <span class="product-price">$20.00</span>
+                        </div>
+                        <div class="quantity-selector">
+                            <button class="qty-btn minus-btn">-</button>
+                            <input type="number" value="1" min="1" max="25" class="qty-input">
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">
+                            <span>THÊM VÀO GIỎ</span>
+                            <i class="fas fa-shopping-bag"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- Top Product 5 -->
+                <div class="product-card" data-product-id="15" data-product-name="Heart's Desire" data-product-price="150000" data-product-image="https://images.unsplash.com/photo-1606041008023-472dfb5e530f?w=400" data-product-stock="60">
+                    <div class="product-badge hot-badge">
+                        <span class="badge-text">Hot</span>
+                    </div>
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1606041008023-472dfb5e530f?w=400" alt="Heart's Desire" class="product-image">
+                        <div class="product-overlay">
+                            <button class="quick-view-btn">Xem nhanh</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Heart's Desire</h3>
+                        <div class="product-price-container">
+                            <span class="product-price">$15.00</span>
+                        </div>
+                        <div class="quantity-selector">
+                            <button class="qty-btn minus-btn">-</button>
+                            <input type="number" value="1" min="1" max="60" class="qty-input">
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">
+                            <span>THÊM VÀO GIỎ</span>
+                            <i class="fas fa-shopping-bag"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
 
-    <script src="/js/home.js"></script>
+    <!-- Benefits Section -->
+    <section class="benefits-section">
+        <div class="container">
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h3 class="benefit-title">Free shipping</h3>
+                    <p class="benefit-text">On all orders over $49.00</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-undo"></i>
+                    </div>
+                    <h3 class="benefit-title">15 days returns</h3>
+                    <p class="benefit-text">Moneyback guarantee</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3 class="benefit-title">Secure checkout</h3>
+                    <p class="benefit-text">Protected by Paypal</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h3 class="benefit-title">Offer & gift here</h3>
+                    <p class="benefit-text">On all orders over</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Brands Section -->
+    <section class="brands-section">
+        <div class="container">
+            <div class="brands-grid">
+                <div class="brand-item">
+                    <div class="brand-logo">Brand Logo</div>
+                </div>
+                <div class="brand-item">
+                    <div class="brand-logo">Brand Logo</div>
+                </div>
+                <div class="brand-item">
+                    <div class="brand-logo">Brand Logo</div>
+                </div>
+                <div class="brand-item">
+                    <div class="brand-logo">Brand Logo</div>
+                </div>
+                <div class="brand-item">
+                    <div class="brand-logo">Brand Logo</div>
+                </div>
+                <div class="brand-item">
+                    <div class="brand-logo">Brand Logo</div>
+                </div>
+                <div class="brand-item">
+                    <div class="brand-logo">Brand Logo</div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <div class="footer-column">
+            <h4>My Account</h4>
+            <ul>
+                <li><a href="/account">My account</a></li>
+                <li><a href="/checkout">Checkout</a></li>
+                <li><a href="/contact">Contact us</a></li>
+                <li><a href="/cart">Shopping Cart</a></li>
+                <li><a href="/wishlist">Wishlist</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h4>Quick Links</h4>
+            <ul>
+                <li><a href="/location">Store Location</a></li>
+                <li><a href="/tracking">Orders Tracking</a></li>
+                <li><a href="/size-guide">Size Guide</a></li>
+                <li><a href="/account">My account</a></li>
+                <li><a href="/faq">FAQs</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h4>Information</h4>
+            <ul>
+                <li><a href="/privacy">Privacy Page</a></li>
+                <li><a href="/about">About us</a></li>
+                <li><a href="/careers">Careers</a></li>
+                <li><a href="/delivery">Delivery Information</a></li>
+                <li><a href="/terms">Term & Conditions</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h4>Customer Service</h4>
+            <ul>
+                <li><a href="/shipping">Shipping Policy</a></li>
+                <li><a href="/contact">Help & Contact Us</a></li>
+                <li><a href="/returns">Returns & Refunds</a></li>
+                <li><a href="/stores">Online Stores</a></li>
+                <li><a href="/terms">Terms and Conditions</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h4>About Our Shop</h4>
+            <div class="footer-logo">BLOOMORA</div>
+            <p class="footer-description">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmo incididunt ut labore et dolore</p>
+            <div class="footer-contact">
+                <p><i class="fas fa-map-marker-alt"></i> Brooklyn, New York, United States</p>
+                <p><i class="fas fa-phone"></i> +0123-456789</p>
+                <p><i class="fas fa-envelope"></i> example@example.com</p>
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="payment-methods">
+            <img src="https://via.placeholder.com/200x30?text=Payment+Methods" alt="Payment Methods" class="payment-image">
+        </div>
+        <p class="copyright">© - Just For You</p>
+        <div class="footer-links">
+            <a href="/terms">Terms & Conditions</a>
+            <a href="/claim">Claim</a>
+            <a href="/privacy">Privacy & Policy</a>
+        </div>
+    </div>
+</footer>
+
+<!-- Add to Cart Success Toast -->
+<div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span>Đã thêm vào giỏ!</span>
+</div>
+
+<!-- Quick View Modal -->
+<div class="quick-view-modal" id="quickViewModal">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+        <button class="modal-close-btn" id="modalCloseBtn">
+            <i class="fas fa-times"></i>
+        </button>
+        <div class="modal-body">
+            <div class="modal-product-image">
+                <img id="modalProductImage" src="" alt="Sản phẩm">
+                <p class="quick-view-label">Quick View</p>
+            </div>
+            <div class="modal-product-info">
+                <h2 class="modal-product-name" id="modalProductName"></h2>
+                <p class="modal-product-price" id="modalProductPrice"></p>
+                <div class="modal-quantity-section">
+                    <div class="modal-quantity-selector" id="modalQuantitySelector">
+                        <button class="modal-qty-btn modal-minus-btn">-</button>
+                        <input type="number" id="modalQuantity" value="1" min="1" class="modal-qty-input">
+                        <button class="modal-qty-btn modal-plus-btn">+</button>
+                    </div>
+                </div>
+                <button class="modal-add-to-cart-btn" id="modalAddToCartBtn">
+                    Thêm vào giỏ hàng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/home.js"></script>
 </body>
 </html>
 
