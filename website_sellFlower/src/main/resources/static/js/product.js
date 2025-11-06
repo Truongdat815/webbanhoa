@@ -1,19 +1,91 @@
-// Get product ID from URL parameters
+// Get product ID from URL path parameter
 function getProductIdFromURL() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('id');
+    const pathParts = window.location.pathname.split('/');
+    // Look for 'detail' in the path (e.g., /product/detail/1)
+    const idIndex = pathParts.indexOf('detail');
+    if (idIndex !== -1 && pathParts[idIndex + 1]) {
+        return pathParts[idIndex + 1];
+    }
+    return null;
 }
 
-// Get product data from URL parameters (for hardcoded demo)
+// Sample products data (will be replaced with API call later)
+const sampleProducts = {
+    1: {
+        id: 1,
+        name: "Cây Hoa Hồng Hồng",
+        price: 420000,
+        image: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400",
+        stock: 50,
+        description: "Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo."
+    },
+    2: {
+        id: 2,
+        name: "Hoa Hạnh Phúc Cao Cấp",
+        price: 420000,
+        image: "https://images.unsplash.com/photo-1520763185298-1b434c919102?w=400",
+        stock: 30,
+        description: "Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo."
+    },
+    3: {
+        id: 3,
+        name: "Hoa Hồng Trắng",
+        price: 380000,
+        image: "https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=400",
+        stock: 40,
+        description: "Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo."
+    },
+    4: {
+        id: 4,
+        name: "Bó Hoa Hồng Đỏ",
+        price: 480000,
+        image: "https://images.unsplash.com/photo-1563241529-0c3e8b3d3e3f?w=400",
+        stock: 25,
+        description: "Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo."
+    },
+    5: {
+        id: 5,
+        name: "Khát Vọng Trái Tim",
+        price: 360000,
+        image: "https://images.unsplash.com/photo-1606041008023-472dfb5e530f?w=400",
+        stock: 60,
+        description: "Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo."
+    },
+    6: {
+        id: 6,
+        name: "Bó Hoa Hồng Đỏ",
+        price: 480000,
+        image: "https://images.unsplash.com/photo-1597848212624-e593b98b8c9a?w=400",
+        stock: 35,
+        description: "Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo."
+    },
+    7: {
+        id: 7,
+        name: "Khát Vọng Trái Tim",
+        price: 360000,
+        image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400",
+        stock: 20,
+        description: "Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo."
+    },
+    8: {
+        id: 8,
+        name: "Hoa Hồng Đỏ Tươi",
+        price: 450000,
+        image: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400",
+        stock: 45,
+        description: "Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo."
+    }
+};
+
+// Get product data from URL path parameter
 function getProductDataFromURL() {
-    const urlParams = new URLSearchParams(window.location.search);
-    return {
-        id: urlParams.get('id'),
-        name: urlParams.get('name'),
-        price: urlParams.get('price'),
-        image: urlParams.get('image'),
-        stock: urlParams.get('stock')
-    };
+    const productId = getProductIdFromURL();
+    if (!productId) {
+        return null;
+    }
+    
+    // Get product data from sample data (will be replaced with API call)
+    return sampleProducts[productId] || null;
 }
 
 // Helper function to format price
@@ -34,9 +106,9 @@ const productImages = [
 function loadProductDetails() {
     const productData = getProductDataFromURL();
     
-    if (!productData.id) {
-        // If no product ID, redirect to home
-        window.location.href = 'home.html';
+    if (!productData || !productData.id) {
+        // If no product data, redirect to product list
+        window.location.href = '/product';
         return;
     }
 
@@ -45,6 +117,11 @@ function loadProductDetails() {
     document.getElementById('productPrice').textContent = formatPrice(productData.price || '0');
     document.getElementById('mainProductImage').src = productData.image || productImages[0];
     document.getElementById('productQuantity').setAttribute('max', productData.stock || '50');
+    
+    // Update short description if available
+    if (productData.description && document.getElementById('productShortDesc')) {
+        document.getElementById('productShortDesc').textContent = productData.description;
+    }
 
     // Set main image source
     const mainImage = document.getElementById('mainProductImage');
@@ -131,6 +208,11 @@ function initAddToCart() {
     
     addToCartBtn.addEventListener('click', function() {
         const productData = getProductDataFromURL();
+        if (!productData) {
+            showToast('Không tìm thấy sản phẩm!', 'warning');
+            return;
+        }
+        
         const quantity = document.getElementById('productQuantity').value;
         
         console.log(`Added ${quantity} x ${productData.name} to cart`);

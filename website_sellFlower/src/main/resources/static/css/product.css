@@ -9,6 +9,8 @@ body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background-color: #ffffff;
     color: #2c2c2c;
+    line-height: 1.6;
+    overflow-x: hidden;
 }
 
 a {
@@ -20,6 +22,30 @@ a {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+}
+
+/* Top Banner */
+.top-banner {
+    background-color: #a8b5a0;
+    color: #ffffff;
+    text-align: center;
+    padding: 12px 20px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 /* Header */
@@ -36,11 +62,22 @@ a {
     backdrop-filter: blur(10px);
 }
 
+.logo {
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: flex-start;
+}
+
 .logo h1 {
     font-size: 24px;
     font-weight: 700;
     color: #FF8FA3;
     letter-spacing: 2px;
+}
+
+.logo a {
+    text-decoration: none;
+    color: inherit;
 }
 
 .nav-links {
@@ -57,6 +94,9 @@ a {
     font-weight: 500;
     transition: color 0.3s ease;
     position: relative;
+    text-decoration: none;
+    text-transform: none;
+    letter-spacing: 0;
 }
 
 .nav-links a:hover,
@@ -65,6 +105,21 @@ a {
 }
 
 .nav-links a.active::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #FF8FA3;
+}
+
+.nav-links a::after {
+    display: none;
+}
+
+.nav-links a:hover::after {
+    display: block;
     content: '';
     position: absolute;
     bottom: -5px;
@@ -87,6 +142,10 @@ a {
     font-weight: 500;
     color: #2c2c2c;
     transition: color 0.3s ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .user-link:hover {

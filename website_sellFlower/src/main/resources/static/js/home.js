@@ -461,16 +461,9 @@ function resetNewArrivalCarousel() {
 // Function to navigate to product detail page
 function goToProductDetail(productCard) {
     const productId = productCard.getAttribute('data-product-id');
-    const productName = productCard.getAttribute('data-product-name');
-    const productPrice = productCard.getAttribute('data-product-price');
-    const productImage = productCard.getAttribute('data-product-image');
-    const productStock = productCard.getAttribute('data-product-stock');
     
-    // Create URL with query parameters
-    const url = `product.html?id=${encodeURIComponent(productId)}&name=${encodeURIComponent(productName)}&price=${encodeURIComponent(productPrice)}&image=${encodeURIComponent(productImage)}&stock=${encodeURIComponent(productStock)}`;
-    
-    // Navigate to product detail page
-    window.location.href = url;
+    // Navigate to product detail page using path parameter
+    window.location.href = `/product/detail/${productId}`;
 }
 
 // Initialize carousel on page load
