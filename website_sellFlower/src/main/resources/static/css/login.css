@@ -418,14 +418,14 @@ body {
 }
 
 .error-message {
-    background-color: #fff5f5;
-    color: #7a4a4a;
+    background-color: #FF9800;
+    color: #ffffff;
     padding: 12px;
     border-radius: 8px;
     margin-bottom: 20px;
     font-size: 14px;
     display: none;
-    border: 1px solid #e8d4d4;
+    border: 1px solid #FF9800;
     font-weight: 400;
 }
 
