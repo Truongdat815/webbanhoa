@@ -16,7 +16,8 @@ document.querySelectorAll('.quantity-selector').forEach(selector => {
 
     minusBtn.addEventListener('click', function() {
         let currentValue = parseInt(qtyInput.value);
-        if (currentValue > 1) {
+        const min = parseInt(qtyInput.getAttribute('min')) || 1;
+        if (currentValue > min) {
             qtyInput.value = currentValue - 1;
             animateInput(qtyInput);
         }
@@ -24,13 +25,24 @@ document.querySelectorAll('.quantity-selector').forEach(selector => {
 
     plusBtn.addEventListener('click', function() {
         let currentValue = parseInt(qtyInput.value);
+        const max = parseInt(qtyInput.getAttribute('max'));
+        if (max && currentValue >= max) {
+            showToast('Số lượng vượt quá tồn kho!', 'warning');
+            return;
+        }
         qtyInput.value = currentValue + 1;
         animateInput(qtyInput);
     });
 
     qtyInput.addEventListener('change', function() {
-        if (this.value < 1) {
-            this.value = 1;
+        const min = parseInt(this.getAttribute('min')) || 1;
+        const max = parseInt(this.getAttribute('max'));
+        
+        if (this.value < min) {
+            this.value = min;
+        } else if (max && this.value > max) {
+            this.value = max;
+            showToast('Số lượng tối đa là ' + max, 'warning');
         }
     });
 });
@@ -150,11 +162,23 @@ function openQuickViewModal(productCard) {
     const productPrice = productCard.getAttribute('data-product-price');
     const productImage = productCard.getAttribute('data-product-image');
     
+    // Lấy max stock từ quantity input của product card
+    const qtyInput = productCard.querySelector('.qty-input');
+    const maxStock = qtyInput ? qtyInput.getAttribute('max') : null;
+    
     // Fill modal with product data
     document.getElementById('modalProductImage').src = productImage;
     document.getElementById('modalProductName').textContent = productName;
     document.getElementById('modalProductPrice').textContent = productPrice;
-    document.getElementById('modalQuantity').value = '1';
+    const modalQtyInput = document.getElementById('modalQuantity');
+    modalQtyInput.value = '1';
+    
+    // Set max stock cho modal quantity input
+    if (maxStock) {
+        modalQtyInput.setAttribute('max', maxStock);
+    } else {
+        modalQtyInput.removeAttribute('max');
+    }
     
     // Lưu product ID vào modal để có thể dùng khi thêm vào giỏ hàng
     modal.setAttribute('data-current-product-id', productId);
@@ -218,7 +242,8 @@ const modalQtyInput = document.getElementById('modalQuantity');
 if (modalMinusBtn && modalPlusBtn && modalQtyInput) {
     modalMinusBtn.addEventListener('click', function() {
         let currentValue = parseInt(modalQtyInput.value);
-        if (currentValue > 1) {
+        const min = parseInt(modalQtyInput.getAttribute('min')) || 1;
+        if (currentValue > min) {
             modalQtyInput.value = currentValue - 1;
             animateInput(modalQtyInput);
         }
@@ -226,13 +251,24 @@ if (modalMinusBtn && modalPlusBtn && modalQtyInput) {
 
     modalPlusBtn.addEventListener('click', function() {
         let currentValue = parseInt(modalQtyInput.value);
+        const max = parseInt(modalQtyInput.getAttribute('max'));
+        if (max && currentValue >= max) {
+            showToast('Số lượng vượt quá tồn kho!', 'warning');
+            return;
+        }
         modalQtyInput.value = currentValue + 1;
         animateInput(modalQtyInput);
     });
 
     modalQtyInput.addEventListener('change', function() {
-        if (this.value < 1) {
-            this.value = 1;
+        const min = parseInt(this.getAttribute('min')) || 1;
+        const max = parseInt(this.getAttribute('max'));
+        
+        if (this.value < min) {
+            this.value = min;
+        } else if (max && this.value > max) {
+            this.value = max;
+            showToast('Số lượng tối đa là ' + max, 'warning');
         }
     });
 }

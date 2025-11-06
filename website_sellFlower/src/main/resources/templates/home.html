@@ -104,7 +104,7 @@
                         <p class="product-price" th:text="${product.price}">Product Price</p>
                         <div class="quantity-selector">
                             <button class="qty-btn minus-btn">-</button>
-                            <input type="number" value="1" min="1" class="qty-input">
+                            <input type="number" value="1" min="1" max="${product.stock}"class="qty-input">
                             <button class="qty-btn plus-btn">+</button>
                         </div>
                         <button class="add-to-cart-btn">
