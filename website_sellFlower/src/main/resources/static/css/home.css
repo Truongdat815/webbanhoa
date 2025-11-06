@@ -40,7 +40,7 @@ body {
 
 /* Header */
 .header {
-    background-color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.95);
     padding: 20px 40px;
     display: flex;
     justify-content: space-between;
@@ -50,8 +50,6 @@ body {
     top: 0;
     z-index: 1000;
     backdrop-filter: blur(10px);
-    background-color: rgba(255, 255, 255, 0.95);
-    transition: box-shadow 0.3s ease;
 }
 
 .header.scrolled {
@@ -64,39 +62,16 @@ body {
     justify-content: flex-start;
 }
 
-.logo-box {
-    background-color: #000000;
-    color: #ffffff;
-    padding: 8px 20px;
-    border: 1px solid #ffffff;
-    font-size: 18px;
+.logo h1 {
+    font-size: 24px;
     font-weight: 700;
+    color: #FF8FA3;
     letter-spacing: 2px;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
 }
 
-.logo-box::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-    transition: left 0.5s ease;
-}
-
-.logo-box:hover::before {
-    left: 100%;
-}
-
-.logo-box:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+.logo a {
+    text-decoration: none;
+    color: inherit;
 }
 
 .nav-links {
@@ -109,32 +84,43 @@ body {
 
 .nav-links a {
     color: #2c2c2c;
-    text-decoration: none;
-    font-size: 13px;
+    font-size: 15px;
     font-weight: 500;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    position: relative;
     transition: color 0.3s ease;
+    position: relative;
+    text-decoration: none;
+    text-transform: none;
+    letter-spacing: 0;
 }
 
-.nav-links a::after {
+.nav-links a:hover,
+.nav-links a.active {
+    color: #FF8FA3;
+}
+
+.nav-links a.active::after {
     content: '';
     position: absolute;
     bottom: -5px;
     left: 0;
-    width: 0;
+    width: 100%;
     height: 2px;
     background-color: #FF8FA3;
-    transition: width 0.3s ease;
 }
 
-.nav-links a:hover {
-    color: #FF8FA3;
+.nav-links a::after {
+    display: none;
 }
 
 .nav-links a:hover::after {
+    display: block;
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
     width: 100%;
+    height: 2px;
+    background-color: #FF8FA3;
 }
 
 .utility-nav {
@@ -145,89 +131,42 @@ body {
     justify-content: flex-end;
 }
 
-.search-container {
-    position: relative;
+.user-link {
+    font-size: 14px;
+    font-weight: 500;
+    color: #2c2c2c;
+    transition: color 0.3s ease;
+    text-decoration: none;
     display: flex;
     align-items: center;
+    gap: 8px;
 }
 
-.search-input {
-    border: none;
-    background: transparent;
-    border-bottom: 1px solid #e0e0e0;
-    padding: 5px 25px 5px 0;
-    font-size: 12px;
-    font-weight: 400;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    color: #2c2c2c;
-    width: 120px;
-    transition: all 0.3s ease;
+.user-link:hover {
+    color: #FF8FA3;
 }
 
-.search-input:focus {
-    outline: none;
-    border-bottom-color: #F4A5B9;
-    width: 180px;
-}
-
-.search-input::placeholder {
-    color: #999;
-}
-
-.search-icon {
-    position: absolute;
-    right: 0;
-    color: #666;
+.cart-icon-wrapper {
+    position: relative;
     cursor: pointer;
-    transition: transform 0.3s ease, color 0.3s ease;
-}
-
-.search-icon:hover {
-    transform: scale(1.2);
-    color: #2c2c2c;
-}
-
-.user-link,
-.cart-link {
     display: flex;
     align-items: center;
     gap: 8px;
     color: #2c2c2c;
-    text-decoration: none;
-    font-size: 12px;
-    font-weight: 400;
-    letter-spacing: 0.5px;
-    transition: color 0.3s ease, transform 0.3s ease;
-    position: relative;
-}
-
-.user-link:hover,
-.cart-link:hover {
-    color: #FF8FA3;
-    transform: translateY(-2px);
-}
-
-.user-link i,
-.cart-link i {
-    font-size: 16px;
 }
 
 .cart-count {
     position: absolute;
     top: -8px;
     right: -8px;
-    background-color: #a8b5a0;
-    color: #ffffff;
-    border-radius: 50%;
-    width: 18px;
-    height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
+    background-color: #FF8FA3;
+    color: white;
+    font-size: 11px;
     font-weight: 600;
-    animation: pulse 2s infinite;
+    padding: 2px 6px;
+    border-radius: 10px;
+    min-width: 18px;
+    text-align: center;
 }
 
 @keyframes pulse {
@@ -1014,13 +953,22 @@ body {
     margin: 0;
 }
 
+/* Row chứa số lượng và nút thêm vào giỏ hàng */
+.modal-quantity-cart-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+    margin-top: 20px;
+    width: 100%;
+}
+
 /* SỬA LỖI CĂN CHỈNH MODAL: Thêm width 100% */
 .modal-quantity-section {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    margin-top: 10px;
-    width: 100%; /* Đảm bảo căng ra 100% */
+    flex: 0 0 auto;
+    min-width: 200px;
 }
 
 .modal-quantity-label {
@@ -1042,7 +990,7 @@ body {
     display: flex;
     align-items: stretch;
     gap: 0;
-    width: 100%; /* ĐÃ SỬA: Căng ra 100% */
+    width: 100%;
     border: 2px solid #e0e0e0;
     border-radius: 6px;
     overflow: hidden;
@@ -1105,7 +1053,7 @@ body {
 
 /* SỬA LỖI CĂN CHỈNH MODAL: Thay 200px bằng 100% */
 .modal-add-to-cart-btn {
-    width: 100%; /* ĐÃ SỬA: Căng ra 100% */
+    flex: 1;
     background-color: #FF8FA3;
     color: #ffffff;
     border: none;
@@ -1115,13 +1063,14 @@ body {
     letter-spacing: 0.5px;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-top: 10px;
     border-radius: 4px;
     text-transform: uppercase;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
+    height: 50px;
+    white-space: nowrap;
 }
 
 .modal-add-to-cart-btn i {
@@ -1214,6 +1163,20 @@ body {
 
     .modal-content {
         max-height: 95vh;
+    }
+
+    .modal-quantity-cart-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .modal-quantity-section {
+        min-width: auto;
+        width: 100%;
+    }
+
+    .modal-add-to-cart-btn {
+        width: 100%;
     }
 }
 

@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trang chủ - BLOOMORA</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/home.css">
 </head>
 <body>
@@ -18,28 +19,22 @@
     <!-- Header -->
     <header class="header">
         <div class="logo">
-            <div class="logo-box">BLOOMORA</div>
-        </div>
-    <nav class="nav-links">
-        <a href="/home">Trang chủ</a>
-        <a href="/shop">Cửa hàng</a>
-        <a href="/about">Về chúng tôi</a>
-        <a href="/news">Tin tức</a>
-        <a href="/contact">Liên hệ</a>
-    </nav>
-        <div class="utility-nav">
-            <div class="search-container">
-                <input type="text" placeholder="Tìm kiếm..." class="search-input">
-                <i class="fas fa-search search-icon"></i>
-            </div>
-        <a href="/login" class="user-link">
-                <i class="fas fa-user"></i>
-                <span>Đăng nhập</span>
+            <a href="home.html">
+                <h1>FIAMA</h1>
             </a>
-            <a href="/cart" class="cart-link">
+        </div>
+        <nav class="nav-links">
+            <a href="home.html" class="active">Trang chủ</a>
+            <a href="#">Sản phẩm</a>
+            <a href="#">Giới thiệu</a>
+            <a href="#">Liên hệ</a>
+        </nav>
+        <div class="utility-nav">
+            <a href="/login" class="user-link">Đăng nhập</a>
+            <div class="cart-icon-wrapper">
                 <i class="fas fa-shopping-bag"></i>
                 <span class="cart-count" id="cartCount">0</span>
-            </a>
+            </div>
         </div>
     </header>
 
@@ -683,18 +678,20 @@
                 <div class="modal-product-description">
                     <p id="modalProductDescription">Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo. Thích hợp trang trí nhà cửa, văn phòng hoặc làm quà tặng ý nghĩa cho người thân yêu.</p>
                 </div>
-                    <div class="modal-quantity-section">
-                    <label class="modal-quantity-label">Số lượng:</label>
-                    <div class="modal-quantity-selector" id="modalQuantitySelector">
-                            <button class="modal-qty-btn modal-minus-btn">-</button>
-                            <input type="number" id="modalQuantity" value="1" min="1" class="modal-qty-input">
-                            <button class="modal-qty-btn modal-plus-btn">+</button>
+                    <div class="modal-quantity-cart-row">
+                        <div class="modal-quantity-section">
+                            <label class="modal-quantity-label">Số lượng:</label>
+                            <div class="modal-quantity-selector" id="modalQuantitySelector">
+                                <button class="modal-qty-btn modal-minus-btn">-</button>
+                                <input type="number" id="modalQuantity" value="1" min="1" class="modal-qty-input">
+                                <button class="modal-qty-btn modal-plus-btn">+</button>
+                            </div>
                         </div>
+                        <button class="modal-add-to-cart-btn" id="modalAddToCartBtn">
+                            <i class="fas fa-shopping-cart"></i>
+                            Thêm vào giỏ hàng
+                        </button>
                     </div>
-                    <button class="modal-add-to-cart-btn" id="modalAddToCartBtn">
-                    <i class="fas fa-shopping-cart"></i>
-                        Thêm vào giỏ hàng
-                    </button>
                 </div>
             </div>
         </div>

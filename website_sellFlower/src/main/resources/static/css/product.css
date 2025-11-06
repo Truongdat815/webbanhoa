@@ -309,12 +309,21 @@ a {
     font-weight: 500;
 }
 
+/* Row chứa số lượng và nút thêm vào giỏ hàng */
+.quantity-cart-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+    padding: 20px 0;
+}
+
 /* Quantity Section */
 .quantity-section {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    padding: 20px 0;
+    flex: 0 0 auto;
+    min-width: 200px;
 }
 
 .quantity-label {
@@ -384,7 +393,7 @@ a {
 
 /* Add to Cart Button */
 .add-to-cart-btn-detail {
-    width: 100%;
+    flex: 1;
     background-color: #FF8FA3;
     color: #ffffff;
     border: none;
@@ -400,7 +409,8 @@ a {
     align-items: center;
     justify-content: center;
     gap: 12px;
-    margin-top: 10px;
+    height: 50px;
+    white-space: nowrap;
 }
 
 .add-to-cart-btn-detail i {
@@ -682,6 +692,20 @@ a {
     }
 
     .quantity-selector-detail {
+        width: 100%;
+    }
+
+    .quantity-cart-row {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .quantity-section {
+        min-width: auto;
+        width: 100%;
+    }
+
+    .add-to-cart-btn-detail {
         width: 100%;
     }
 
