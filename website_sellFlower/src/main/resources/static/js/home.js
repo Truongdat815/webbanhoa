@@ -8,6 +8,27 @@ window.addEventListener('scroll', function() {
     }
 });
 
+// Sync quantity selector width with product image width
+function syncQuantitySelectorWidth() {
+    document.querySelectorAll('.product-card').forEach(card => {
+        const imageContainer = card.querySelector('.product-image-container');
+        const quantitySelector = card.querySelector('.quantity-selector');
+        
+        if (imageContainer && quantitySelector) {
+            const imageWidth = imageContainer.offsetWidth;
+            quantitySelector.style.width = imageWidth + 'px';
+            quantitySelector.style.maxWidth = imageWidth + 'px';
+        }
+    });
+}
+
+// Sync on page load
+window.addEventListener('load', syncQuantitySelectorWidth);
+// Sync on window resize
+window.addEventListener('resize', syncQuantitySelectorWidth);
+// Initial sync
+setTimeout(syncQuantitySelectorWidth, 100);
+
 // Quantity selector
 document.querySelectorAll('.quantity-selector').forEach(selector => {
     const minusBtn = selector.querySelector('.minus-btn');
@@ -289,4 +310,3 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     });
 });
-

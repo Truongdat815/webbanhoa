@@ -1,0 +1,152 @@
+/* 
+ * MẪU CSS CHO QUANTITY SELECTOR
+ * Tham khảo cách làm - Không dùng màu cụ thể, dễ tùy chỉnh
+ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background-color: #f5f5f5;
+    padding: 40px;
+}
+
+.example-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 8px;
+}
+
+.example-container h2 {
+    margin-bottom: 30px;
+    color: #333;
+}
+
+.example-section {
+    margin-bottom: 40px;
+    padding: 20px;
+    background-color: #fafafa;
+    border-radius: 4px;
+}
+
+.example-section h3 {
+    margin-bottom: 15px;
+    color: #666;
+    font-size: 16px;
+}
+
+/* ============================================
+   QUANTITY SELECTOR - PHẦN CHÍNH
+   ============================================ */
+
+/* Container cho toàn bộ quantity selector */
+.quantity-selector {
+    display: flex;                    /* Sử dụng flexbox để căn chỉnh ngang */
+    align-items: stretch;             /* Kéo dài các phần tử con để có cùng chiều cao */
+    gap: 0;                          /* Không có khoảng cách giữa các phần tử */
+    width: 100%;                     /* Chiếm toàn bộ chiều rộng có sẵn */
+    max-width: 100%;                 /* Đảm bảo không vượt quá chiều rộng */
+    border: 1px solid #e0e0e0;      /* Border chung cho toàn bộ khối (có thể đổi màu) */
+    border-radius: 4px;             /* Bo góc cho toàn bộ khối (có thể đổi giá trị) */
+    overflow: hidden;                /* Quan trọng: đảm bảo border-radius hoạt động đúng */
+}
+
+/* Nút tăng/giảm số lượng */
+.qty-btn {
+    width: 45px;                     /* Chiều rộng cố định cho nút (có thể đổi) */
+    height: 45px;                    /* Chiều cao cố định cho nút (có thể đổi) */
+    border: none;                     /* Bỏ border riêng của nút */
+    background-color: #ffffff;       /* Màu nền (có thể đổi) */
+    color: #2c2c2c;                  /* Màu chữ (có thể đổi) */
+    font-size: 18px;                 /* Kích thước chữ cho dấu +/- */
+    font-weight: 600;                /* Độ đậm chữ */
+    cursor: pointer;                 /* Con trỏ dạng bàn tay khi hover */
+    transition: all 0.3s ease;       /* Hiệu ứng chuyển đổi mượt mà */
+    flex-shrink: 0;                  /* Quan trọng: ngăn nút bị co lại */
+    display: flex;                   /* Sử dụng flexbox để căn giữa nội dung */
+    align-items: center;             /* Căn giữa theo chiều dọc */
+    justify-content: center;          /* Căn giữa theo chiều ngang */
+    padding: 0;                      /* Bỏ padding để tránh lệch */
+}
+
+/* Hiệu ứng khi di chuột qua nút */
+.qty-btn:hover {
+    background-color: #2c2c2c;       /* Màu nền khi hover (có thể đổi) */
+    color: #ffffff;                  /* Màu chữ khi hover (có thể đổi) */
+}
+
+/* Hiệu ứng khi nhấn nút */
+.qty-btn:active {
+    transform: scale(0.95);          /* Thu nhỏ nhẹ khi nhấn */
+}
+
+/* Trường nhập số lượng */
+.qty-input {
+    flex: 1;                         /* Quan trọng: kéo dài để chiếm hết không gian còn lại */
+    height: 45px;                    /* Chiều cao bằng với nút */
+    text-align: center;              /* Căn giữa số trong ô nhập */
+    border: none;                    /* Quan trọng: bỏ border riêng để không có đường phân chia */
+    font-size: 16px;                 /* Kích thước chữ */
+    font-weight: 500;                /* Độ đậm chữ */
+    color: #2c2c2c;                  /* Màu chữ (có thể đổi) */
+    background-color: #ffffff;       /* Màu nền (có thể đổi) */
+    transition: all 0.3s ease;       /* Hiệu ứng chuyển đổi mượt mà */
+    padding: 0;                      /* Quan trọng: bỏ padding để tránh lệch */
+    margin: 0;                       /* Quan trọng: bỏ margin để tránh lệch */
+    
+    /* Ẩn mũi tên tăng/giảm mặc định của input type="number" */
+    -moz-appearance: textfield;      /* Cho Firefox */
+}
+
+/* Ẩn mũi tên spinner trên Chrome, Safari, Edge */
+.qty-input::-webkit-outer-spin-button,
+.qty-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Bỏ outline khi input được focus */
+.qty-input:focus {
+    outline: none;                   /* Bỏ outline mặc định */
+    background-color: #ffffff;       /* Giữ màu nền khi focus (có thể đổi) */
+}
+
+/* ============================================
+   GIẢI THÍCH CÁC THUỘC TÍNH QUAN TRỌNG
+   ============================================
+
+1. `.quantity-selector` (Container):
+   - `display: flex`: Tạo layout flexbox để các phần tử con nằm trên một hàng
+   - `align-items: stretch`: Đảm bảo tất cả phần tử con có cùng chiều cao
+   - `border` và `border-radius` chỉ đặt ở container, không đặt ở các phần tử con
+   - `overflow: hidden`: Quan trọng để border-radius hoạt động đúng
+
+2. `.qty-btn` (Nút):
+   - `flex-shrink: 0`: Quan trọng - ngăn nút bị co lại khi không gian hạn chế
+   - `border: none`: Bỏ border riêng để hòa vào border của container
+   - Width và height cố định để đảm bảo kích thước nhất quán
+
+3. `.qty-input` (Input):
+   - `flex: 1`: Quan trọng - cho phép input tự động kéo dài để lấp đầy không gian
+   - `border: none`: Bỏ border riêng để không có đường phân chia giữa các phần tử
+   - `padding: 0; margin: 0`: Bỏ padding và margin để tránh lệch
+
+4. Cách tùy chỉnh màu sắc:
+   - Đổi `background-color` của `.qty-btn`, `.qty-input` và `.quantity-selector`
+   - Đổi `color` cho chữ và biểu tượng
+   - Đổi `border-color` của `.quantity-selector`
+   - Đổi màu `:hover` và `:focus` theo ý muốn
+
+5. Cách tùy chỉnh kích thước:
+   - Đổi `width` và `height` của `.qty-btn` và `.qty-input`
+   - Đổi `font-size` cho chữ
+   - Đổi `border-radius` để bo góc nhiều hoặc ít hơn
+
+*/
+
