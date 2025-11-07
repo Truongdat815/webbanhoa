@@ -11,12 +11,8 @@ public class AccountServiceImpl implements AccountService {
     @Autowired
     private AccountRepository repository;
     @Override
-    public boolean login(String username, String password) {
-        Account account = repository.isExist(username, password);
-        if (account != null) {
-            return true;
-        }
-        return false;
+    public Account login(String username, String password) {
+        return repository.findByUsernameAndPassword(username, password);
     }
     @Override
     public boolean register(Account account) {
