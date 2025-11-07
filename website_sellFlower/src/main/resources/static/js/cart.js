@@ -458,53 +458,38 @@ document.getElementById('updateCartBtn')?.addEventListener('click', async functi
 });
 
 
-// Checkout button
+// Checkout button - Hard coded to just clear cart
 document.getElementById('checkoutBtn')?.addEventListener('click', async function(e) {
     e.preventDefault();
     
     try {
-        // Call checkout endpoint
-        const response = await fetch('/cart/api/checkout', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
+        // Clear cart
+        const response = await fetch('/cart/api/clear', {
+            method: 'POST'
         });
         
         const result = await response.json();
         
         if (result.success) {
             // Update cart count
-            updateCartCountInHeaderLocal(result.cartCount || 0);
+            updateCartCountInHeaderLocal(0);
             // Also update via shared function
             if (typeof updateCartCountInHeader === 'function') {
                 updateCartCountInHeader();
             }
             
             // Show success message
-            showToast(result.message || 'Đặt hàng thành công!', 'success');
+            showToast('Đã đặt hàng thành công!', 'success');
             
             // Reload cart to show empty state
             await loadCartItems();
-            
-            // Redirect to home after a short delay
-            setTimeout(() => {
-                window.location.href = '/home';
-            }, 1500);
         } else {
             // Show error message
-            showToast(result.message || 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.', 'error');
-            
-            // If user is not logged in, redirect to login page
-            if (result.message && result.message.includes('đăng nhập')) {
-                setTimeout(() => {
-                    window.location.href = '/login';
-                }, 2000);
-            }
+            showToast('Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.', 'error');
         }
     } catch (error) {
         console.error('Error during checkout:', error);
-        showToast('Có lỗi xảy ra khi xử lý đặt hàng. Vui lòng thử lại.', 'error');
+        showToast('Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.', 'error');
     }
 });
 

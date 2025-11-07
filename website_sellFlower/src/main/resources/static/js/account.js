@@ -13,15 +13,43 @@ document.querySelectorAll('.nav-item[data-section]').forEach(item => {
     item.addEventListener('click', function(e) {
         e.preventDefault();
         const sectionId = this.getAttribute('data-section');
-        
-        // Remove active class from all nav items and sections
-        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-        document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
-        
-        // Add active class to clicked nav item and corresponding section
-        this.classList.add('active');
-        document.getElementById(sectionId).classList.add('active');
+        // Lưu vị trí scroll hiện tại trước khi chuyển section
+        const currentScroll = window.scrollY || window.pageYOffset;
+        showSection(sectionId);
+        // Giữ nguyên vị trí scroll sau khi chuyển section
+        requestAnimationFrame(() => {
+            window.scrollTo(0, currentScroll);
+        });
     });
+});
+
+// Function to show a specific section
+function showSection(sectionId) {
+    // Remove active class from all nav items and sections
+    document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+    document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
+    
+    // Add active class to corresponding nav item and section
+    const navItem = document.querySelector(`.nav-item[data-section="${sectionId}"]`);
+    const section = document.getElementById(sectionId);
+    
+    if (navItem) {
+        navItem.classList.add('active');
+    }
+    if (section) {
+        section.classList.add('active');
+    }
+}
+
+// Handle hash in URL on page load (khi vào từ link bên ngoài như footer)
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.location.hash) {
+        const hash = window.location.hash.substring(1);
+        // Show section nhưng giữ ở đầu trang (không scroll)
+        showSection(hash);
+        // Đảm bảo trang ở đầu
+        window.scrollTo(0, 0);
+    }
 });
 
 // Store default values for profile form fields
@@ -228,8 +256,129 @@ document.querySelector('.newsletter-form')?.addEventListener('submit', function(
     }
 });
 
+// Hardcode dữ liệu orders và reviews ở frontend
+const hardcodedOrders = [
+    {
+        orderId: 1,
+        date: '15/01/2024',
+        status: 'Hoàn thành',
+        statusClass: 'completed',
+        amount: '450.000₫'
+    },
+    {
+        orderId: 2,
+        date: '10/01/2024',
+        status: 'Đang xử lý',
+        statusClass: 'processing',
+        amount: '320.000₫'
+    },
+    {
+        orderId: 3,
+        date: '05/01/2024',
+        status: 'Chờ xử lý',
+        statusClass: 'pending',
+        amount: '280.000₫'
+    },
+    {
+        orderId: 4,
+        date: '22/12/2023',
+        status: 'Đã duyệt',
+        statusClass: 'approved',
+        amount: '550.000₫'
+    },
+    {
+        orderId: 5,
+        date: '18/12/2023',
+        status: 'Tạm giữ',
+        statusClass: 'on-hold',
+        amount: '190.000₫'
+    }
+];
+
+const hardcodedReviewCount = 3;
+
+// Render orders table
+function renderOrders() {
+    const tbody = document.getElementById('ordersTableBody');
+    if (!tbody) return;
+    
+    if (hardcodedOrders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" class="no-orders">Bạn chưa có đơn hàng nào</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = hardcodedOrders.map(order => `
+        <tr>
+            <td>${order.orderId}</td>
+            <td>${order.date}</td>
+            <td>
+                <span class="order-status-badge ${order.statusClass}">${order.status}</span>
+            </td>
+            <td>${order.amount}</td>
+            <td>
+                <a href="/order/${order.orderId}" class="view-order-link">Xem</a>
+            </td>
+        </tr>
+    `).join('');
+}
+
+// Update review count và các thống kê khác
+function updateReviewCount() {
+    const reviewCountElements = document.querySelectorAll('[data-review-count]');
+    reviewCountElements.forEach(el => {
+        el.textContent = hardcodedReviewCount;
+    });
+    
+    // Update overview card reviews nếu có
+    const reviewCards = document.querySelectorAll('.overview-card');
+    reviewCards.forEach(card => {
+        const icon = card.querySelector('.card-icon');
+        if (icon && icon.classList.contains('reviews')) {
+            const valueEl = card.querySelector('.card-value');
+            if (valueEl) {
+                valueEl.textContent = hardcodedReviewCount;
+            }
+        }
+    });
+    
+    // Update tổng đơn hàng
+    const orderCards = document.querySelectorAll('.overview-card');
+    orderCards.forEach(card => {
+        const icon = card.querySelector('.card-icon');
+        if (icon && icon.classList.contains('orders')) {
+            const valueEl = card.querySelector('.card-value');
+            if (valueEl) {
+                valueEl.textContent = hardcodedOrders.length;
+            }
+        }
+    });
+    
+    // Update tổng chi tiêu
+    const totalSpending = hardcodedOrders.reduce((sum, order) => {
+        const amount = parseInt(order.amount.replace(/[^\d]/g, ''));
+        return sum + amount;
+    }, 0);
+    const spendingCards = document.querySelectorAll('.overview-card');
+    spendingCards.forEach(card => {
+        const icon = card.querySelector('.card-icon');
+        if (icon && icon.classList.contains('spending')) {
+            const valueEl = card.querySelector('.card-value');
+            if (valueEl) {
+                valueEl.textContent = totalSpending.toLocaleString('vi-VN') + '₫';
+            }
+        }
+    });
+}
+
 // Animate overview cards on load
 document.addEventListener('DOMContentLoaded', function() {
+    // Render orders
+    renderOrders();
+    
+    // Update review count
+    updateReviewCount();
+    
+    // Animate cards
     const cards = document.querySelectorAll('.overview-card');
     cards.forEach((card, index) => {
         setTimeout(() => {

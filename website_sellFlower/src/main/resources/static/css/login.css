@@ -65,7 +65,7 @@ body {
 .logo h1 {
     font-size: 24px;
     font-weight: 700;
-    color: #FF8FA3;
+    color: #E95473;
     letter-spacing: 2px;
 }
 
@@ -95,7 +95,7 @@ body {
 
 .nav-links a:hover,
 .nav-links a.active {
-    color: #FF8FA3;
+    color: #E95473;
 }
 
 .nav-links a.active::after {
@@ -105,7 +105,7 @@ body {
     left: 0;
     width: 100%;
     height: 2px;
-    background-color: #FF8FA3;
+    background-color: #E95473;
 }
 
 .nav-links a::after {
@@ -120,7 +120,7 @@ body {
     left: 0;
     width: 100%;
     height: 2px;
-    background-color: #FF8FA3;
+    background-color: #E95473;
 }
 
 .utility-nav {
@@ -144,7 +144,7 @@ body {
 
 .user-link:hover,
 .user-link.active {
-    color: #FF8FA3;
+    color: #E95473;
 }
 
 /* User Dropdown */
@@ -199,7 +199,7 @@ body {
 
 .dropdown-menu a:hover {
     background-color: #f8f8f8;
-    color: #FF8FA3;
+    color: #E95473;
 }
 
 .cart-icon-wrapper {
@@ -214,14 +214,14 @@ body {
 }
 
 .cart-icon-wrapper:hover {
-    color: #FF8FA3;
+    color: #E95473;
 }
 
 .cart-count {
     position: absolute;
     top: -8px;
     right: -8px;
-    background-color: #FF8FA3;
+    background-color: #E95473;
     color: white;
     font-size: 11px;
     font-weight: 600;
@@ -335,7 +335,7 @@ body {
 
 .form-group input:focus {
     outline: none;
-    border-color: #FF8FA3;
+    border-color: #E95473;
     background-color: white;
     box-shadow: 0 0 0 3px rgba(255, 143, 163, 0.1);
 }
@@ -344,7 +344,7 @@ body {
     position: absolute;
     right: 15px;
     top: 42px;
-    color: #FF8FA3;
+    color: #E95473;
     transition: color 0.3s;
 }
 
@@ -369,7 +369,7 @@ body {
 }
 
 .remember-me a {
-    color: #FF8FA3;
+    color: #E95473;
     text-decoration: underline;
     transition: color 0.3s;
 }
@@ -381,12 +381,12 @@ body {
 .remember-me input[type="checkbox"] {
     width: 18px;
     height: 18px;
-    accent-color: #FF8FA3;
+    accent-color: #E95473;
     cursor: pointer;
 }
 
 .forgot-password {
-    color: #FF8FA3;
+    color: #E95473;
     text-decoration: none;
     transition: color 0.3s;
     font-weight: 400;
@@ -399,10 +399,10 @@ body {
 }
 
 .login-button {
-    background: #FF8FA3;
+    background: #E95473;
     color: white;
     padding: 16px;
-    border: 2px solid #FF8FA3;
+    border: 2px solid #E95473;
     border-radius: 8px;
     font-size: 15px;
     font-weight: 600;
@@ -460,7 +460,7 @@ body {
 }
 
 .register-link a {
-    color: #FF8FA3;
+    color: #E95473;
     text-decoration: none;
     font-weight: 500;
     transition: color 0.3s;
@@ -530,13 +530,13 @@ body {
 }
 
 .footer-column ul li a:hover {
-    color: #FF8FA3;
+    color: #E95473;
 }
 
 .footer-logo {
     font-size: 20px;
     font-weight: 700;
-    color: #FF8FA3;
+    color: #E95473;
     margin-bottom: 15px;
     letter-spacing: 2px;
 }
@@ -563,7 +563,7 @@ body {
 }
 
 .footer-contact i {
-    color: #FF8FA3;
+    color: #E95473;
     width: 20px;
 }
 
@@ -609,7 +609,7 @@ body {
 }
 
 .footer-links a:hover {
-    color: #FF8FA3;
+    color: #E95473;
 }
 
 /* Header scroll effect */

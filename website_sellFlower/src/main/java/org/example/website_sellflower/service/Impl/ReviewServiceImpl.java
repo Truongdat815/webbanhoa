@@ -66,13 +66,12 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public long getReviewCountByAccountId(Integer accountId) {
-        // Tạm thời hardcode - sẽ implement sau khi có database
-        // Giả sử mỗi account có một số lượng đánh giá ngẫu nhiên để test
+        // Không hardcode ở backend - sẽ được xử lý ở frontend
         if (accountId == null) {
             return 0;
         }
-        // Hardcode số lượng đánh giá dựa trên accountId để test
-        return accountId % 5 + 1; // Trả về số từ 1-5 để test
+        // Return 0 - frontend sẽ xử lý hardcode
+        return 0;
         
         /*
         return reviewRepository.countByAccountId(accountId);
