@@ -6,7 +6,7 @@
     <title>Trang chủ - BLOOMORA</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 <body>
 
@@ -19,22 +19,22 @@
     <!-- Header -->
     <header class="header">
         <div class="logo">
-            <a href="home.html">
+            <a href="/home">
                 <h1>FIAMA</h1>
             </a>
         </div>
         <nav class="nav-links">
-            <a href="home.html" class="active">Trang chủ</a>
-            <a href="#">Sản phẩm</a>
+            <a href="/home" class="active">Trang chủ</a>
+            <a href="/product">Sản phẩm</a>
             <a href="#">Giới thiệu</a>
             <a href="#">Liên hệ</a>
         </nav>
         <div class="utility-nav">
             <a href="/login" class="user-link">Đăng nhập</a>
-            <div class="cart-icon-wrapper">
+            <a href="/cart" class="cart-icon-wrapper">
                 <i class="fas fa-shopping-bag"></i>
                 <span class="cart-count" id="cartCount">0</span>
-            </div>
+            </a>
         </div>
     </header>
 
@@ -697,6 +697,7 @@
         </div>
     </div>
 
+<script src="/js/cart-utils.js"></script>
 <script src="js/home.js"></script>
 </body>
 </html>

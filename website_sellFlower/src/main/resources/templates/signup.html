@@ -3,50 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng ký - BLOOMORA</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Đăng ký - FIAMA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/login.css}">
     <link rel="stylesheet" th:href="@{/css/signup.css}">
 </head>
 <body>
-    <!-- Top Bar -->
-    <div class="top-bar">
-        <div class="top-bar-left">
-            <i class="fas fa-phone"></i>
-            <span>Hotline: 1900 1234</span>
-        </div>
-        <div class="top-bar-right">
-            <a href="/login"><i class="fas fa-user"></i> Đăng nhập</a>
-            <a href="/register"><i class="fas fa-user-plus"></i> Đăng ký</a>
-            <a href="/cart"><i class="fas fa-shopping-cart"></i> Giỏ hàng</a>
-            <a href="/checkout"><i class="fas fa-credit-card"></i> Thanh toán</a>
-        </div>
+    <!-- Top Banner -->
+    <div class="top-banner">
+        <p>MIỄN PHÍ VẬN CHUYỂN CHO ĐƠN HÀNG TRÊN 500.000₫</p>
     </div>
 
     <!-- Header -->
-    <div class="header">
-        <div class="logo-section">
-            <div class="social-icons">
-                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
-                <a href="#" class="social-icon"><i class="fab fa-tiktok"></i></a>
-            </div>
-        </div>
-        <div style="text-align: center;">
-            <a href="/" class="logo">
-                <div class="logo-image">🌸</div>
+    <header class="header">
+        <div class="logo">
+            <a href="/home">
+                <h1>FIAMA</h1>
             </a>
         </div>
-        <div style="width: 200px;"></div>
-    </div>
+        <nav class="nav-links">
+            <a href="/home">Trang chủ</a>
+            <a href="/product">Sản phẩm</a>
+            <a href="#">Giới thiệu</a>
+            <a href="#">Liên hệ</a>
+        </nav>
+        <div class="utility-nav">
+            <a href="/login" class="user-link">Đăng nhập</a>
+            <a href="/cart" class="cart-icon-wrapper">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </a>
+        </div>
+    </header>
 
     <!-- Main Content -->
-    <div class="main-content">
+    <main class="main-content">
         <div class="login-container" style="max-width: 500px;">
             <div class="login-header">
                 <h1>Đăng ký</h1>
-                <p>Tạo tài khoản mới để trải nghiệm BLOOMORA</p>
+                <p>Tạo tài khoản mới để trải nghiệm FIAMA</p>
             </div>
 
             <div class="error-message" id="errorMessage" th:if="${error}" th:text="${error}"></div>
@@ -92,7 +88,7 @@
                 <div class="remember-forgot">
                     <label class="remember-me">
                         <input type="checkbox" name="agreeTerms" id="agreeTerms" required>
-                        <span>Tôi đồng ý với <a href="/terms" style="color: #5a6b54; text-decoration: underline;">điều khoản sử dụng</a></span>
+                        <span>Tôi đồng ý với <a href="/terms" style="color: #FF8FA3; text-decoration: underline;">điều khoản sử dụng</a></span>
                     </label>
                 </div>
 
@@ -107,8 +103,76 @@
                 Đã có tài khoản? <a href="/login">Đăng nhập ngay</a>
             </div>
         </div>
-    </div>
+    </main>
 
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>Tài khoản của tôi</h4>
+                <ul>
+                    <li><a href="/account">Tài khoản của tôi</a></li>
+                    <li><a href="/checkout">Thanh toán</a></li>
+                    <li><a href="/contact">Liên hệ chúng tôi</a></li>
+                    <li><a href="/cart">Giỏ hàng</a></li>
+                    <li><a href="/wishlist">Yêu thích</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Liên kết nhanh</h4>
+                <ul>
+                    <li><a href="/location">Vị trí cửa hàng</a></li>
+                    <li><a href="/tracking">Theo dõi đơn hàng</a></li>
+                    <li><a href="/size-guide">Hướng dẫn kích thước</a></li>
+                    <li><a href="/account">Tài khoản của tôi</a></li>
+                    <li><a href="/faq">Câu hỏi thường gặp</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Thông tin</h4>
+                <ul>
+                    <li><a href="/privacy">Trang bảo mật</a></li>
+                    <li><a href="/about">Về chúng tôi</a></li>
+                    <li><a href="/careers">Tuyển dụng</a></li>
+                    <li><a href="/delivery">Thông tin giao hàng</a></li>
+                    <li><a href="/terms">Điều khoản & Điều kiện</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Dịch vụ khách hàng</h4>
+                <ul>
+                    <li><a href="/shipping">Chính sách vận chuyển</a></li>
+                    <li><a href="/contact">Trợ giúp & Liên hệ</a></li>
+                    <li><a href="/returns">Đổi trả & Hoàn tiền</a></li>
+                    <li><a href="/stores">Cửa hàng trực tuyến</a></li>
+                    <li><a href="/terms">Điều khoản và Điều kiện</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Về cửa hàng</h4>
+                <div class="footer-logo">FIAMA</div>
+                <p class="footer-description">Chuyên cung cấp hoa tươi chất lượng cao với dịch vụ giao hàng tận nơi nhanh chóng và chuyên nghiệp.</p>
+                <div class="footer-contact">
+                    <p><i class="fas fa-map-marker-alt"></i> Thành phố Hồ Chí Minh, Việt Nam</p>
+                    <p><i class="fas fa-phone"></i> +84 123 456 789</p>
+                    <p><i class="fas fa-envelope"></i> info@fiama.com</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="payment-methods">
+                <img src="https://via.placeholder.com/200x30?text=Phương+thức+thanh+toán" alt="Phương thức thanh toán" class="payment-image">
+            </div>
+            <p class="copyright">© - Dành cho bạn</p>
+            <div class="footer-links">
+                <a href="/terms">Điều khoản & Điều kiện</a>
+                <a href="/claim">Khiếu nại</a>
+                <a href="/privacy">Bảo mật & Chính sách</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/cart-utils.js"></script>
     <script src="/js/signup.js"></script>
 </body>
 </html>
