@@ -8,36 +8,46 @@ import java.math.BigDecimal;
 public class OrderDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer orderDetailId;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "order_id")
+    @JoinColumn(name = "order_id", nullable = false)
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    private int quantity;
-    private BigDecimal total;
+    private Integer quantity;
 
-    // Getters & Setters
+    private Double price;
 
+    public  OrderDetail() {
 
-    public Integer getOrderDetailId() {
-        return orderDetailId;
     }
 
-    public void setOrderDetailId(Integer orderDetailId) {
-        this.orderDetailId = orderDetailId;
-    }
-
-    public Order getOrder() {
-        return order;
-    }
-
-    public void setOrder(Order order) {
+    public OrderDetail(Long id, Order order, Product product, Integer quantity, Double price) {
+        this.id = id;
         this.order = order;
+        this.product = product;
+        this.quantity = quantity;
+        this.price = price;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 
     public Product getProduct() {
@@ -48,19 +58,19 @@ public class OrderDetail {
         this.product = product;
     }
 
-    public int getQuantity() {
-        return quantity;
+    public Order getOrder() {
+        return order;
     }
 
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
+    public void setOrder(Order order) {
+        this.order = order;
     }
 
-    public BigDecimal getTotal() {
-        return total;
+    public Long getId() {
+        return id;
     }
 
-    public void setTotal(BigDecimal total) {
-        this.total = total;
+    public void setId(Long id) {
+        this.id = id;
     }
 }

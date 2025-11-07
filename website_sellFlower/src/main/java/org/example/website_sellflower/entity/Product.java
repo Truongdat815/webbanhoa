@@ -9,35 +9,54 @@ import java.time.LocalDateTime;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer productId;
+    private Long id;
 
-    private String productName;
-    @Column(columnDefinition = "TEXT")
+    @Column(nullable = false, length = 100)
+    private String name;
+
+    @Column(length = 255)
     private String description;
 
-    private BigDecimal price;
-    private Integer stock;
+    @Column(nullable = false)
+    private Double price;
+
+    @Column(name = "stock_quantity", nullable = false)
+    private Integer stockQuantity;
+
+    @Column(name = "image_url")
     private String imageUrl;
+
+    @Column(length = 100)
     private String category;
-    private LocalDateTime createAt;
 
-    // Getters & Setters
+    public Product() {
 
-
-    public Integer getProductId() {
-        return productId;
     }
 
-    public void setProductId(Integer productId) {
-        this.productId = productId;
+    public Product(Long id, String name, String description, Double price, Integer stockQuantity, String imageUrl, String category) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.imageUrl = imageUrl;
+        this.category = category;
     }
 
-    public String getProductName() {
-        return productName;
+    public Long getId() {
+        return id;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -48,20 +67,20 @@ public class Product {
         this.description = description;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
-    public Integer getStock() {
-        return stock;
+    public Integer getStockQuantity() {
+        return stockQuantity;
     }
 
-    public void setStock(Integer stock) {
-        this.stock = stock;
+    public void setStockQuantity(Integer stockQuantity) {
+        this.stockQuantity = stockQuantity;
     }
 
     public String getImageUrl() {
@@ -78,13 +97,5 @@ public class Product {
 
     public void setCategory(String category) {
         this.category = category;
-    }
-
-    public LocalDateTime getCreateAt() {
-        return createAt;
-    }
-
-    public void setCreateAt(LocalDateTime createAt) {
-        this.createAt = createAt;
     }
 }
