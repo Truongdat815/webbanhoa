@@ -1,4 +1,4 @@
-package org.example.website_sellflower.service.impl;
+package org.example.website_sellflower.service.Impl;
 
 import org.example.website_sellflower.entity.OrderDetail;
 import org.example.website_sellflower.repository.OrderDetailRepository;
@@ -23,7 +23,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
-    public boolean deleteOrderDetailByOrderDetailId(int orderDetailId) {
+    public boolean deleteOrderDetailById(int orderDetailId) {
         OrderDetail orderDetail = repository.findById((long) orderDetailId).orElse(null);
         if (orderDetail != null) {
             repository.deleteById((long) orderDetailId);
@@ -34,7 +34,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Override
     public boolean updateOrderDetail(OrderDetail orderDetail) {
-        OrderDetail existingOrderDetail = repository.findById((long) orderDetail.getOrderDetailId()).orElse(null);
+        OrderDetail existingOrderDetail = repository.findById((long) orderDetail.getId()).orElse(null);
         if (existingOrderDetail != null) {
             repository.save(orderDetail);
             return true;
@@ -48,7 +48,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
-    public List<OrderDetail> getAllOrderDetailsByOrderId(int orderId) {
+    public List<OrderDetail> getAllOrderDetailsById(int orderId) {
         return repository.findByOrderId((long) orderId);
     }
 }
