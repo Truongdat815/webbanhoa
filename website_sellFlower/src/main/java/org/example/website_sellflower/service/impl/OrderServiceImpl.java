@@ -1,4 +1,4 @@
-package org.example.website_sellflower.service.impl;
+package org.example.website_sellflower.service.Impl;
 
 import org.example.website_sellflower.entity.Order;
 import org.example.website_sellflower.repository.OrderRepository;
@@ -32,7 +32,7 @@ public class OrderServiceImpl implements OrderService {
     public Order updateOrder(Long id, Order order) {
         Order existingOrder = repository.findById(id).orElse(null);
         if (existingOrder != null) {
-            order.setOrderId(Math.toIntExact(id));
+            order.setId(id);
             return repository.save(order);
         }
         return null;

@@ -11,5 +11,5 @@ public interface AccountRepository extends JpaRepository<Account, Integer> {
     @Query("SELECT a FROM Account a WHERE a.email = :email AND a.password = :password")
     Account isExist(String email, String password);
 
-    Account findByAccountId(Integer accountId);
+    Account findById(Long id);
 }

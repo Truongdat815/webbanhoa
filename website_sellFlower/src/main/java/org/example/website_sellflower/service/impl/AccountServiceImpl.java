@@ -1,4 +1,4 @@
-package org.example.website_sellflower.service.impl;
+package org.example.website_sellflower.service.Impl;
 
 import org.example.website_sellflower.entity.Account;
 import org.example.website_sellflower.repository.AccountRepository;
@@ -20,7 +20,7 @@ public class AccountServiceImpl implements AccountService {
     }
     @Override
     public boolean register(Account account) {
-        Account existingAccount = repository.findByAccountId(account.getAccountId());
+        Account existingAccount = repository.findById(account.getId());
         if (existingAccount == null) {
             repository.save(account);
             return true;
@@ -30,7 +30,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public boolean updateProfile(Account account) {
-        Account existingAccount = repository.findByAccountId(account.getAccountId());
+        Account existingAccount = repository.findById(account.getId());
         if (existingAccount != null) {
             repository.save(account);
             return true;

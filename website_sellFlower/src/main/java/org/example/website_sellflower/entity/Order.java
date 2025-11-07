@@ -6,35 +6,53 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "`order`")
+@Table(name = "order_table")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer orderId;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "account_id")
+    @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
+    @Column(name = "order_date")
     private LocalDateTime orderDate;
-    private BigDecimal totalAmount;
+
+    @Column(name = "total_amount")
+    private Double totalAmount;
+
+    @Column(length = 50)
     private String status;
 
-    @Column(columnDefinition = "TEXT")
-    private String note;
+    @Column(name = "shipping_address")
+    private String shippingAddress;
+
+    private String phone;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderDetail> orderDetails;
 
-    // Getters & Setters
-
-
-    public Integer getOrderId() {
-        return orderId;
+    public Order() {
+    }
+    public Order(Account account) {}
+    public Order(Long id, Account account, LocalDateTime orderDate, Double totalAmount, String status, String shippingAddress, String phone, List<OrderDetail> orderDetails) {
+        this.id = id;
+        this.account = account;
+        this.orderDate = orderDate;
+        this.totalAmount = totalAmount;
+        this.status = status;
+        this.shippingAddress = shippingAddress;
+        this.phone = phone;
+        this.orderDetails = orderDetails;
     }
 
-    public void setOrderId(Integer orderId) {
-        this.orderId = orderId;
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Account getAccount() {
@@ -53,11 +71,11 @@ public class Order {
         this.orderDate = orderDate;
     }
 
-    public BigDecimal getTotalAmount() {
+    public Double getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(BigDecimal totalAmount) {
+    public void setTotalAmount(Double totalAmount) {
         this.totalAmount = totalAmount;
     }
 
@@ -69,12 +87,20 @@ public class Order {
         this.status = status;
     }
 
-    public String getNote() {
-        return note;
+    public String getShippingAddress() {
+        return shippingAddress;
     }
 
-    public void setNote(String note) {
-        this.note = note;
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public List<OrderDetail> getOrderDetails() {
