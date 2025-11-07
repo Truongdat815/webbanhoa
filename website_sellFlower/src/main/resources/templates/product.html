@@ -3,69 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chi tiết sản phẩm - Flower Shop</title>
+    <title>Sản phẩm - Flower Shop</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/product.css">
+    <link rel="stylesheet" href="/css/product.css">
 </head>
 <body>
+    <!-- Top Banner -->
+    <div class="top-banner">
+        <p>MIỄN PHÍ VẬN CHUYỂN CHO ĐƠN HÀNG TRÊN 500.000₫</p>
+    </div>
+
     <!-- Header -->
     <header class="header">
         <div class="logo">
-            <a href="home.html">
+            <a href="/home">
                 <h1>FIAMA</h1>
             </a>
         </div>
         <nav class="nav-links">
-            <a href="home.html">Trang chủ</a>
-            <a href="#" class="active">Sản phẩm</a>
+            <a href="/home">Trang chủ</a>
+            <a href="/product" class="active">Sản phẩm</a>
             <a href="#">Giới thiệu</a>
             <a href="#">Liên hệ</a>
         </nav>
         <div class="utility-nav">
-            <a href="#" class="user-link">Đăng nhập</a>
-            <div class="cart-icon-wrapper">
+            <a href="/login" class="user-link">Đăng nhập</a>
+            <a href="/cart" class="cart-icon-wrapper">
                 <i class="fas fa-shopping-bag"></i>
-                <span class="cart-count">0</span>
-            </div>
+                <span class="cart-count" id="cartCount">0</span>
+            </a>
         </div>
     </header>
 
     <!-- Breadcrumb -->
     <div class="breadcrumb">
         <div class="container">
-            <a href="home.html">Trang chủ</a>
+            <a href="/home">Trang chủ</a>
             <span class="separator">›</span>
             <span class="current">Sản phẩm</span>
         </div>
     </div>
 
-    <!-- Product Detail Section -->
-    <section class="product-detail-section">
-        <div class="container">
-            <div class="product-detail-grid">
-                <!-- Product Images -->
-                <div class="product-images">
-                    <div class="main-image">
-                        <img id="mainProductImage" src="" alt="Product">
-                    </div>
-                    <div class="thumbnail-images">
-                        <img src="" alt="Thumbnail 1" class="thumbnail active" data-index="0">
-                        <img src="" alt="Thumbnail 2" class="thumbnail" data-index="1">
-                        <img src="" alt="Thumbnail 3" class="thumbnail" data-index="2">
-                        <img src="" alt="Thumbnail 4" class="thumbnail" data-index="3">
-                    </div>
-                </div>
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <section class="hero-section">
+            <h1 class="page-title">Tất cả sản phẩm</h1>
+            <p class="page-subtitle">Khám phá bộ sưu tập hoa tươi đẹp nhất của chúng tôi</p>
+        </section>
 
-                <!-- Product Info -->
-                <div class="product-info-detail">
-                    <h1 class="product-title" id="productTitle">Cây Hoa Hồng Hồng</h1>
-                    
-                    <div class="price-rating-row">
-                        <div class="product-price-wrapper">
-                            <span class="product-price" id="productPrice">₫420,000</span>
+    <!-- Products Grid -->
+    <section class="products-section">
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be loaded here by JavaScript -->
+        </div>
+    </section>
+    </main>
+
+    <!-- Quick View Modal -->
+    <div class="quick-view-modal" id="quickViewModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close-btn" id="modalCloseBtn">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-body">
+                <div class="modal-product-image">
+                    <img id="modalProductImage" src="" alt="Sản phẩm">
+                </div>
+                <div class="modal-product-info">
+                    <h2 class="modal-product-name" id="modalProductName"></h2>
+                    <div class="modal-price-rating-row">
+                        <div class="modal-product-price-container">
+                            <p class="modal-product-price" id="modalProductPrice"></p>
                         </div>
-                        <div class="product-rating">
+                        <div class="modal-product-rating">
                             <div class="rating-stars">
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
@@ -73,122 +86,30 @@
                                 <i class="fas fa-star"></i>
                                 <i class="fas fa-star"></i>
                             </div>
-                            <span class="rating-count">(56 Reviews)</span>
+                            <span class="rating-text">(56 Reviews)</span>
                         </div>
                     </div>
-
-                    <div class="product-short-description">
-                        <p id="productShortDesc">Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo.</p>
+                    <div class="modal-product-description">
+                        <p id="modalProductDescription">Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo. Thích hợp trang trí nhà cửa, văn phòng hoặc làm quà tặng ý nghĩa cho người thân yêu.</p>
                     </div>
-
-                    <div class="product-meta">
-                        <div class="meta-item">
-                            <span class="meta-label">Danh mục:</span>
-                            <span class="meta-value">Hoa hồng</span>
-                        </div>
-                        <div class="meta-item">
-                            <span class="meta-label">Tình trạng:</span>
-                            <span class="meta-value stock-status" id="stockStatus">Còn hàng</span>
-                        </div>
-                    </div>
-
-                    <div class="quantity-cart-row">
-                        <div class="quantity-section">
-                            <label class="quantity-label">Số lượng:</label>
-                            <div class="quantity-selector-detail">
-                                <button class="qty-btn-detail minus-btn-detail">-</button>
-                                <input type="number" id="productQuantity" value="1" min="1" max="50" class="qty-input-detail">
-                                <button class="qty-btn-detail plus-btn-detail">+</button>
+                    <div class="modal-quantity-cart-row">
+                        <div class="modal-quantity-section">
+                            <label class="modal-quantity-label">Số lượng:</label>
+                            <div class="modal-quantity-selector" id="modalQuantitySelector">
+                                <button class="modal-qty-btn modal-minus-btn">-</button>
+                                <input type="number" id="modalQuantity" value="1" min="1" class="modal-qty-input">
+                                <button class="modal-qty-btn modal-plus-btn">+</button>
                             </div>
                         </div>
-                        <button class="add-to-cart-btn-detail" id="addToCartBtn">
+                        <button class="modal-add-to-cart-btn" id="modalAddToCartBtn">
                             <i class="fas fa-shopping-cart"></i>
                             Thêm vào giỏ hàng
                         </button>
                     </div>
                 </div>
             </div>
-
-            <!-- Product Tabs -->
-            <div class="product-tabs">
-                <div class="tab-buttons">
-                    <button class="tab-button active" data-tab="description">Mô tả</button>
-                    <button class="tab-button" data-tab="reviews">Đánh giá</button>
-                </div>
-
-                <div class="tab-contents">
-                    <div class="tab-content-detail active" id="description">
-                        <h3>Mô tả sản phẩm</h3>
-                        <div id="productFullDescription">
-                            <p>Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo. Thích hợp trang trí nhà cửa, văn phòng hoặc làm quà tặng ý nghĩa cho người thân yêu.</p>
-                            <p>Sản phẩm được đóng gói cẩn thận, giao hàng nhanh chóng trong vòng 2-3 giờ tại khu vực nội thành.</p>
-                            <ul>
-                                <li>Hoa tươi 100%, nhập khẩu trực tiếp</li>
-                                <li>Bảo quản được 7-10 ngày</li>
-                                <li>Miễn phí thiệp chúc mừng</li>
-                                <li>Đổi trả trong 24h nếu không hài lòng</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="tab-content-detail" id="reviews">
-                        <h3>Đánh giá từ khách hàng</h3>
-                        <div class="reviews-summary">
-                            <div class="average-rating">
-                                <div class="rating-number">5.0</div>
-                                <div class="rating-stars-large">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                </div>
-                                <div class="rating-count-text">Dựa trên 56 đánh giá</div>
-                            </div>
-                        </div>
-
-                        <div class="reviews-list">
-                            <div class="review-item">
-                                <div class="reviewer-info">
-                                    <div class="reviewer-avatar">N</div>
-                                    <div class="reviewer-details">
-                                        <h4 class="reviewer-name">Nguyễn Văn A</h4>
-                                        <div class="review-stars">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="review-text">Hoa rất đẹp và tươi, giao hàng nhanh. Rất hài lòng!</p>
-                                <span class="review-date">15/11/2024</span>
-                            </div>
-
-                            <div class="review-item">
-                                <div class="reviewer-info">
-                                    <div class="reviewer-avatar">T</div>
-                                    <div class="reviewer-details">
-                                        <h4 class="reviewer-name">Trần Thị B</h4>
-                                        <div class="review-stars">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="review-text">Chất lượng tuyệt vời, đóng gói cẩn thận. Sẽ ủng hộ shop lâu dài!</p>
-                                <span class="review-date">10/11/2024</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
-    </section>
+    </div>
 
     <!-- Toast Notification -->
     <div class="toast" id="toast">
@@ -196,7 +117,74 @@
         <span>Đã thêm vào giỏ!</span>
     </div>
 
-    <script src="js/product.js"></script>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h4>Tài khoản của tôi</h4>
+                <ul>
+                    <li><a href="/account">Tài khoản của tôi</a></li>
+                    <li><a href="/checkout">Thanh toán</a></li>
+                    <li><a href="/contact">Liên hệ chúng tôi</a></li>
+                    <li><a href="/cart">Giỏ hàng</a></li>
+                    <li><a href="/wishlist">Yêu thích</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Liên kết nhanh</h4>
+                <ul>
+                    <li><a href="/location">Vị trí cửa hàng</a></li>
+                    <li><a href="/tracking">Theo dõi đơn hàng</a></li>
+                    <li><a href="/size-guide">Hướng dẫn kích thước</a></li>
+                    <li><a href="/account">Tài khoản của tôi</a></li>
+                    <li><a href="/faq">Câu hỏi thường gặp</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Thông tin</h4>
+                <ul>
+                    <li><a href="/privacy">Trang bảo mật</a></li>
+                    <li><a href="/about">Về chúng tôi</a></li>
+                    <li><a href="/careers">Tuyển dụng</a></li>
+                    <li><a href="/delivery">Thông tin giao hàng</a></li>
+                    <li><a href="/terms">Điều khoản & Điều kiện</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Dịch vụ khách hàng</h4>
+                <ul>
+                    <li><a href="/shipping">Chính sách vận chuyển</a></li>
+                    <li><a href="/contact">Trợ giúp & Liên hệ</a></li>
+                    <li><a href="/returns">Đổi trả & Hoàn tiền</a></li>
+                    <li><a href="/stores">Cửa hàng trực tuyến</a></li>
+                    <li><a href="/terms">Điều khoản và Điều kiện</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h4>Về cửa hàng</h4>
+                <div class="footer-logo">FIAMA</div>
+                <p class="footer-description">Chuyên cung cấp hoa tươi chất lượng cao với dịch vụ giao hàng tận nơi nhanh chóng và chuyên nghiệp.</p>
+                <div class="footer-contact">
+                    <p><i class="fas fa-map-marker-alt"></i> Thành phố Hồ Chí Minh, Việt Nam</p>
+                    <p><i class="fas fa-phone"></i> +84 123 456 789</p>
+                    <p><i class="fas fa-envelope"></i> info@fiama.com</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="payment-methods">
+                <img src="https://via.placeholder.com/200x30?text=Phương+thức+thanh+toán" alt="Phương thức thanh toán" class="payment-image">
+            </div>
+            <p class="copyright">© - Dành cho bạn</p>
+            <div class="footer-links">
+                <a href="/terms">Điều khoản & Điều kiện</a>
+                <a href="/claim">Khiếu nại</a>
+                <a href="/privacy">Bảo mật & Chính sách</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/js/cart-utils.js"></script>
+    <script src="/js/product.js"></script>
 </body>
 </html>
-

@@ -26,26 +26,11 @@ public class homeController {
 
     @GetMapping("/")
     public String redirectToHome(){
-        return "redirect:/home.html";
+        return "redirect:/home";
     }
 
-    @GetMapping("/home.html")
+    @GetMapping("/home")
     public String showHome(){
-        return "home";  // Thymeleaf sẽ tìm home.html
-    }
-    
-    @GetMapping("/product.html")
-    public String showProduct(){
-        return "product";  // Thymeleaf sẽ tìm product.html
-    }
-    
-    @GetMapping("/cart.html")
-    public String showCart(){
-        return "cart";
-    }
-    
-    @GetMapping("/login.html")
-    public String showLogin(){
-        return "login";
+        return "home";
     }
 }
