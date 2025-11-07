@@ -28,7 +28,20 @@
             <a href="#">Liên hệ</a>
         </nav>
         <div class="utility-nav">
-            <a href="/login" class="user-link active">Đăng nhập</a>
+            <div th:if="${isLoggedIn}" class="user-dropdown">
+                <a href="#" class="user-link">
+                    <i class="fas fa-user"></i>
+                    <span th:text="${userDisplayName}">User</span>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="/account">Tài khoản</a>
+                    <a href="/logout">Đăng xuất</a>
+                </div>
+            </div>
+            <a th:if="${!isLoggedIn}" href="/login" class="user-link active">
+                <i class="fas fa-user"></i>
+                <span>Đăng nhập</span>
+            </a>
             <a href="/cart" class="cart-icon-wrapper">
                 <i class="fas fa-shopping-bag"></i>
                 <span class="cart-count" id="cartCount">0</span>

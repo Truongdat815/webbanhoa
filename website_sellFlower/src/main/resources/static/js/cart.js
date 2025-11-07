@@ -457,49 +457,54 @@ document.getElementById('updateCartBtn')?.addEventListener('click', async functi
     alert('Đã cập nhật giỏ hàng thành công!');
 });
 
-// Apply coupon button
-document.getElementById('applyCouponBtn')?.addEventListener('click', function() {
-    const couponCode = document.getElementById('couponCode').value;
-    if (couponCode.trim() === '') {
-        alert('Vui lòng nhập mã giảm giá');
-        return;
-    }
-    // TODO: Implement coupon validation
-    alert('Mã giảm giá đã được áp dụng! (Tính năng sắp ra mắt)');
-});
 
 // Checkout button
 document.getElementById('checkoutBtn')?.addEventListener('click', async function(e) {
     e.preventDefault();
     
     try {
-        const response = await fetch('/cart/api');
-        const cartItems = await response.json();
-        
-        if (!cartItems || cartItems.length === 0) {
-            alert('Giỏ hàng của bạn đang trống!');
-            return;
-        }
-        
-        // Clear cart after checkout
-        const clearResponse = await fetch('/cart/api/clear', {
-            method: 'POST'
+        // Call checkout endpoint
+        const response = await fetch('/cart/api/checkout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
         });
         
-        if (clearResponse.ok) {
-            updateCartCountInHeaderLocal(0);
+        const result = await response.json();
+        
+        if (result.success) {
+            // Update cart count
+            updateCartCountInHeaderLocal(result.cartCount || 0);
             // Also update via shared function
             if (typeof updateCartCountInHeader === 'function') {
                 updateCartCountInHeader();
             }
-            alert('Đặt hàng thành công! Giỏ hàng đã được xóa.');
-            window.location.href = '/home';
+            
+            // Show success message
+            showToast(result.message || 'Đặt hàng thành công!', 'success');
+            
+            // Reload cart to show empty state
+            await loadCartItems();
+            
+            // Redirect to home after a short delay
+            setTimeout(() => {
+                window.location.href = '/home';
+            }, 1500);
         } else {
-            alert('Có lỗi xảy ra khi xử lý thanh toán. Vui lòng thử lại.');
+            // Show error message
+            showToast(result.message || 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.', 'error');
+            
+            // If user is not logged in, redirect to login page
+            if (result.message && result.message.includes('đăng nhập')) {
+                setTimeout(() => {
+                    window.location.href = '/login';
+                }, 2000);
+            }
         }
     } catch (error) {
         console.error('Error during checkout:', error);
-        alert('Có lỗi xảy ra khi xử lý thanh toán. Vui lòng thử lại.');
+        showToast('Có lỗi xảy ra khi xử lý đặt hàng. Vui lòng thử lại.', 'error');
     }
 });
 

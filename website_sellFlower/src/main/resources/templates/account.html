@@ -3,38 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tài khoản - FRAIS</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Tài khoản - FIAMA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/account.css}">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 <body>
     <!-- Top Banner -->
     <div class="top-banner">
-        <p>FREE SHIPPING ON ORDERS OVER 50$</p>
+        <p>MIỄN PHÍ VẬN CHUYỂN CHO ĐƠN HÀNG TRÊN 500.000₫</p>
     </div>
 
     <!-- Header -->
     <header class="header">
-        <nav class="nav-links">
-            <a href="/home">SHOP ALL</a>
-            <a href="/home#body">FOR BODY</a>
-            <a href="/home#home">FOR HOME</a>
-            <a href="/about">ABOUT</a>
-            <a href="/contact">CONTACT</a>
-        </nav>
         <div class="logo">
-            <div class="logo-box">FRAIS</div>
-        </div>
-        <div class="utility-nav">
-            <div class="search-container">
-                <input type="text" placeholder="SEARCH..." class="search-input">
-                <i class="fas fa-search search-icon"></i>
-            </div>
-            <a href="/account" class="user-link active">
-                <i class="fas fa-user"></i>
-                <span>Account</span>
+            <a href="/home">
+                <h1>FIAMA</h1>
             </a>
-            <a href="/cart" class="cart-link">
+        </div>
+        <nav class="nav-links">
+            <a href="/home">Trang chủ</a>
+            <a href="/product">Sản phẩm</a>
+            <a href="#">Giới thiệu</a>
+            <a href="#">Liên hệ</a>
+        </nav>
+        <div class="utility-nav">
+            <div th:if="${isLoggedIn}" class="user-dropdown">
+                <a href="#" class="user-link">
+                    <i class="fas fa-user"></i>
+                    <span th:text="${userDisplayName}">User</span>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="/account">Tài khoản</a>
+                    <a href="/logout">Đăng xuất</a>
+                </div>
+            </div>
+            <a th:if="${!isLoggedIn}" href="/login" class="user-link">
+                <i class="fas fa-user"></i>
+                <span>Đăng nhập</span>
+            </a>
+            <a href="/cart" class="cart-icon-wrapper">
                 <i class="fas fa-shopping-bag"></i>
                 <span class="cart-count" id="cartCount">0</span>
             </a>
@@ -49,33 +58,33 @@
                     <div class="avatar">
                         <i class="fas fa-user"></i>
                     </div>
-                    <h2 class="user-name">John Doe</h2>
-                    <p class="user-email">john.doe@example.com</p>
+                    <h2 class="user-name" th:text="${accountName ?: 'Người dùng'}">Người dùng</h2>
+                    <p class="user-email" th:text="${accountEmail ?: 'email@example.com'}">email@example.com</p>
                 </div>
                 <nav class="account-nav">
                     <a href="#overview" class="nav-item active" data-section="overview">
                         <i class="fas fa-home"></i>
-                        <span>Overview</span>
+                        <span>Tổng quan</span>
                     </a>
                     <a href="#orders" class="nav-item" data-section="orders">
                         <i class="fas fa-shopping-bag"></i>
-                        <span>Orders</span>
+                        <span>Đơn hàng</span>
                     </a>
                     <a href="#profile" class="nav-item" data-section="profile">
                         <i class="fas fa-user-circle"></i>
-                        <span>Profile</span>
+                        <span>Hồ sơ</span>
                     </a>
                     <a href="#addresses" class="nav-item" data-section="addresses">
                         <i class="fas fa-map-marker-alt"></i>
-                        <span>Addresses</span>
+                        <span>Địa chỉ</span>
                     </a>
                     <a href="#settings" class="nav-item" data-section="settings">
                         <i class="fas fa-cog"></i>
-                        <span>Settings</span>
+                        <span>Cài đặt</span>
                     </a>
                     <a href="/logout" class="nav-item logout">
                         <i class="fas fa-sign-out-alt"></i>
-                        <span>Log Out</span>
+                        <span>Đăng xuất</span>
                     </a>
                 </nav>
             </div>
@@ -83,14 +92,14 @@
             <div class="account-content">
                 <!-- Overview Section -->
                 <div class="content-section active" id="overview">
-                    <h1 class="section-title">Account Overview</h1>
+                    <h1 class="section-title">Tổng quan tài khoản</h1>
                     <div class="overview-grid">
                         <div class="overview-card">
                             <div class="card-icon orders">
                                 <i class="fas fa-shopping-bag"></i>
                             </div>
                             <div class="card-content">
-                                <h3>Total Orders</h3>
+                                <h3>Tổng đơn hàng</h3>
                                 <p class="card-value">12</p>
                             </div>
                         </div>
@@ -99,8 +108,8 @@
                                 <i class="fas fa-dollar-sign"></i>
                             </div>
                             <div class="card-content">
-                                <h3>Total Spending</h3>
-                                <p class="card-value">$450.00</p>
+                                <h3>Tổng chi tiêu</h3>
+                                <p class="card-value">450.000₫</p>
                             </div>
                         </div>
                         <div class="overview-card">
@@ -108,29 +117,29 @@
                                 <i class="fas fa-star"></i>
                             </div>
                             <div class="card-content">
-                                <h3>Reward Points</h3>
-                                <p class="card-value">1,250</p>
+                                <h3>Đánh giá</h3>
+                                <p class="card-value" th:text="${reviewCount ?: 0}">0</p>
                             </div>
                         </div>
                     </div>
                     <div class="recent-orders">
-                        <h2 class="subsection-title">Recent Orders</h2>
+                        <h2 class="subsection-title">Đơn hàng gần đây</h2>
                         <div class="orders-list">
                             <div class="order-item">
                                 <div class="order-info">
                                     <span class="order-id">#ORD-2024-001</span>
-                                    <span class="order-date">Jan 15, 2024</span>
+                                    <span class="order-date">15/01/2024</span>
                                 </div>
-                                <div class="order-status completed">Completed</div>
-                                <div class="order-total">$45.00</div>
+                                <div class="order-status completed">Hoàn thành</div>
+                                <div class="order-total">45.000₫</div>
                             </div>
                             <div class="order-item">
                                 <div class="order-info">
                                     <span class="order-id">#ORD-2024-002</span>
-                                    <span class="order-date">Jan 10, 2024</span>
+                                    <span class="order-date">10/01/2024</span>
                                 </div>
-                                <div class="order-status processing">Processing</div>
-                                <div class="order-total">$32.00</div>
+                                <div class="order-status processing">Đang xử lý</div>
+                                <div class="order-total">32.000₫</div>
                             </div>
                         </div>
                     </div>
@@ -138,72 +147,99 @@
 
                 <!-- Orders Section -->
                 <div class="content-section" id="orders">
-                    <h1 class="section-title">My Orders</h1>
-                    <div class="orders-section">
-                        <div class="order-card">
-                            <div class="order-header">
-                                <div>
-                                    <span class="order-number">Order #ORD-2024-001</span>
-                                    <span class="order-date">Placed on Jan 15, 2024</span>
-                                </div>
-                                <span class="order-status-badge completed">Completed</span>
-                            </div>
-                            <div class="order-products">
-                                <div class="order-product">
-                                    <img src="https://via.placeholder.com/80x80?text=Product" alt="Product">
-                                    <div class="product-info">
-                                        <h4>Lemon Coco Candle</h4>
-                                        <p>Quantity: 2</p>
-                                    </div>
-                                    <div class="product-price">$30.00</div>
-                                </div>
-                                <div class="order-product">
-                                    <img src="https://via.placeholder.com/80x80?text=Product" alt="Product">
-                                    <div class="product-info">
-                                        <h4>Rose Water Candle</h4>
-                                        <p>Quantity: 1</p>
-                                    </div>
-                                    <div class="product-price">$15.00</div>
-                                </div>
-                            </div>
-                            <div class="order-footer">
-                                <div class="order-total-amount">
-                                    <span>Total: <strong>$45.00</strong></span>
-                                </div>
-                                <button class="view-details-btn">View Details</button>
-                            </div>
-                        </div>
+                    <h1 class="section-title">Đơn hàng của tôi</h1>
+                    <div class="orders-table-container">
+                        <table class="orders-table">
+                            <thead>
+                                <tr>
+                                    <th>Đơn hàng</th>
+                                    <th>Ngày</th>
+                                    <th>Trạng thái</th>
+                                    <th>Tổng tiền</th>
+                                    <th>Hành động</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:if="${orders == null || orders.isEmpty()}">
+                                    <td colspan="5" class="no-orders">Bạn chưa có đơn hàng nào</td>
+                                </tr>
+                                <tr th:each="order : ${orders}">
+                                    <td th:text="${order.orderId}">1</td>
+                                    <td th:text="${order.formattedDate}">22/06/2019</td>
+                                    <td>
+                                        <span th:class="'order-status-badge ' + ${order.statusClass}"
+                                              th:text="${order.status}">Hoàn thành</span>
+                                    </td>
+                                    <td th:text="${order.formattedAmount}">300.000₫</td>
+                                    <td>
+                                        <a th:href="@{/order/{id}(id=${order.orderId})}" class="view-order-link">Xem</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
                 <!-- Profile Section -->
                 <div class="content-section" id="profile">
-                    <h1 class="section-title">Edit Profile</h1>
+                    <h1 class="section-title">Chỉnh sửa hồ sơ</h1>
+                    
+                    <!-- Flash Messages -->
+                    <div th:if="${success}" class="flash-message success" th:text="${success}"></div>
+                    <div th:if="${error}" class="flash-message error" th:text="${error}"></div>
+                    
                     <form class="profile-form">
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="firstName">First Name</label>
-                                <input type="text" id="firstName" value="John" required>
+                                <label for="firstName">Họ</label>
+                                <input type="text" id="firstName" value="Nguyễn Văn" required>
                             </div>
                             <div class="form-group">
-                                <label for="lastName">Last Name</label>
-                                <input type="text" id="lastName" value="Doe" required>
+                                <label for="lastName">Tên</label>
+                                <input type="text" id="lastName" value="A" required>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group full-width">
                             <label for="email">Email</label>
-                            <input type="email" id="email" value="john.doe@example.com" required>
+                            <input type="email" id="email" value="user1@test.com" required>
                         </div>
-                        <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" value="+1 234 567 8900">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="phone">Số điện thoại</label>
+                                <input type="tel" id="phone" value="0987654321">
+                            </div>
+                            <div class="form-group">
+                                <label>Mật khẩu</label>
+                                <button type="button" class="change-password-toggle-btn" id="changePasswordBtn">
+                                    <i class="fas fa-key"></i>
+                                    <span>Đổi mật khẩu</span>
+                                </button>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="birthday">Date of Birth</label>
-                            <input type="date" id="birthday" value="1990-01-01">
+                        
+                        <!-- Password Change Section (Hidden by default) -->
+                        <div class="password-change-section" id="passwordChangeSection" style="display: none;">
+                            <div class="form-group full-width">
+                                <label for="oldPassword">Mật khẩu cũ</label>
+                                <input type="password" id="oldPassword" name="oldPassword" placeholder="Nhập mật khẩu cũ" minlength="6">
+                                <span class="error-message" id="oldPasswordError"></span>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="newPassword">Mật khẩu mới</label>
+                                    <input type="password" id="newPassword" name="newPassword" placeholder="Nhập mật khẩu mới (tối thiểu 6 ký tự)" minlength="6">
+                                    <span class="error-message" id="newPasswordError"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="confirmPassword">Xác nhận mật khẩu mới</label>
+                                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu mới" minlength="6">
+                                    <span class="error-message" id="confirmPasswordError"></span>
+                                </div>
+                            </div>
                         </div>
+                        
                         <button type="submit" class="save-btn">
-                            <span>Save Changes</span>
+                            <span>Lưu thay đổi</span>
                             <i class="fas fa-check"></i>
                         </button>
                     </form>
@@ -211,29 +247,28 @@
 
                 <!-- Addresses Section -->
                 <div class="content-section" id="addresses">
-                    <h1 class="section-title">My Addresses</h1>
+                    <h1 class="section-title">Địa chỉ của tôi</h1>
                     <div class="addresses-grid">
                         <div class="address-card">
                             <div class="address-header">
-                                <h3>Default Address</h3>
-                                <span class="default-badge">Default</span>
+                                <h3>Địa chỉ mặc định</h3>
+                                <span class="default-badge">Mặc định</span>
                             </div>
                             <div class="address-content">
-                                <p>John Doe</p>
-                                <p>123 Main Street</p>
-                                <p>New York, NY 10001</p>
-                                <p>United States</p>
-                                <p>Phone: +1 234 567 8900</p>
+                                <p>Nguyễn Văn A</p>
+                                <p>123 Đường ABC, Phường XYZ, Quận 1,</p>
+                                <p>TP.HCM</p>
+                                <p>Điện thoại: 0987654321</p>
                             </div>
                             <div class="address-actions">
-                                <button class="edit-btn">Edit</button>
-                                <button class="delete-btn">Delete</button>
+                                <button class="edit-btn">Sửa</button>
+                                <button class="delete-btn">Xóa</button>
                             </div>
                         </div>
                         <div class="address-card add-address">
                             <div class="add-address-content">
                                 <i class="fas fa-plus"></i>
-                                <span>Add New Address</span>
+                                <span>Thêm địa chỉ mới</span>
                             </div>
                         </div>
                     </div>
@@ -241,12 +276,12 @@
 
                 <!-- Settings Section -->
                 <div class="content-section" id="settings">
-                    <h1 class="section-title">Account Settings</h1>
+                    <h1 class="section-title">Cài đặt tài khoản</h1>
                     <div class="settings-list">
                         <div class="setting-item">
                             <div class="setting-info">
-                                <h3>Email Notifications</h3>
-                                <p>Receive email updates about your orders</p>
+                                <h3>Thông báo Email</h3>
+                                <p>Nhận cập nhật qua email về đơn hàng của bạn</p>
                             </div>
                             <label class="toggle-switch">
                                 <input type="checkbox" checked>
@@ -255,8 +290,8 @@
                         </div>
                         <div class="setting-item">
                             <div class="setting-info">
-                                <h3>SMS Notifications</h3>
-                                <p>Receive SMS updates about your orders</p>
+                                <h3>Thông báo SMS</h3>
+                                <p>Nhận cập nhật qua SMS về đơn hàng của bạn</p>
                             </div>
                             <label class="toggle-switch">
                                 <input type="checkbox">
@@ -265,8 +300,8 @@
                         </div>
                         <div class="setting-item">
                             <div class="setting-info">
-                                <h3>Newsletter</h3>
-                                <p>Receive our weekly newsletter</p>
+                                <h3>Bản tin</h3>
+                                <p>Nhận bản tin hàng tuần của chúng tôi</p>
                             </div>
                             <label class="toggle-switch">
                                 <input type="checkbox" checked>
@@ -275,10 +310,10 @@
                         </div>
                         <div class="setting-item">
                             <div class="setting-info">
-                                <h3>Change Password</h3>
-                                <p>Update your account password</p>
+                                <h3>Đổi mật khẩu</h3>
+                                <p>Cập nhật mật khẩu tài khoản của bạn</p>
                             </div>
-                            <button class="change-password-btn">Change Password</button>
+                            <button class="change-password-btn">Đổi mật khẩu</button>
                         </div>
                     </div>
                 </div>
@@ -290,52 +325,70 @@
     <footer class="footer">
         <div class="footer-content">
             <div class="footer-column">
-                <h4>FRAIS</h4>
-                <ul>
-                    <li><a href="/home">SHOP ALL</a></li>
-                    <li><a href="/home#body">FOR BODY</a></li>
-                    <li><a href="/home#home">FOR HOME</a></li>
-                    <li><a href="/about">ABOUT</a></li>
-                    <li><a href="/contact">CONTACT</a></li>
+            <h4>Tài khoản của tôi</h4>
+            <ul>
+                <li><a href="/account">Tài khoản của tôi</a></li>
+                <li><a href="/checkout">Thanh toán</a></li>
+                <li><a href="/contact">Liên hệ chúng tôi</a></li>
+                <li><a href="/cart">Giỏ hàng</a></li>
+                <li><a href="/wishlist">Yêu thích</a></li>
                 </ul>
             </div>
             <div class="footer-column">
-                <h4>HELP</h4>
-                <ul>
-                    <li><a href="/shipping">SHIPPING & RETURNS</a></li>
-                    <li><a href="/policy">STORE POLICY</a></li>
-                    <li><a href="/payment">PAYMENT METHODS</a></li>
-                    <li><a href="/faq">FAQ</a></li>
+            <h4>Liên kết nhanh</h4>
+            <ul>
+                <li><a href="/location">Vị trí cửa hàng</a></li>
+                <li><a href="/tracking">Theo dõi đơn hàng</a></li>
+                <li><a href="/size-guide">Hướng dẫn kích thước</a></li>
+                <li><a href="/account">Tài khoản của tôi</a></li>
+                    <li><a href="/faq">Câu hỏi thường gặp</a></li>
                 </ul>
             </div>
             <div class="footer-column">
-                <h4>CONTACT</h4>
-                <ul>
-                    <li><a href="tel:1234567890">123-456-7890</a></li>
-                    <li><a href="mailto:info@my-domain.com">INFO@MY-DOMAIN.COM</a></li>
+            <h4>Thông tin</h4>
+            <ul>
+                <li><a href="/privacy">Trang bảo mật</a></li>
+                <li><a href="/about">Về chúng tôi</a></li>
+                <li><a href="/careers">Tuyển dụng</a></li>
+                <li><a href="/delivery">Thông tin giao hàng</a></li>
+                <li><a href="/terms">Điều khoản & Điều kiện</a></li>
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h4>Dịch vụ khách hàng</h4>
+            <ul>
+                <li><a href="/shipping">Chính sách vận chuyển</a></li>
+                <li><a href="/contact">Trợ giúp & Liên hệ</a></li>
+                <li><a href="/returns">Đổi trả & Hoàn tiền</a></li>
+                <li><a href="/stores">Cửa hàng trực tuyến</a></li>
+                <li><a href="/terms">Điều khoản và Điều kiện</a></li>
                 </ul>
             </div>
             <div class="footer-column">
-                <h4>NEWSLETTER</h4>
-                <form class="newsletter-form">
-                    <label for="newsletter-email">Email</label>
-                    <input type="email" id="newsletter-email" placeholder="Enter Email *" required>
-                    <button type="submit" class="subscribe-btn">
-                        <span>SUBSCRIBE</span>
-                    </button>
-                </form>
+            <h4>Về cửa hàng</h4>
+            <div class="footer-logo">FIAMA</div>
+            <p class="footer-description">Chuyên cung cấp hoa tươi chất lượng cao với dịch vụ giao hàng tận nơi nhanh chóng và chuyên nghiệp.</p>
+            <div class="footer-contact">
+                <p><i class="fas fa-map-marker-alt"></i> Thành phố Hồ Chí Minh, Việt Nam</p>
+                <p><i class="fas fa-phone"></i> +84 123 456 789</p>
+                <p><i class="fas fa-envelope"></i> info@fiama.com</p>
+            </div>
             </div>
         </div>
         <div class="footer-bottom">
-            <div class="social-icons">
-                <a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="#" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social-icon" aria-label="Pinterest"><i class="fab fa-pinterest"></i></a>
+        <div class="payment-methods">
+            <img src="https://via.placeholder.com/200x30?text=Phương+thức+thanh+toán" alt="Phương thức thanh toán" class="payment-image">
+        </div>
+        <p class="copyright">© - Dành cho bạn</p>
+        <div class="footer-links">
+            <a href="/terms">Điều khoản & Điều kiện</a>
+            <a href="/claim">Khiếu nại</a>
+            <a href="/privacy">Bảo mật & Chính sách</a>
             </div>
-            <p class="copyright">© 2023 by Frais. Proudly created with Wix.com</p>
         </div>
     </footer>
 
+    <script src="/js/cart-utils.js"></script>
     <script src="/js/account.js"></script>
 </body>
 </html>

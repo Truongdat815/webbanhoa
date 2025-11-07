@@ -9,4 +9,5 @@ public interface ReviewService {
     Review updateReview(Integer id,Review review);
     boolean deleteReview(Integer id);
     List<Review> findAllReviews();
+    long getReviewCountByAccountId(Integer accountId);
 }

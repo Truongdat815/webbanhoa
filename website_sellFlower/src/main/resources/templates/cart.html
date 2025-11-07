@@ -28,7 +28,20 @@
             <a href="#">Liên hệ</a>
         </nav>
         <div class="utility-nav">
-            <a href="/login" class="user-link">Đăng nhập</a>
+            <div th:if="${isLoggedIn}" class="user-dropdown">
+                <a href="#" class="user-link">
+                    <i class="fas fa-user"></i>
+                    <span th:text="${userDisplayName}">User</span>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="/account">Tài khoản</a>
+                    <a href="/logout">Đăng xuất</a>
+                </div>
+            </div>
+            <a th:if="${!isLoggedIn}" href="/login" class="user-link">
+                <i class="fas fa-user"></i>
+                <span>Đăng nhập</span>
+            </a>
             <a href="/cart" class="cart-icon-wrapper">
                 <i class="fas fa-shopping-bag"></i>
                 <span class="cart-count" id="cartCount">0</span>
@@ -57,12 +70,8 @@
                         <!-- Cart items will be dynamically loaded here -->
                     </div>
                     
-                    <!-- Coupon and Update Cart Section -->
+                    <!-- Update Cart Section -->
                     <div class="cart-actions">
-                        <div class="coupon-section">
-                            <input type="text" id="couponCode" placeholder="Mã giảm giá" class="coupon-input">
-                            <button class="apply-coupon-btn" id="applyCouponBtn">Áp dụng mã</button>
-                        </div>
                         <button class="update-cart-btn" id="updateCartBtn">Cập nhật giỏ hàng</button>
                     </div>
                 </div>
@@ -87,7 +96,7 @@
                         <span class="total">₫0</span>
                     </div>
                     <button class="checkout-btn" id="checkoutBtn">
-                        <span>Thanh toán</span>
+                        <span>Đặt hàng</span>
                     </button>
                 </div>
             </div>

@@ -1,8 +1,15 @@
 package org.example.website_sellflower.controller;
 
 import org.example.website_sellflower.dto.CartItemDTO;
+import org.example.website_sellflower.entity.Account;
+import org.example.website_sellflower.entity.Order;
+import org.example.website_sellflower.entity.OrderDetail;
 import org.example.website_sellflower.entity.Product;
+import org.example.website_sellflower.repository.AccountRepository;
 import org.example.website_sellflower.repository.ProductRepository;
+import org.example.website_sellflower.service.OrderDetailService;
+import org.example.website_sellflower.service.OrderService;
+import org.example.website_sellflower.util.OrderStatusUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -10,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +29,15 @@ public class CartController {
     
     @Autowired(required = false)
     private ProductRepository productRepository;
+    
+    @Autowired(required = false)
+    private OrderService orderService;
+    
+    @Autowired(required = false)
+    private OrderDetailService orderDetailService;
+    
+    @Autowired(required = false)
+    private AccountRepository accountRepository;
     
     @GetMapping
     public String showCartPage() {
@@ -227,6 +244,122 @@ public class CartController {
         response.put("success", true);
         response.put("message", "Đã xóa giỏ hàng");
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/api/checkout")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> checkout(HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            // Check if user is logged in
+            Boolean isLoggedIn = (Boolean) session.getAttribute("isLoggedIn");
+            if (isLoggedIn == null || !isLoggedIn) {
+                response.put("success", false);
+                response.put("message", "Vui lòng đăng nhập để đặt hàng");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+            // Get cart items
+            List<CartItemDTO> cart = getCartFromSession(session);
+            if (cart == null || cart.isEmpty()) {
+                response.put("success", false);
+                response.put("message", "Giỏ hàng của bạn đang trống!");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+            // Get account from session
+            Integer accountId = (Integer) session.getAttribute("accountId");
+            if (accountId == null) {
+                response.put("success", false);
+                response.put("message", "Không tìm thấy thông tin tài khoản");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+            // Get account entity
+            Account account = null;
+            if (accountRepository != null) {
+                account = accountRepository.findById(accountId).orElse(null);
+            }
+            if (account == null && accountRepository == null) {
+                // If repository is not available, create a temporary account object
+                account = new Account();
+                account.setAccountId(accountId);
+                account.setName((String) session.getAttribute("accountName"));
+                account.setEmail((String) session.getAttribute("accountEmail"));
+            }
+            
+            if (account == null) {
+                response.put("success", false);
+                response.put("message", "Không tìm thấy thông tin tài khoản");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+            // Calculate total amount
+            BigDecimal totalAmount = BigDecimal.ZERO;
+            for (CartItemDTO item : cart) {
+                BigDecimal itemTotal = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+                totalAmount = totalAmount.add(itemTotal);
+            }
+            
+            // Add shipping fee (15,000 VND)
+            BigDecimal shippingFee = new BigDecimal("15000");
+            totalAmount = totalAmount.add(shippingFee);
+            
+            // Create Order
+            Order order = new Order();
+            order.setAccount(account);
+            order.setOrderDate(LocalDateTime.now());
+            order.setTotalAmount(totalAmount);
+            order.setStatus(OrderStatusUtil.PENDING_PAYMENT); // Status in English for database
+            order.setNote(null);
+            
+            // Save order
+            if (orderService != null) {
+                order = orderService.createOrder(order);
+            } else {
+                response.put("success", false);
+                response.put("message", "Dịch vụ đặt hàng chưa sẵn sàng");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+            if (order == null || order.getOrderId() == null) {
+                response.put("success", false);
+                response.put("message", "Không thể tạo đơn hàng. Vui lòng thử lại.");
+                return ResponseEntity.badRequest().body(response);
+            }
+            
+            // Create OrderDetails
+            if (orderDetailService != null && productRepository != null) {
+                for (CartItemDTO item : cart) {
+                    Product product = productRepository.findById(item.getProductId()).orElse(null);
+                    if (product != null) {
+                        OrderDetail orderDetail = new OrderDetail();
+                        orderDetail.setOrder(order);
+                        orderDetail.setProduct(product);
+                        orderDetail.setQuantity(item.getQuantity());
+                        BigDecimal itemTotal = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+                        orderDetail.setTotal(itemTotal);
+                        orderDetailService.saveOrderDetail(orderDetail);
+                    }
+                }
+            }
+            
+            // Clear cart after successful checkout
+            session.removeAttribute("cart");
+            
+            response.put("success", true);
+            response.put("message", "Đặt hàng thành công!");
+            response.put("orderId", order.getOrderId());
+            response.put("cartCount", 0);
+            
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.put("success", false);
+            response.put("message", "Có lỗi xảy ra khi xử lý đơn hàng: " + e.getMessage());
+            return ResponseEntity.badRequest().body(response);
+        }
     }
 
     @SuppressWarnings("unchecked")

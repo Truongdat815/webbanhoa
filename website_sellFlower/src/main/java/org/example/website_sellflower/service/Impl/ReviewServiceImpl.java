@@ -7,7 +7,6 @@ import org.example.website_sellflower.service.ReviewService;
 // import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 // @Service  // TẠM THỜI COMMENT - Sẽ uncomment khi có database
 public class ReviewServiceImpl implements ReviewService {
@@ -62,6 +61,21 @@ public class ReviewServiceImpl implements ReviewService {
         return List.of();
         /*
         return reviewRepository.findAll();
+        */
+    }
+
+    @Override
+    public long getReviewCountByAccountId(Integer accountId) {
+        // Tạm thời hardcode - sẽ implement sau khi có database
+        // Giả sử mỗi account có một số lượng đánh giá ngẫu nhiên để test
+        if (accountId == null) {
+            return 0;
+        }
+        // Hardcode số lượng đánh giá dựa trên accountId để test
+        return accountId % 5 + 1; // Trả về số từ 1-5 để test
+        
+        /*
+        return reviewRepository.countByAccountId(accountId);
         */
     }
 }

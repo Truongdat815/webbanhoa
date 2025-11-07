@@ -6,8 +6,9 @@ import java.util.List;
 
 public interface OrderService {
     public List<Order> getAllOrders();
-    public Order getOrderById(Long id);
+    public Order getOrderById(Integer id);
     public Order createOrder(Order order);
-    public Order updateOrder(Long id, Order order);
-    public boolean deleteOrder(Long id);
+    public Order updateOrder(Integer id, Order order);
+    public boolean deleteOrder(Integer id);
+    public List<Order> getOrdersByAccountId(Integer accountId);
 }
