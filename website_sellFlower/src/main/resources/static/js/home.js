@@ -399,11 +399,25 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 
         // Add active class to clicked tab
         this.classList.add('active');
-        document.getElementById(tabId).classList.add('active');
+        const activeTab = document.getElementById(tabId);
+        activeTab.classList.add('active');
+
+        // Force reflow to ensure CSS is applied
+        void activeTab.offsetHeight;
 
         // Reset carousel position when switching tabs
         if (tabId === 'new-arrival') {
             resetNewArrivalCarousel();
+            // Sync quantity selector width after a short delay
+            setTimeout(() => {
+                syncQuantitySelectorWidth();
+            }, 100);
+        } else if (tabId === 'top-sales') {
+            resetTopSalesCarousel();
+            // Sync quantity selector width after a short delay
+            setTimeout(() => {
+                syncQuantitySelectorWidth();
+            }, 100);
         }
     });
 });
@@ -496,9 +510,90 @@ function goToProductDetail(productCard) {
     window.location.href = `/product/detail/${productId}`;
 }
 
+// Top Sales Carousel Functionality
+function initTopSalesCarousel() {
+    const track = document.getElementById('topSalesTrack');
+    const prevBtn = document.getElementById('topSalesPrev');
+    const nextBtn = document.getElementById('topSalesNext');
+    const container = track?.closest('.carousel-container');
+    const grid = track?.querySelector('.carousel-grid');
+    const productCards = grid?.querySelectorAll('.product-card');
+
+    if (!track || !prevBtn || !nextBtn || !container || !productCards || productCards.length === 0) {
+        return;
+    }
+
+    const productsPerView = 3;
+    const totalProducts = productCards.length;
+    const maxSlide = Math.max(0, totalProducts - productsPerView);
+    let currentSlide = 0;
+
+    // Calculate slide distance (1 product card width + gap)
+    function calculateSlideDistance() {
+        if (productCards.length === 0) return 0;
+        // Wait for layout to complete
+        const cardWidth = productCards[0].offsetWidth;
+        const gap = 40; // gap from CSS
+        return cardWidth + gap;
+    }
+
+    function updateCarousel() {
+        const slideDistance = calculateSlideDistance();
+        const transformX = -currentSlide * slideDistance;
+        track.style.transform = `translateX(${transformX}px)`;
+
+        // Update button states
+        if (prevBtn && nextBtn) {
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide >= maxSlide;
+        }
+    }
+
+    function nextSlide() {
+        if (currentSlide < maxSlide) {
+            currentSlide++;
+            updateCarousel();
+        }
+    }
+
+    function prevSlide() {
+        if (currentSlide > 0) {
+            currentSlide--;
+            updateCarousel();
+        }
+    }
+
+    // Add event listeners (only once)
+    nextBtn.onclick = nextSlide;
+    prevBtn.onclick = prevSlide;
+
+    // Initialize
+    setTimeout(() => {
+        updateCarousel();
+    }, 100);
+
+    // Store functions for reset
+    window.topSalesCarousel = {
+        reset: function() {
+            currentSlide = 0;
+            updateCarousel();
+        },
+        update: updateCarousel,
+        next: nextSlide,
+        prev: prevSlide
+    };
+}
+
+function resetTopSalesCarousel() {
+    if (window.topSalesCarousel && window.topSalesCarousel.reset) {
+        window.topSalesCarousel.reset();
+    }
+}
+
 // Initialize carousel on page load
 window.addEventListener('DOMContentLoaded', function() {
     initNewArrivalCarousel();
+    initTopSalesCarousel();
     
     // Initialize hero banner carousel
     initHeroBannerCarousel();
@@ -538,5 +633,6 @@ window.addEventListener('resize', function() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function() {
         initNewArrivalCarousel();
+        initTopSalesCarousel();
     }, 250);
 });
