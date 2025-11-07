@@ -1,9 +1,7 @@
 package org.example.website_sellflower.service.impl;
 
 import org.example.website_sellflower.entity.Account;
-import org.example.website_sellflower.repository.AccountRepository;
 import org.example.website_sellflower.service.AccountService;
-// import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -11,12 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-@Service  // Đã bật lại để Spring có thể inject service
+@Service
 public class AccountServiceImpl implements AccountService {
-    // @Autowired  // TẠM THỜI COMMENT - không cần repository khi dùng hardcode
-    private AccountRepository repository;
     
-    // Hardcode data để test - lưu trong memory
+    // Hard code data để test - lưu trong memory
     private static final Map<String, Account> hardcodedAccounts = new HashMap<>();
     private static final AtomicInteger accountIdCounter = new AtomicInteger(100);
     
@@ -34,7 +30,7 @@ public class AccountServiceImpl implements AccountService {
         admin.setCreateAt(LocalDateTime.now());
         hardcodedAccounts.put("admin@test.com", admin);
         
-        // Tài khoản user 1
+        // Tài khoản user
         Account user1 = new Account();
         user1.setAccountId(2);
         user1.setName("Nguyễn Văn A");
@@ -45,30 +41,6 @@ public class AccountServiceImpl implements AccountService {
         user1.setRole("user");
         user1.setCreateAt(LocalDateTime.now());
         hardcodedAccounts.put("user1@test.com", user1);
-        
-        // Tài khoản user 2
-        Account user2 = new Account();
-        user2.setAccountId(3);
-        user2.setName("Trần Thị B");
-        user2.setEmail("user2@test.com");
-        user2.setPassword("user123");
-        user2.setPhone("0912345678");
-        user2.setAddress("789 Customer Street, Da Nang");
-        user2.setRole("user");
-        user2.setCreateAt(LocalDateTime.now());
-        hardcodedAccounts.put("user2@test.com", user2);
-        
-        // Tài khoản test đơn giản
-        Account test = new Account();
-        test.setAccountId(4);
-        test.setName("Test User");
-        test.setEmail("test@test.com");
-        test.setPassword("test123");
-        test.setPhone("0900000000");
-        test.setAddress("Test Address");
-        test.setRole("user");
-        test.setCreateAt(LocalDateTime.now());
-        hardcodedAccounts.put("test@test.com", test);
     }
     
     @Override
@@ -120,10 +92,5 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account getAccountByEmail(String email) {
         return hardcodedAccounts.get(email);
-    }
-    
-    // Method helper để lấy tất cả accounts (để debug/test)
-    public static Map<String, Account> getAllAccounts() {
-        return new HashMap<>(hardcodedAccounts);
     }
 }
