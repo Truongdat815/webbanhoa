@@ -48,7 +48,7 @@
             <div class="error-message" id="errorMessage" th:if="${error}" th:text="${error}"></div>
             <div class="success-message" id="successMessage" th:if="${success}" th:text="${success}"></div>
 
-            <form class="login-form" th:action="@{/register}" method="post" id="signupForm">
+            <form class="login-form" th:action="@{/signup/register}" method="post" id="signupForm">
                 <div class="form-group">
                     <label for="name">Họ và tên</label>
                     <input type="text" id="name" name="name" placeholder="Nhập họ và tên" required>
