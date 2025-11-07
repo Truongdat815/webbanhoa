@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 public class AccountServiceImpl implements AccountService {
     @Autowired
     private AccountRepository repository;
-    
     @Override
     public boolean login(String username, String password) {
         Account account = repository.isExist(username, password);
@@ -19,7 +18,6 @@ public class AccountServiceImpl implements AccountService {
         }
         return false;
     }
-    
     @Override
     public boolean register(Account account) {
         Account existingAccount = repository.findByAccountId(account.getAccountId());
