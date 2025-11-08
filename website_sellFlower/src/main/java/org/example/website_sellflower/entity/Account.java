@@ -20,11 +20,13 @@ public class Account {
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "full_name")
+    @Column(name = "full_name", columnDefinition = "NVARCHAR(255)")
     private String fullName;
 
+    @Column(columnDefinition = "NVARCHAR(20)")
     private String phone;
 
+    @Column(columnDefinition = "NVARCHAR(500)")
     private String address;
 
     @Column(length = 20)

@@ -20,7 +20,7 @@ public class Review {
 
     private Integer rating;
 
-    @Column(length = 255)
+    @Column(length = 1000, columnDefinition = "NVARCHAR(1000)")
     private String comment;
 
     @Column(name = "review_date")

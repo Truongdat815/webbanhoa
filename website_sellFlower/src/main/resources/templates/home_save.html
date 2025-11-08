@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chủ - BLOOMORA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+</head>
+<body>
+
+
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            <a href="/home">
+                <h1>FIAMA</h1>
+            </a>
+        </div>
+        <nav class="nav-links">
+            <a href="/home" class="active">Trang chủ</a>
+            <a href="/product">Sản phẩm</a>
+            <a href="#">Liên hệ</a>
+        </nav>
+        <div class="utility-nav">
+            <div class="user-dropdown" th:if="${isLoggedIn}">
+                <a href="#" class="user-link">
+                    <i class="fas fa-user"></i>
+                    <span th:text="${userDisplayName}">User</span>
+                </a>
+                <div class="dropdown-menu">
+                    <a href="/account">Tài khoản</a>
+                    <a href="/logout">Đăng xuất</a>
+                </div>
+            </div>
+            <a th:if="${!isLoggedIn}" href="/login" class="user-link">
+                <i class="fas fa-user"></i>
+                <span>Đăng nhập</span>
+            </a>
+            <a href="/cart" class="cart-icon-wrapper">
+                <i class="fas fa-shopping-bag"></i>
+                <span class="cart-count" id="cartCount">0</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+<main class="main-content" th:attr="data-is-logged-in=${isLoggedIn != null ? isLoggedIn : false}">
+    <!-- Hero Banner -->
+    <section class="hero-banner-section">
+        <div class="hero-banner-container">
+            <div class="hero-banner-content">
+                <div class="hero-text-section">
+                    <div class="hero-divider"></div>
+                    <span class="hero-category">HOA & QUÀ TẶNG</span>
+                    <h1 class="hero-title">GIẢM GIÁ LÊN ĐẾN 75%</h1>
+                    <p class="hero-description">Khám phá bộ sưu tập hoa tươi đẹp nhất với giá ưu đãi đặc biệt. Từ những bó hoa lãng mạn đến những món quà tinh tế, chúng tôi mang đến cho bạn những khoảnh khắc đáng nhớ với chất lượng cao và dịch vụ tận tâm.</p>
+                    <a href="#products" class="hero-shop-btn">Mua Ngay</a>
+                </div>
+                <div class="hero-image-section">
+                    <div class="hero-floral-image">
+                        <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=600" alt="Flower & Gift" class="hero-main-image">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Tabs Section -->
+    <section class="product-tabs-section" id="products">
+        <div class="container">
+            <div class="section-header">
+                <div class="product-tabs">
+                    <button class="tab-btn active" data-tab="new-arrival">Sản phẩm mới</button>
+                    <button class="tab-btn" data-tab="top-sales">Bán chạy</button>
+                </div>
+            </div>
+
+            <!-- New Arrival Tab -->
+            <div class="tab-content active" id="new-arrival">
+                <div class="product-carousel">
+                    <button class="carousel-nav-btn prev-btn" id="newArrivalPrev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="carousel-container">
+                        <div class="carousel-track" id="newArrivalTrack">
+                            <div class="products-grid carousel-grid">
+                                <!-- Product 1 -->
+                        <div class="product-card" data-product-id="1" data-product-name="Cây Hoa Hồng Hồng" data-product-price="420000" data-product-image="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400" data-product-stock="50">
+                            <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                                <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400" alt="Cây Hoa Hồng Hồng" class="product-image">
+                                <div class="product-overlay">
+                                    <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                                </div>
+                            </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Cây Hoa Hồng Hồng</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">₫420,000</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="50" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Product 2 -->
+                                <div class="product-card" data-product-id="2" data-product-name="Hoa Hạnh Phúc Cao Cấp" data-product-price="420000" data-product-image="https://images.unsplash.com/photo-1520763185298-1b434c919102?w=400" data-product-stock="30">
+                                    <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                                        <img src="https://images.unsplash.com/photo-1520763185298-1b434c919102?w=400" alt="Hoa Hạnh Phúc Cao Cấp" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Hoa Hạnh Phúc Cao Cấp</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">₫420,000</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="30" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Product 3 -->
+                                <div class="product-card" data-product-id="3" data-product-name="Hoa Hồng Trắng" data-product-price="380000" data-product-image="https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=400" data-product-stock="40">
+                                    <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                                        <img src="https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=400" alt="Hoa Hồng Trắng" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Hoa Hồng Trắng</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">₫380,000</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="40" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Product 4 -->
+                                <div class="product-card" data-product-id="4" data-product-name="Bó Hoa Hồng Đỏ" data-product-price="480000" data-product-image="https://images.unsplash.com/photo-1563241529-0c3e8b3d3e3f?w=400" data-product-stock="25">
+                                    <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                                        <img src="https://images.unsplash.com/photo-1563241529-0c3e8b3d3e3f?w=400" alt="Bó Hoa Hồng Đỏ" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Bó Hoa Hồng Đỏ</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">₫480,000</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="25" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Product 5 -->
+                                <div class="product-card" data-product-id="5" data-product-name="Khát Vọng Trái Tim" data-product-price="360000" data-product-image="https://images.unsplash.com/photo-1606041008023-472dfb5e530f?w=400" data-product-stock="60">
+                                    <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                                        <img src="https://images.unsplash.com/photo-1606041008023-472dfb5e530f?w=400" alt="Khát Vọng Trái Tim" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Khát Vọng Trái Tim</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">₫360,000</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="60" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Product 6 -->
+                                <div class="product-card" data-product-id="6" data-product-name="Bó Hoa Hồng Đỏ" data-product-price="480000" data-product-image="https://images.unsplash.com/photo-1597848212624-e593b98b8c9a?w=400" data-product-stock="35">
+                                    <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                                        <img src="https://images.unsplash.com/photo-1597848212624-e593b98b8c9a?w=400" alt="Bó Hoa Hồng Đỏ" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Bó Hoa Hồng Đỏ</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">₫480,000</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="35" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Product 7 -->
+                                <div class="product-card" data-product-id="7" data-product-name="Khát Vọng Trái Tim" data-product-price="360000" data-product-image="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400" data-product-stock="20">
+                                    <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                                        <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400" alt="Khát Vọng Trái Tim" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Khát Vọng Trái Tim</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">₫360,000</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="20" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Product 8 -->
+                                <div class="product-card" data-product-id="8" data-product-name="Cây Hoa Hồng Hồng" data-product-price="420000" data-product-image="https://images.unsplash.com/photo-1518621012428-4ae49baa3d23?w=400" data-product-stock="28">
+                                    <div class="product-badge">
+                                        <span class="badge-text">10%</span>
+                                    </div>
+                                    <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                                        <img src="https://images.unsplash.com/photo-1518621012428-4ae49baa3d23?w=400" alt="Cây Hoa Hồng Hồng" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Cây Hoa Hồng Hồng</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">₫420,000</span>
+                                            <span class="product-price-old">₫500,000</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="28" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-nav-btn next-btn" id="newArrivalNext">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Top Sales Tab -->
+            <div class="tab-content" id="top-sales">
+                <div class="product-carousel">
+                    <button class="carousel-nav-btn prev-btn" id="topSalesPrev">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <div class="carousel-container">
+                        <div class="carousel-track" id="topSalesTrack">
+                            <div class="products-grid carousel-grid">
+                                <!-- Top Sales Product 1 -->
+                                <div class="product-card" data-product-id="9" data-product-name="Hoa Hồng Đỏ Tươi" data-product-price="450000" data-product-image="https://images.unsplash.com/photo-1518621012428-4ae49baa3d23?w=400" data-product-stock="45">
+                                    <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                                        <img src="https://images.unsplash.com/photo-1518621012428-4ae49baa3d23?w=400" alt="Hoa Hồng Đỏ Tươi" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Hoa Hồng Đỏ Tươi</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">₫450,000</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="45" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Top Sales Product 2 -->
+                                <div class="product-card" data-product-id="10" data-product-name="Bó Hoa Cưới Cao Cấp" data-product-price="550000" data-product-image="https://images.unsplash.com/photo-1597848212624-e593b98b8c9a?w=400" data-product-stock="25">
+                                    <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                                        <img src="https://images.unsplash.com/photo-1597848212624-e593b98b8c9a?w=400" alt="Bó Hoa Cưới Cao Cấp" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Bó Hoa Cưới Cao Cấp</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">₫550,000</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="25" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Top Sales Product 3 -->
+                                <div class="product-card" data-product-id="11" data-product-name="Hoa Ly Trắng" data-product-price="390000" data-product-image="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400" data-product-stock="35">
+                                    <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                                        <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400" alt="Hoa Ly Trắng" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Hoa Ly Trắng</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">₫390,000</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="35" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Top Sales Product 4 -->
+                                <div class="product-card" data-product-id="12" data-product-name="Hoa Tulip Vàng" data-product-price="370000" data-product-image="https://images.unsplash.com/photo-1606041008023-472dfb5e530f?w=400" data-product-stock="30">
+                                    <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                                        <img src="https://images.unsplash.com/photo-1606041008023-472dfb5e530f?w=400" alt="Hoa Tulip Vàng" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Hoa Tulip Vàng</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">₫370,000</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="30" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Top Sales Product 5 -->
+                                <div class="product-card" data-product-id="13" data-product-name="Hoa Cẩm Chướng Hồng" data-product-price="320000" data-product-image="https://images.unsplash.com/photo-1520763185298-1b434c919102?w=400" data-product-stock="55">
+                                    <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                                        <img src="https://images.unsplash.com/photo-1520763185298-1b434c919102?w=400" alt="Hoa Cẩm Chướng Hồng" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Hoa Cẩm Chướng Hồng</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">₫320,000</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="55" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Top Sales Product 6 -->
+                                <div class="product-card" data-product-id="14" data-product-name="Hoa Hướng Dương" data-product-price="410000" data-product-image="https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=400" data-product-stock="40">
+                                    <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                                        <img src="https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=400" alt="Hoa Hướng Dương" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Hoa Hướng Dương</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">₫410,000</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="40" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Top Sales Product 7 -->
+                                <div class="product-card" data-product-id="15" data-product-name="Hoa Lan Tím" data-product-price="480000" data-product-image="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400" data-product-stock="22">
+                                    <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                                        <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400" alt="Hoa Lan Tím" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Hoa Lan Tím</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">₫480,000</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="22" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!-- Top Sales Product 8 -->
+                                <div class="product-card" data-product-id="16" data-product-name="Hoa Đào Hồng" data-product-price="350000" data-product-image="https://images.unsplash.com/photo-1518621012428-4ae49baa3d23?w=400" data-product-stock="38">
+                                    <div class="product-badge">
+                                        <span class="badge-text">15%</span>
+                                    </div>
+                                    <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                                        <img src="https://images.unsplash.com/photo-1518621012428-4ae49baa3d23?w=400" alt="Hoa Đào Hồng" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name">Hoa Đào Hồng</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price">₫350,000</span>
+                                            <span class="product-price-old">₫420,000</span>
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" max="38" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="carousel-nav-btn next-btn" id="topSalesNext">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Top Products Section -->
+    <section class="top-products-section">
+        <div class="container">
+            <h2 class="section-title">SẢN PHẨM NỔI BẬT</h2>
+            <div class="products-grid">
+                <!-- Top Product 1 -->
+                <div class="product-card" data-product-id="11" data-product-name="Cây Hoa Hồng Hồng" data-product-price="420000" data-product-image="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400" data-product-stock="50">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400" alt="Cây Hoa Hồng Hồng" class="product-image">
+                        <div class="product-overlay">
+                            <button class="quick-view-btn">Xem nhanh</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Cây Hoa Hồng Hồng</h3>
+                        <div class="product-price-container">
+                            <span class="product-price">₫420,000</span>
+                        </div>
+                        <div class="quantity-selector">
+                            <button class="qty-btn minus-btn">-</button>
+                            <input type="number" value="1" min="1" max="50" class="qty-input">
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">
+                            <span>THÊM VÀO GIỎ</span>
+                            <i class="fas fa-shopping-bag"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- Top Product 2 -->
+                <div class="product-card" data-product-id="12" data-product-name="Hoa Hạnh Phúc Cao Cấp" data-product-price="420000" data-product-image="https://images.unsplash.com/photo-1520763185298-1b434c919102?w=400" data-product-stock="30">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1520763185298-1b434c919102?w=400" alt="Hoa Hạnh Phúc Cao Cấp" class="product-image">
+                        <div class="product-overlay">
+                            <button class="quick-view-btn">Xem nhanh</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Hoa Hạnh Phúc Cao Cấp</h3>
+                        <div class="product-price-container">
+                            <span class="product-price">₫420,000</span>
+                        </div>
+                        <div class="quantity-selector">
+                            <button class="qty-btn minus-btn">-</button>
+                            <input type="number" value="1" min="1" max="30" class="qty-input">
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">
+                            <span>THÊM VÀO GIỎ</span>
+                            <i class="fas fa-shopping-bag"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- Top Product 3 -->
+                <div class="product-card" data-product-id="13" data-product-name="Hoa Hồng Trắng" data-product-price="380000" data-product-image="https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=400" data-product-stock="40">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=400" alt="Hoa Hồng Trắng" class="product-image">
+                        <div class="product-overlay">
+                            <button class="quick-view-btn">Xem nhanh</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Hoa Hồng Trắng</h3>
+                        <div class="product-price-container">
+                            <span class="product-price">₫380,000</span>
+                        </div>
+                        <div class="quantity-selector">
+                            <button class="qty-btn minus-btn">-</button>
+                            <input type="number" value="1" min="1" max="40" class="qty-input">
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">
+                            <span>THÊM VÀO GIỎ</span>
+                            <i class="fas fa-shopping-bag"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- Top Product 4 -->
+                <div class="product-card" data-product-id="14" data-product-name="Bó Hoa Hồng Đỏ" data-product-price="480000" data-product-image="https://images.unsplash.com/photo-1563241529-0c3e8b3d3e3f?w=400" data-product-stock="25">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1563241529-0c3e8b3d3e3f?w=400" alt="Bó Hoa Hồng Đỏ" class="product-image">
+                        <div class="product-overlay">
+                            <button class="quick-view-btn">Xem nhanh</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Bó Hoa Hồng Đỏ</h3>
+                        <div class="product-price-container">
+                            <span class="product-price">₫480,000</span>
+                        </div>
+                        <div class="quantity-selector">
+                            <button class="qty-btn minus-btn">-</button>
+                            <input type="number" value="1" min="1" max="25" class="qty-input">
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">
+                            <span>THÊM VÀO GIỎ</span>
+                            <i class="fas fa-shopping-bag"></i>
+                        </button>
+                    </div>
+                </div>
+                <!-- Top Product 5 -->
+                <div class="product-card" data-product-id="15" data-product-name="Khát Vọng Trái Tim" data-product-price="360000" data-product-image="https://images.unsplash.com/photo-1606041008023-472dfb5e530f?w=400" data-product-stock="60">
+                    <div class="product-image-container">
+                        <img src="https://images.unsplash.com/photo-1606041008023-472dfb5e530f?w=400" alt="Khát Vọng Trái Tim" class="product-image">
+                        <div class="product-overlay">
+                            <button class="quick-view-btn">Xem nhanh</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name">Khát Vọng Trái Tim</h3>
+                        <div class="product-price-container">
+                            <span class="product-price">₫360,000</span>
+                        </div>
+                        <div class="quantity-selector">
+                            <button class="qty-btn minus-btn">-</button>
+                            <input type="number" value="1" min="1" max="60" class="qty-input">
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">
+                            <span>THÊM VÀO GIỎ</span>
+                            <i class="fas fa-shopping-bag"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits-section">
+        <div class="container">
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-shipping-fast"></i>
+                    </div>
+                    <h3 class="benefit-title">Miễn phí vận chuyển</h3>
+                    <p class="benefit-text">Cho đơn hàng trên 1.000.000₫</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-undo"></i>
+                    </div>
+                    <h3 class="benefit-title">Đổi trả 15 ngày</h3>
+                    <p class="benefit-text">Đảm bảo hoàn tiền</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <h3 class="benefit-title">Thanh toán an toàn</h3>
+                    <p class="benefit-text">Được bảo vệ bởi Paypal</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h3 class="benefit-title">Ưu đãi & quà tặng</h3>
+                    <p class="benefit-text">Cho mọi đơn hàng</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <!-- Column 1: Opening Time -->
+            <div class="footer-column">
+                <h4>Giờ mở cửa</h4>
+                <div class="footer-opening-time">
+                    <div class="opening-time-row">
+                        <span class="opening-day">Thứ 2 - Thứ 6:</span>
+                        <span class="opening-hours">8:00 - 22:00</span>
+                    </div>
+                    <div class="opening-time-row">
+                        <span class="opening-day">Thứ 7:</span>
+                        <span class="opening-hours">9:00 - 20:00</span>
+                    </div>
+                    <div class="opening-time-row">
+                        <span class="opening-day">Chủ nhật:</span>
+                        <span class="opening-hours">14:00 - 18:00</span>
+                    </div>
+                    <p class="footer-holiday">Chúng tôi làm việc cả ngày lễ</p>
+                </div>
+            </div>
+            
+            <!-- Column 2: Contact -->
+            <div class="footer-column">
+                <h4>Liên hệ</h4>
+                <div class="footer-contact-info">
+                    <p><i class="fas fa-map-marker-alt"></i> Thành phố Hồ Chí Minh, Việt Nam</p>
+                    <p><i class="fas fa-phone"></i> +84 123 456 789</p>
+                    <p><i class="fas fa-envelope"></i> info@fiama.com</p>
+                </div>
+            </div>
+            
+            <!-- Column 3: Central Section with Logo, Social, Apps -->
+            <div class="footer-column footer-center-column">
+                <div class="footer-logo-center">FIAMA</div>
+                <div class="footer-social-icons">
+                    <a href="#" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+                <div class="footer-app-buttons">
+                    <a href="#" class="app-button app-store">
+                        <i class="fab fa-apple"></i>
+                        <span>Tải từ APP STORE</span>
+                    </a>
+                    <a href="#" class="app-button google-play">
+                        <i class="fab fa-google-play"></i>
+                        <span>Tải từ GOOGLE PLAY</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Column 4: My Account -->
+            <div class="footer-column">
+                <h4>Tài khoản của tôi</h4>
+                <ul>
+                    <li><a href="/account">Tài khoản của tôi</a></li>
+                    <li><a href="/cart">Giỏ hàng</a></li>
+                    <li><a href="/orders">Lịch sử đơn hàng</a></li>
+                </ul>
+            </div>
+            
+            <!-- Column 5: Customer Service -->
+            <div class="footer-column">
+                <h4>Dịch vụ khách hàng</h4>
+                <ul>
+                    <li><a href="#">Điều khoản sử dụng</a></li>
+                    <li><a href="#">Chính sách bảo mật</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Add to Cart Success Toast -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span>Đã thêm vào giỏ!</span>
+    </div>
+
+    <!-- Quick View Modal -->
+    <div class="quick-view-modal" id="quickViewModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close-btn" id="modalCloseBtn">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-body">
+                <div class="modal-product-image">
+                    <img id="modalProductImage" src="" alt="Sản phẩm">
+                </div>
+            <div class="modal-product-info">
+                <h2 class="modal-product-name" id="modalProductName"></h2>
+                <div class="modal-price-rating-row">
+                    <div class="modal-product-price-container">
+                        <p class="modal-product-price" id="modalProductPrice"></p>
+                    </div>
+                    <div class="modal-product-rating">
+                        <div class="rating-stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <span class="rating-text">(56 Reviews)</span>
+                    </div>
+                </div>
+                <div class="modal-product-description">
+                    <p id="modalProductDescription">Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo. Thích hợp trang trí nhà cửa, văn phòng hoặc làm quà tặng ý nghĩa cho người thân yêu.</p>
+                </div>
+                    <div class="modal-quantity-cart-row">
+                        <div class="modal-quantity-section">
+                            <label class="modal-quantity-label">Số lượng:</label>
+                            <div class="modal-quantity-selector" id="modalQuantitySelector">
+                                <button class="modal-qty-btn modal-minus-btn">-</button>
+                                <input type="number" id="modalQuantity" value="1" min="1" class="modal-qty-input">
+                                <button class="modal-qty-btn modal-plus-btn">+</button>
+                            </div>
+                        </div>
+                        <button class="modal-add-to-cart-btn" id="modalAddToCartBtn">
+                            <i class="fas fa-shopping-cart"></i>
+                            Thêm vào giỏ hàng
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="/js/cart-utils.js"></script>
+<script src="js/home.js"></script>
+</body>
+</html>
+

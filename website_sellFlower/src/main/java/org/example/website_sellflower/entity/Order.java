@@ -25,9 +25,10 @@ public class Order {
     @Column(length = 50)
     private String status;
 
-    @Column(name = "shipping_address")
+    @Column(name = "shipping_address", columnDefinition = "NVARCHAR(500)")
     private String shippingAddress;
 
+    @Column(columnDefinition = "NVARCHAR(20)")
     private String phone;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)

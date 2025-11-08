@@ -1,5 +1,6 @@
 package org.example.website_sellflower.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.example.website_sellflower.entity.Account;
 import org.example.website_sellflower.service.AccountService;
 import org.example.website_sellflower.service.Impl.AccountServiceImpl;
@@ -21,16 +22,18 @@ public class LoginController {
     @GetMapping
     public String showLoginPage(@RequestParam(value = "error", required = false) String error,
                                 Model model) {
+        model.addAttribute("isLoggedIn", false);
         return "login";
     }
 
     @PostMapping("/login")
     public String login(@RequestParam("username") String username,
                         @RequestParam("password") String password,
-                        Model model) {
+                        Model model, HttpSession session) {
 
         Account acc = accountService.login(username, password);
         if (acc != null) {
+            session.setAttribute("account", acc);
             return "redirect:/home";
         } else {
             model.addAttribute("error", "Sai tên đăng nhập hoặc mật khẩu!");

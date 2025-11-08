@@ -11,4 +11,9 @@ public interface ProductService {
     boolean deleteProduct(Integer id);
     // ← THÊM MỚI
     Product findProductById(Long id);
+
+    List<Product> getLatestProducts(int numberOfProducts);
+
+    List<Product> getTopProductsByOrderByIdDesc(int numberOfProducts);
+    List<Product> getTopProminentProducts(int numberOfProducts);
 }

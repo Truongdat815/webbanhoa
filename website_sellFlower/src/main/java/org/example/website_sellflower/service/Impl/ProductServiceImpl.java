@@ -1,4 +1,4 @@
-package org.example.website_sellflower.service.Impl;
+package org.example.website_sellflower.service.impl;
 
 import org.example.website_sellflower.entity.Product;
 import org.example.website_sellflower.repository.ProductRepository;
@@ -54,5 +54,20 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Product findProductById(Long id) {
         return productRepository.findById(id.intValue()).orElse(null);
+    }
+
+    @Override
+    public List<Product> getLatestProducts(int numberOfProducts) {
+        return productRepository.getLatestProducts(numberOfProducts);
+    }
+
+    @Override
+    public List<Product> getTopProductsByOrderByIdDesc(int numberOfProducts) {
+        return productRepository.getTopProductsByOrderByIdDesc(numberOfProducts);
+    }
+
+    @Override
+    public List<Product> getTopProminentProducts(int numberOfProducts) {
+        return productRepository.getTopProminentProducts(numberOfProducts);
     }
 }

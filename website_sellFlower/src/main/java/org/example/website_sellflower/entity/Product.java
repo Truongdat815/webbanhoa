@@ -3,6 +3,7 @@ package org.example.website_sellflower.entity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
@@ -11,10 +12,10 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 255, columnDefinition = "NVARCHAR(255)")
     private String name;
 
-    @Column(length = 255)
+    @Column(length = 1000, columnDefinition = "NVARCHAR(1000)")
     private String description;
 
     @Column(nullable = false)
@@ -23,18 +24,20 @@ public class Product {
     @Column(name = "stock_quantity", nullable = false)
     private Integer stockQuantity;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", columnDefinition = "NVARCHAR(500)")
     private String imageUrl;
 
-    @Column(length = 100)
+    @Column(length = 100, columnDefinition = "NVARCHAR(100)")
     private String category;
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Review> reviews;
 
     public Product() {
 
     }
 
-    public Product(Long id, String name, String description, Double price, Integer stockQuantity, String imageUrl, String category) {
-        this.id = id;
+    public Product(String name, String description, Double price, Integer stockQuantity, String imageUrl, String category) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -97,5 +100,24 @@ public class Product {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public double getAverageRating() {
+        if (reviews == null || reviews.isEmpty()) {
+            return 0.0;
+        }
+        double sum = 0.0;
+        for (Review review : reviews) {
+            sum += review.getRating();
+        }
+        return sum / reviews.size();
     }
 }
