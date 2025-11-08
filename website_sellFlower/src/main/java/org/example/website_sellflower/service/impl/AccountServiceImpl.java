@@ -40,6 +40,11 @@ public class AccountServiceImpl implements AccountService {
         }
         return false;
     }
+    // ← THÊM MỚI
+    @Override
+    public Account findById(Long id) {
+        return repository.findById(id);
+    }
 }
 
 

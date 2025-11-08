@@ -13,10 +13,8 @@ document.querySelectorAll('.nav-item[data-section]').forEach(item => {
     item.addEventListener('click', function(e) {
         e.preventDefault();
         const sectionId = this.getAttribute('data-section');
-        // Lưu vị trí scroll hiện tại trước khi chuyển section
         const currentScroll = window.scrollY || window.pageYOffset;
         showSection(sectionId);
-        // Giữ nguyên vị trí scroll sau khi chuyển section
         requestAnimationFrame(() => {
             window.scrollTo(0, currentScroll);
         });
@@ -25,14 +23,12 @@ document.querySelectorAll('.nav-item[data-section]').forEach(item => {
 
 // Function to show a specific section
 function showSection(sectionId) {
-    // Remove active class from all nav items and sections
     document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
     document.querySelectorAll('.content-section').forEach(section => section.classList.remove('active'));
-    
-    // Add active class to corresponding nav item and section
+
     const navItem = document.querySelector(`.nav-item[data-section="${sectionId}"]`);
     const section = document.getElementById(sectionId);
-    
+
     if (navItem) {
         navItem.classList.add('active');
     }
@@ -41,13 +37,11 @@ function showSection(sectionId) {
     }
 }
 
-// Handle hash in URL on page load (khi vào từ link bên ngoài như footer)
+// Handle hash in URL on page load
 document.addEventListener('DOMContentLoaded', function() {
     if (window.location.hash) {
         const hash = window.location.hash.substring(1);
-        // Show section nhưng giữ ở đầu trang (không scroll)
         showSection(hash);
-        // Đảm bảo trang ở đầu
         window.scrollTo(0, 0);
     }
 });
@@ -61,10 +55,8 @@ document.addEventListener('DOMContentLoaded', function() {
     if (profileForm) {
         const inputs = profileForm.querySelectorAll('input[type="text"], input[type="email"], input[type="tel"]');
         inputs.forEach(input => {
-            // Store the default value
             defaultValues[input.id] = input.value;
-            
-            // Add blur event listener to restore default value if empty
+
             input.addEventListener('blur', function() {
                 if (this.value.trim() === '') {
                     this.value = defaultValues[this.id] || '';
@@ -85,11 +77,9 @@ document.getElementById('changePasswordBtn')?.addEventListener('click', function
         passwordSection.style.display = 'none';
         this.innerHTML = '<i class="fas fa-key"></i> <span>Đổi mật khẩu</span>';
         this.classList.remove('active');
-        // Clear password fields
         document.getElementById('oldPassword').value = '';
         document.getElementById('newPassword').value = '';
         document.getElementById('confirmPassword').value = '';
-        // Clear error messages
         clearPasswordErrors();
     }
 });
@@ -105,23 +95,21 @@ function clearPasswordErrors() {
 function validatePasswordChange() {
     const passwordSection = document.getElementById('passwordChangeSection');
     if (passwordSection.style.display === 'none') {
-        return true; // No password change requested
+        return true;
     }
-    
+
     const oldPassword = document.getElementById('oldPassword').value.trim();
     const newPassword = document.getElementById('newPassword').value.trim();
     const confirmPassword = document.getElementById('confirmPassword').value.trim();
-    
+
     let isValid = true;
     clearPasswordErrors();
-    
-    // Validate old password
+
     if (!oldPassword) {
         document.getElementById('oldPasswordError').textContent = 'Vui lòng nhập mật khẩu cũ';
         isValid = false;
     }
-    
-    // Validate new password
+
     if (!newPassword) {
         document.getElementById('newPasswordError').textContent = 'Vui lòng nhập mật khẩu mới';
         isValid = false;
@@ -129,8 +117,7 @@ function validatePasswordChange() {
         document.getElementById('newPasswordError').textContent = 'Mật khẩu phải có ít nhất 6 ký tự';
         isValid = false;
     }
-    
-    // Validate confirm password
+
     if (!confirmPassword) {
         document.getElementById('confirmPasswordError').textContent = 'Vui lòng xác nhận mật khẩu mới';
         isValid = false;
@@ -138,70 +125,65 @@ function validatePasswordChange() {
         document.getElementById('confirmPasswordError').textContent = 'Mật khẩu xác nhận không khớp';
         isValid = false;
     }
-    
+
     return isValid;
 }
 
 // Profile form submission
 document.querySelector('.profile-form')?.addEventListener('submit', function(e) {
     e.preventDefault();
-    
-    // Validate password change if section is visible
+
     const passwordSection = document.getElementById('passwordChangeSection');
     const isPasswordChangeVisible = passwordSection && passwordSection.style.display !== 'none';
-    
+
     if (isPasswordChangeVisible) {
         if (!validatePasswordChange()) {
             return false;
         }
-        
-        // Submit password change via form submission
+
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = '/account/change-password';
-        
+
         const oldPasswordInput = document.createElement('input');
         oldPasswordInput.type = 'hidden';
         oldPasswordInput.name = 'oldPassword';
         oldPasswordInput.value = document.getElementById('oldPassword').value;
         form.appendChild(oldPasswordInput);
-        
+
         const newPasswordInput = document.createElement('input');
         newPasswordInput.type = 'hidden';
         newPasswordInput.name = 'newPassword';
         newPasswordInput.value = document.getElementById('newPassword').value;
         form.appendChild(newPasswordInput);
-        
+
         const confirmPasswordInput = document.createElement('input');
         confirmPasswordInput.type = 'hidden';
         confirmPasswordInput.name = 'confirmPassword';
         confirmPasswordInput.value = document.getElementById('confirmPassword').value;
         form.appendChild(confirmPasswordInput);
-        
+
         document.body.appendChild(form);
         form.submit();
         return false;
     }
-    
-    // Show success animation for regular profile update
+
     const saveBtn = this.querySelector('.save-btn');
     const originalText = saveBtn.innerHTML;
-    
+
     saveBtn.innerHTML = '<i class="fas fa-check"></i> Đã lưu!';
     saveBtn.style.backgroundColor = '#4a5a44';
-    
+
     setTimeout(() => {
         saveBtn.innerHTML = originalText;
         saveBtn.style.backgroundColor = '';
     }, 2000);
-    
-    // Here you would typically send profile data to server
+
     console.log('Profile updated');
 });
 
 // Add address card
 document.querySelector('.add-address')?.addEventListener('click', function() {
-    // Here you would typically open a form modal
     alert('Open add address form');
 });
 
@@ -209,8 +191,6 @@ document.querySelector('.add-address')?.addEventListener('click', function() {
 document.querySelectorAll('.edit-btn').forEach(btn => {
     btn.addEventListener('click', function(e) {
         e.stopPropagation();
-        const addressCard = this.closest('.address-card');
-        // Here you would typically open an edit form
         console.log('Edit address');
     });
 });
@@ -231,7 +211,6 @@ document.querySelectorAll('.delete-btn').forEach(btn => {
 // View details button
 document.querySelectorAll('.view-details-btn').forEach(btn => {
     btn.addEventListener('click', function() {
-        // Here you would typically show order details
         console.log('View order details');
     });
 });
@@ -240,14 +219,14 @@ document.querySelectorAll('.view-details-btn').forEach(btn => {
 document.querySelector('.newsletter-form')?.addEventListener('submit', function(e) {
     e.preventDefault();
     const email = this.querySelector('input[type="email"]').value;
-    
+
     if (email) {
         const btn = this.querySelector('.subscribe-btn');
         const originalText = btn.innerHTML;
-        
+
         btn.innerHTML = '<i class="fas fa-check"></i> Subscribed!';
         btn.style.backgroundColor = '#4a5a44';
-        
+
         setTimeout(() => {
             btn.innerHTML = originalText;
             btn.style.backgroundColor = '';
@@ -256,135 +235,166 @@ document.querySelector('.newsletter-form')?.addEventListener('submit', function(
     }
 });
 
-// Hardcode dữ liệu orders và reviews ở frontend
-const hardcodedOrders = [
-    {
-        orderId: 1,
-        date: '15/01/2024',
-        status: 'Hoàn thành',
-        statusClass: 'completed',
-        amount: '450.000₫'
-    },
-    {
-        orderId: 2,
-        date: '10/01/2024',
-        status: 'Đang xử lý',
-        statusClass: 'processing',
-        amount: '320.000₫'
-    },
-    {
-        orderId: 3,
-        date: '05/01/2024',
-        status: 'Chờ xử lý',
-        statusClass: 'pending',
-        amount: '280.000₫'
-    },
-    {
-        orderId: 4,
-        date: '22/12/2023',
-        status: 'Đã duyệt',
-        statusClass: 'approved',
-        amount: '550.000₫'
-    },
-    {
-        orderId: 5,
-        date: '18/12/2023',
-        status: 'Tạm giữ',
-        statusClass: 'on-hold',
-        amount: '190.000₫'
+// ← THÊM MỚI: Load dữ liệu từ Backend API
+async function loadAccountData() {
+    try {
+        // 1. Lấy thông tin tài khoản
+        const infoResponse = await fetch('/account/api/info');
+        if (infoResponse.ok) {
+            const accountInfo = await infoResponse.json();
+            displayAccountInfo(accountInfo);
+        }
+
+        // 2. Lấy danh sách đơn hàng
+        const ordersResponse = await fetch('/account/api/orders');
+        if (ordersResponse.ok) {
+            const orders = await ordersResponse.json();
+            displayOrders(orders);
+        }
+
+        // 3. Lấy thống kê
+        const statsResponse = await fetch('/account/api/stats');
+        if (statsResponse.ok) {
+            const stats = await statsResponse.json();
+            displayStats(stats);
+        }
+
+    } catch (error) {
+        console.error('Error loading account data:', error);
     }
-];
+}
 
-const hardcodedReviewCount = 3;
+// ← THÊM MỚI: Hiển thị thông tin tài khoản
+function displayAccountInfo(account) {
+    // Update sidebar
+    const userName = document.querySelector('.user-name');
+    const userEmail = document.querySelector('.user-email');
+    if (userName) userName.textContent = account.fullName || account.username;
+    if (userEmail) userEmail.textContent = account.email;
 
-// Render orders table
-function renderOrders() {
+    // Update profile form
+    const firstNameInput = document.getElementById('firstName');
+    const lastNameInput = document.getElementById('lastName');
+    const emailInput = document.getElementById('email');
+    const phoneInput = document.getElementById('phone');
+
+    if (account.fullName) {
+        const nameParts = account.fullName.split(' ');
+        if (firstNameInput && nameParts.length > 0) {
+            firstNameInput.value = nameParts.slice(0, -1).join(' ');
+        }
+        if (lastNameInput && nameParts.length > 0) {
+            lastNameInput.value = nameParts[nameParts.length - 1];
+        }
+    }
+    if (emailInput) emailInput.value = account.email || '';
+    if (phoneInput) phoneInput.value = account.phone || '';
+}
+
+// ← THÊM MỚI: Hiển thị thống kê
+function displayStats(stats) {
+    const overviewCards = document.querySelectorAll('.overview-card');
+    overviewCards.forEach(card => {
+        const icon = card.querySelector('.card-icon');
+        const valueEl = card.querySelector('.card-value');
+
+        if (!icon || !valueEl) return;
+
+        if (icon.classList.contains('orders')) {
+            valueEl.textContent = stats.totalOrders || 0;
+        } else if (icon.classList.contains('spending')) {
+            valueEl.textContent = formatPrice(stats.totalSpending || 0);
+        } else if (icon.classList.contains('points')) {
+            valueEl.textContent = stats.rewardPoints || 0;
+        }
+    });
+}
+
+// ← THÊM MỚI: Hiển thị danh sách đơn hàng
+function displayOrders(orders) {
     const tbody = document.getElementById('ordersTableBody');
     if (!tbody) return;
-    
-    if (hardcodedOrders.length === 0) {
+
+    if (orders.length === 0) {
         tbody.innerHTML = '<tr><td colspan="5" class="no-orders">Bạn chưa có đơn hàng nào</td></tr>';
         return;
     }
-    
-    tbody.innerHTML = hardcodedOrders.map(order => `
+
+    tbody.innerHTML = orders.map(order => `
         <tr>
-            <td>${order.orderId}</td>
-            <td>${order.date}</td>
+            <td>#ORD-${order.id.toString().padStart(4, '0')}</td>
+            <td>${new Date(order.orderDate).toLocaleDateString('vi-VN')}</td>
             <td>
-                <span class="order-status-badge ${order.statusClass}">${order.status}</span>
+                <span class="order-status-badge ${getStatusClass(order.status)}">${getStatusText(order.status)}</span>
             </td>
-            <td>${order.amount}</td>
+            <td>${formatPrice(order.totalAmount)}</td>
             <td>
-                <a href="/order/${order.orderId}" class="view-order-link">Xem</a>
+                <a href="/order/${order.id}" class="view-order-link">Xem</a>
             </td>
         </tr>
     `).join('');
+
+    updateRecentOrders(orders.slice(0, 5));
 }
 
-// Update review count và các thống kê khác
-function updateReviewCount() {
-    const reviewCountElements = document.querySelectorAll('[data-review-count]');
-    reviewCountElements.forEach(el => {
-        el.textContent = hardcodedReviewCount;
-    });
-    
-    // Update overview card reviews nếu có
-    const reviewCards = document.querySelectorAll('.overview-card');
-    reviewCards.forEach(card => {
-        const icon = card.querySelector('.card-icon');
-        if (icon && icon.classList.contains('reviews')) {
-            const valueEl = card.querySelector('.card-value');
-            if (valueEl) {
-                valueEl.textContent = hardcodedReviewCount;
-            }
-        }
-    });
-    
-    // Update tổng đơn hàng
-    const orderCards = document.querySelectorAll('.overview-card');
-    orderCards.forEach(card => {
-        const icon = card.querySelector('.card-icon');
-        if (icon && icon.classList.contains('orders')) {
-            const valueEl = card.querySelector('.card-value');
-            if (valueEl) {
-                valueEl.textContent = hardcodedOrders.length;
-            }
-        }
-    });
-    
-    // Update tổng chi tiêu
-    const totalSpending = hardcodedOrders.reduce((sum, order) => {
-        const amount = parseInt(order.amount.replace(/[^\d]/g, ''));
-        return sum + amount;
-    }, 0);
-    const spendingCards = document.querySelectorAll('.overview-card');
-    spendingCards.forEach(card => {
-        const icon = card.querySelector('.card-icon');
-        if (icon && icon.classList.contains('spending')) {
-            const valueEl = card.querySelector('.card-value');
-            if (valueEl) {
-                valueEl.textContent = totalSpending.toLocaleString('vi-VN') + '₫';
-            }
-        }
-    });
+// ← THÊM MỚI: Update recent orders in overview
+function updateRecentOrders(recentOrders) {
+    const ordersList = document.querySelector('.orders-list');
+    if (!ordersList || recentOrders.length === 0) return;
+
+    ordersList.innerHTML = recentOrders.map(order => `
+        <div class="order-item">
+            <div class="order-info">
+                <span class="order-id">#ORD-${order.id.toString().padStart(4, '0')}</span>
+                <span class="order-date">${new Date(order.orderDate).toLocaleDateString('vi-VN')}</span>
+            </div>
+            <div class="order-status ${getStatusClass(order.status)}">${getStatusText(order.status)}</div>
+            <div class="order-total">${formatPrice(order.totalAmount)}</div>
+        </div>
+    `).join('');
+}
+
+// ← THÊM MỚI: Helper functions
+function getStatusClass(status) {
+    const statusMap = {
+        'pending_payment': 'pending',
+        'paid': 'approved',
+        'processing': 'processing',
+        'shipped': 'on-hold',
+        'delivered': 'completed',
+        'cancelled': 'cancelled'
+    };
+    return statusMap[status] || 'pending';
+}
+
+function getStatusText(status) {
+    const statusMap = {
+        'pending_payment': 'Chờ thanh toán',
+        'paid': 'Đã thanh toán',
+        'processing': 'Đang xử lý',
+        'shipped': 'Đã gửi hàng',
+        'delivered': 'Hoàn thành',
+        'cancelled': 'Đã hủy'
+    };
+    return statusMap[status] || 'Không xác định';
+}
+
+function formatPrice(price) {
+    return '₫' + parseFloat(price).toLocaleString('vi-VN');
 }
 
 // Animate overview cards on load
-document.addEventListener('DOMContentLoaded', function() {
-    // Render orders
-    renderOrders();
-    
-    // Update review count
-    updateReviewCount();
-    
+document.addEventListener('DOMContentLoaded', async function() {
+    // ← GỌI API LẤY DỮ LIỆU TỪ BACKEND
+    await loadAccountData();
+
     // Animate cards
     const cards = document.querySelectorAll('.overview-card');
     cards.forEach((card, index) => {
         setTimeout(() => {
             card.style.opacity = '0';
             card.style.transform = 'translateY(20px)';
-            
+
             setTimeout(() => {
                 card.style.transition = 'all 0.5s ease';
                 card.style.opacity = '1';
@@ -409,4 +419,3 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
-

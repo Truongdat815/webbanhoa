@@ -48,4 +48,10 @@ public class ReviewServiceImpl implements ReviewService {
     public List<Review> findAllReviews() {
         return reviewRepository.findAll();
     }
+
+    // ← THÊM MỚI
+    @Override
+    public List<Review> findByProductId(Long productId) {
+        return reviewRepository.findByProductId(productId);
+    }
 }

@@ -50,4 +50,9 @@ public class ProductServiceImpl implements ProductService {
         }
         return false;
     }
+    // ← THÊM MỚI
+    @Override
+    public Product findProductById(Long id) {
+        return productRepository.findById(id.intValue()).orElse(null);
+    }
 }

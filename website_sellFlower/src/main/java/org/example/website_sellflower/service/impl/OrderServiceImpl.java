@@ -47,4 +47,9 @@ public class OrderServiceImpl implements OrderService {
         }
         return false;
     }
+    // ← THÊM MỚI
+    @Override
+    public List<Order> findByAccountId(Long accountId) {
+        return repository.findByAccountId(accountId);
+    }
 }

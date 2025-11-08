@@ -10,4 +10,7 @@ public interface OrderService {
     public Order createOrder(Order order);
     public Order updateOrder(Long id, Order order);
     public boolean deleteOrder(Long id);
+
+    // ← THÊM MỚI
+    public List<Order> findByAccountId(Long accountId);
 }

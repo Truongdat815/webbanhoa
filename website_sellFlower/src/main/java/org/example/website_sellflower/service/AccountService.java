@@ -6,4 +6,7 @@ public interface AccountService {
     public Account login(String username, String password);
     public boolean register(String name, String email, String phone, String password, String address);
     public boolean updateProfile(Account account);
+
+    // ← THÊM MỚI
+    public Account findById(Long id);
 }

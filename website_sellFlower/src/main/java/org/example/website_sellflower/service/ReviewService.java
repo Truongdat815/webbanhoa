@@ -9,4 +9,7 @@ public interface ReviewService {
     Review updateReview(Integer id,Review review);
     boolean deleteReview(Integer id);
     List<Review> findAllReviews();
+
+    // ← THÊM MỚI
+    List<Review> findByProductId(Long productId);
 }
