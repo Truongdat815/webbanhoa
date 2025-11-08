@@ -1,5 +1,6 @@
 package org.example.website_sellflower.controller;
 
+import jakarta.servlet.http.HttpSession;
 import org.example.website_sellflower.entity.Product;
 import org.example.website_sellflower.entity.Review;
 import org.example.website_sellflower.service.ProductService;
@@ -7,6 +8,7 @@ import org.example.website_sellflower.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -23,7 +25,11 @@ public class ProductController {
     private ReviewService reviewService;
 
     @GetMapping("/product")
-    public String showProductList() {
+    public String showProductList(Model model, HttpSession session) {
+        if (session.getAttribute("account") == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("isLoggedIn", true);
         return "product";
     }
 

@@ -8,6 +8,7 @@ import org.example.website_sellflower.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -26,7 +27,13 @@ public class AccountController {
     private OrderService orderService;
 
     @GetMapping
-    public String showAccount(){
+    public String showAccount(Model model, HttpSession session) {
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("account", account);
+        model.addAttribute("isLoggedIn", true);
         return "account";
     }
 
