@@ -16,13 +16,8 @@ public class AccountServiceImpl implements AccountService {
     }
     public boolean register(String name, String email, String phone, String password, String address) {
 
-        // Kiểm tra trùng email hoặc phone
-        if (repository.existsByEmail(email) || repository.existsByPhone(phone)) {
-            return false;
-        }
-
         Account account = new Account();
-        account.setUsername(name);
+        account.setName(name);
         account.setEmail(email);
         account.setPhone(phone);
         account.setPassword(password);
@@ -39,6 +34,21 @@ public class AccountServiceImpl implements AccountService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean existsByName(String name) {
+        return repository.findByUsername(name).isPresent();
+    }
+
+    @Override
+    public boolean existsByEmail(String email) {
+        return repository.findByEmail(email).isPresent();
+    }
+
+    @Override
+    public boolean existsByPhone(String phone) {
+        return repository.findByPhone(phone).isPresent();
     }
 }
 

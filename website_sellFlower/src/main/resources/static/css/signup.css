@@ -40,3 +40,9 @@
     display: block;
 }
 
+.error-text {
+    color: red;
+    font-size: 13px;
+    margin-top: 4px;
+}
+

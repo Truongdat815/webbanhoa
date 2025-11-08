@@ -2,7 +2,6 @@ package org.example.website_sellflower.controller;
 
 import org.example.website_sellflower.entity.Account;
 import org.example.website_sellflower.service.AccountService;
-import org.example.website_sellflower.service.Impl.AccountServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

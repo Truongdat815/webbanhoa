@@ -25,13 +25,32 @@ public class SignupController {
                            @RequestParam("email") String email,
                            @RequestParam("phone") String phone,
                            @RequestParam("password") String password,
-                           @RequestParam("confirmPassword") String confirmPassword,
                            @RequestParam(value = "address", required = false) String address,
                            @RequestParam(value = "agreeTerms", required = false) String agreeTerms,
                            Model model) {
-        // Xử lý validate + gọi service
-        if (agreeTerms == null) {
-            model.addAttribute("error", "Bạn phải đồng ý với điều khoản sử dụng!");
+        boolean hasError = false;
+
+        if(accountService.existsByEmail(email)){
+            model.addAttribute("emailError", "Email đã được sử dụng!");
+            hasError = true;
+        }
+
+        if (accountService.existsByPhone(phone)) {
+            model.addAttribute("phoneError", "Số điện thoại đã được sử dụng!");
+            hasError = true;
+        }
+
+        if (accountService.existsByName(name)) {
+            model.addAttribute("nameError", "Tên đăng nhập đã tồn tại!");
+            hasError = true;
+        }
+
+        if (hasError) {
+            model.addAttribute("error", "Đăng ký thất bại! Vui lòng kiểm tra lại thông tin.");
+            model.addAttribute("name", name);
+            model.addAttribute("email", email);
+            model.addAttribute("phone", phone);
+            model.addAttribute("address", address);
             return "signup";
         }
 
@@ -40,7 +59,7 @@ public class SignupController {
         if (success) {
             return "redirect:/home";
         } else {
-            model.addAttribute("error", "Email hoặc số điện thoại đã tồn tại!");
+            model.addAttribute("error", "Đăng ký thất bại");
             return "signup";
         }
 }
