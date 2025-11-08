@@ -10,14 +10,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class AccountServiceImpl implements AccountService {
     @Autowired
     private AccountRepository repository;
+
     @Override
     public Account login(String username, String password) {
         return repository.findByUsernameAndPassword(username, password);
     }
+
     public boolean register(String name, String email, String phone, String password, String address) {
 
         Account account = new Account();
-        account.setName(name);
+        account.setUsername(name);
         account.setEmail(email);
         account.setPhone(phone);
         account.setPassword(password);
@@ -26,6 +28,7 @@ public class AccountServiceImpl implements AccountService {
         repository.save(account);
         return true;
     }
+
     @Override
     public boolean updateProfile(Account account) {
         Account existingAccount = repository.findById(account.getId());
@@ -35,28 +38,29 @@ public class AccountServiceImpl implements AccountService {
         }
         return false;
     }
-<<<<<<< HEAD
+
     // ← THÊM MỚI
     @Override
     public Account findById(Long id) {
         return repository.findById(id);
-=======
-
-    @Override
-    public boolean existsByName(String name) {
-        return repository.findByUsername(name).isPresent();
     }
 
-    @Override
-    public boolean existsByEmail(String email) {
-        return repository.findByEmail(email).isPresent();
-    }
 
-    @Override
-    public boolean existsByPhone(String phone) {
-        return repository.findByPhone(phone).isPresent();
->>>>>>> Dien
+        @Override
+        public boolean existsByName (String name){
+            return repository.findByUsername(name).isPresent();
+        }
+
+        @Override
+        public boolean existsByEmail (String email){
+            return repository.findByEmail(email).isPresent();
+        }
+
+        @Override
+        public boolean existsByPhone (String phone){
+            return repository.findByPhone(phone).isPresent();
+
+        }
     }
-}
 
 

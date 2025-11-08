@@ -159,5 +159,19 @@ document.addEventListener('DOMContentLoaded', function() {
             return false;
         }
     });
+
+    // Show field errors from server
+    const errorTexts = document.querySelectorAll('.error-text');
+    errorTexts.forEach(errorText => {
+        if (errorText.textContent.trim() !== '') {
+            errorText.classList.add('show');
+            // Add error class to input
+            const formGroup = errorText.closest('.form-group');
+            const input = formGroup ? formGroup.querySelector('input') : null;
+            if (input) {
+                input.classList.add('error');
+            }
+        }
+    });
 });
 

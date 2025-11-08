@@ -61,21 +61,21 @@
                     <label for="username">Họ và tên</label>
                     <input type="text" id="username" name="username" placeholder="Nhập họ và tên" required>
                     <i class="fas fa-user"></i>
-                    <p class="error-message" th:if="${nameError}" th:text="${nameError}"></p>
+                    <p class="error-text" th:if="${nameError}" th:text="${nameError}"></p>
                 </div>
 
                 <div class="form-group">
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email" placeholder="Nhập email" required>
                     <i class="fas fa-envelope"></i>
-                    <p class="error-message" th:if="${emailError}" th:text="${emailError}"></p>
+                    <p class="error-text" th:if="${emailError}" th:text="${emailError}"></p>
                 </div>
 
                 <div class="form-group">
                     <label for="phone">Số điện thoại</label>
                     <input type="tel" id="phone" name="phone" placeholder="Nhập số điện thoại" required>
                     <i class="fas fa-phone"></i>
-                    <p class="error-message" th:if="${phoneError}" th:text="${phoneError}"></p>
+                    <p class="error-text" th:if="${phoneError}" th:text="${phoneError}"></p>
                 </div>
 
                 <div class="form-group">

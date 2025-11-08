@@ -16,17 +16,17 @@ public class SignupController {
     AccountService accountService;
 
     @GetMapping
-    public String showSignupPage() {
+    public String showSignupPage(Model model) {
+        model.addAttribute("isLoggedIn", false);
         return "signup";
     }
 
     @PostMapping("/register")
-    public String register(@RequestParam("name") String name,
+    public String register(@RequestParam("username") String name,
                            @RequestParam("email") String email,
                            @RequestParam("phone") String phone,
                            @RequestParam("password") String password,
                            @RequestParam(value = "address", required = false) String address,
-                           @RequestParam(value = "agreeTerms", required = false) String agreeTerms,
                            Model model) {
         boolean hasError = false;
 
@@ -46,6 +46,7 @@ public class SignupController {
         }
 
         if (hasError) {
+            model.addAttribute("isLoggedIn", false);
             model.addAttribute("error", "Đăng ký thất bại! Vui lòng kiểm tra lại thông tin.");
             model.addAttribute("name", name);
             model.addAttribute("email", email);
