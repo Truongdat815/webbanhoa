@@ -1,10 +1,12 @@
-package org.example.website_sellflower.service.Impl;
+package org.example.website_sellflower.service.impl;
 
 import org.example.website_sellflower.service.AccountService;
 import org.springframework.stereotype.Service;
 import org.example.website_sellflower.entity.Account;
 import org.example.website_sellflower.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -43,6 +45,26 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account findById(Long id) {
         return repository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Account findByUsername(String username) {
+        return repository.findByUsername(username).orElse(null);
+    }
+
+    @Override
+    public List<Account> findAllAccounts() {
+        return repository.findAll();
+    }
+
+    @Override
+    public boolean deleteAccount(Long id) {
+        var existingAccount = repository.findById(id);
+        if (existingAccount.isPresent()) {
+            repository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
 
