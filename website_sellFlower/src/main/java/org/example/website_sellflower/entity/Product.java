@@ -113,10 +113,14 @@ public class Product {
             return 0.0;
         }
         double sum = 0.0;
+        int count = 0;
         for (Review review : reviews) {
-            sum += review.getRating();
+            if (review != null && review.getRating() != null) {
+                sum += review.getRating();
+                count++;
+            }
         }
-        return sum / reviews.size();
+        return count > 0 ? sum / count : 0.0;
     }
 
     /**

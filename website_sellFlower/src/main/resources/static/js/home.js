@@ -163,9 +163,18 @@ document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
 
 // Toast notification
 function showToast(message, type = 'success') {
+    // Don't show toast if message is empty or undefined
+    if (!message || message.trim() === '') {
+        return;
+    }
+    
     const toast = document.getElementById('toast');
+    if (!toast) return;
+    
     const toastSpan = toast.querySelector('span');
-    toastSpan.textContent = message;
+    if (toastSpan) {
+        toastSpan.textContent = message;
+    }
 
     // Remove existing type classes
     toast.classList.remove('warning', 'error', 'success');
@@ -177,10 +186,21 @@ function showToast(message, type = 'success') {
         toast.classList.add('success');
     }
 
+    // Remove any existing show class and timeout, then show
+    toast.classList.remove('show');
+    clearTimeout(toast._hideTimeout);
+    
+    // Force display and add show class
+    toast.style.display = 'flex';
     toast.classList.add('show');
 
-    setTimeout(() => {
+    // Hide after 3 seconds
+    toast._hideTimeout = setTimeout(() => {
         toast.classList.remove('show');
+        setTimeout(() => {
+            toast.style.display = 'none';
+            if (toastSpan) toastSpan.textContent = '';
+        }, 300); // Wait for transition to complete
     }, 3000);
 }
 
@@ -664,13 +684,42 @@ function resetTopSalesCarousel() {
     }
 }
 
+// Function to reset toast state
+function resetToastState() {
+    const toast = document.getElementById('toast');
+    if (toast) {
+        toast.classList.remove('show');
+        toast.style.display = 'none';
+        const toastText = toast.querySelector('span');
+        if (toastText) {
+            toastText.textContent = ''; // Clear text
+        }
+    }
+}
+
 // Initialize carousel on page load
 window.addEventListener('DOMContentLoaded', function() {
+    // Reset toast state on page load
+    resetToastState();
+    
     initNewArrivalCarousel();
     initTopSalesCarousel();
     
     // Initialize hero banner carousel
     initHeroBannerCarousel();
+});
+
+// Reset toast when page becomes visible (e.g., when switching back to tab)
+document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+        // Page is now visible, reset toast to prevent showing stale notifications
+        resetToastState();
+    }
+});
+
+// Reset toast when window gains focus (e.g., when switching back to tab)
+window.addEventListener('focus', function() {
+    resetToastState();
 });
 
 // Hero Banner Carousel

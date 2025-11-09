@@ -6,8 +6,9 @@
     <title>Chi tiết sản phẩm - Flower Shop</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/detail.css">
     <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" href="/css/detail.css">
+    <link rel="stylesheet" href="/css/reviews-fix.css">
 </head>
 <body>
     <!-- Header -->
@@ -94,8 +95,8 @@
                     </div>
 
                     <div class="product-short-description" th:if="${product != null}">
-                        <p id="productShortDesc" th:if="${product.description != null && !#strings.isEmpty(product.description)}" th:text="${product.description}">Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín.</p>
-                        <p id="productShortDesc" th:if="${product.description == null || #strings.isEmpty(product.description)}">Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo.</p>
+                        <p th:if="${product.description != null && !#strings.isEmpty(product.description)}" th:text="${product.description}">Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín.</p>
+                        <p th:if="${product.description == null || #strings.isEmpty(product.description)}">Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo.</p>
                     </div>
 
                     <div class="product-meta">
@@ -133,70 +134,112 @@
                 </div>
             </div>
 
-            <!-- Product Tabs -->
-            <div class="product-tabs">
-                <div class="tab-buttons">
-                    <button class="tab-button active" data-tab="description">Mô tả</button>
-                    <button class="tab-button" data-tab="reviews">Đánh giá</button>
-                </div>
-
-                <div class="tab-contents">
-                    <div class="tab-content-detail active" id="description" th:if="${product != null}">
-                        <h3>Mô tả sản phẩm</h3>
-                        <div id="productFullDescription" style="white-space: pre-line;">
-                            <div th:if="${product.description != null && !#strings.isEmpty(product.description)}">
-                                <p th:text="${product.description}">Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín.</p>
+            <!-- Reviews Section -->
+            <div class="product-tabs" id="reviews" th:if="${product != null}">
+                <!-- Flash Messages (Hidden - will be shown as toast, only for review-related messages) -->
+                <div th:if="${success != null and !#strings.contains(success, 'giỏ hàng') and !#strings.contains(success, 'thêm vào giỏ')}" 
+                     id="flashSuccess" 
+                     style="display: none;" 
+                     th:text="${success}"></div>
+                <div th:if="${error != null and !#strings.contains(error, 'giỏ hàng') and !#strings.contains(error, 'thêm vào giỏ')}" 
+                     id="flashError" 
+                     style="display: none;" 
+                     th:text="${error}"></div>
+                <div class="reviews-container">
+                    <!-- Left Column: Reviews List -->
+                    <div class="reviews-list-column">
+                        <h3 class="reviews-section-title">Đánh giá từ khách hàng</h3>
+                        <div th:if="${reviews == null || reviews.isEmpty()}" class="no-reviews">
+                            <p>Chưa có đánh giá nào cho sản phẩm này. Hãy là người đầu tiên đánh giá!</p>
+                        </div>
+                        <div th:each="review : ${reviews}" class="review-item" th:if="${review != null}" th:attr="data-review-id=${review.id}">
+                            <!-- Display Mode -->
+                            <div class="review-display" th:id="'review-display-' + ${review.id}">
+                                <div class="review-item-header">
+                                    <div class="reviewer-info">
+                                        <img class="reviewer-avatar-img" 
+                                             th:src="${'https://ui-avatars.com/api/?name=' + (review.account != null ? #strings.replace(review.account.getDisplayName(), ' ', '+') : 'User') + '&size=60&background=E95473&color=fff&bold=true'}" 
+                                             th:alt="${review.account != null ? review.account.getDisplayName() : 'User'}"
+                                             alt="Avatar">
+                                        <div class="reviewer-details">
+                                            <div class="reviewer-name-wrapper">
+                                                <h4 class="reviewer-name" th:text="${review.account != null ? review.account.getDisplayName() : 'Anonymous'}">Anonymous</h4>
+                                                <!-- Edit/Delete Buttons - Only show if user owns this review -->
+                                                <div class="review-actions" th:if="${currentAccount != null and review.account != null and (review.account.id == currentAccount.id)}">
+                                                    <button type="button" class="edit-review-btn" th:attr="data-review-id=${review.id}">
+                                                        <i class="fas fa-edit"></i>
+                                                        <span class="tooltip-text">Chỉnh sửa</span>
+                                                    </button>
+                                                    <button type="button" class="delete-review-btn" th:attr="data-review-id=${review.id}, data-product-id=${product.id}">
+                                                        <i class="fas fa-trash"></i>
+                                                        <span class="tooltip-text">Xóa</span>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="review-stars" th:if="${review.rating != null}">
+                                                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                                    <i th:if="${review.rating >= i}" class="fas fa-star filled"></i>
+                                                    <i th:if="${review.rating < i}" class="far fa-star"></i>
+                                                </th:block>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <span class="review-date-pill" th:if="${review.reviewDate != null}" th:text="${#temporals.format(review.reviewDate, 'dd/MM/yyyy')}">15/11/2024</span>
+                                </div>
+                                <p class="review-text" th:text="${review.comment != null ? review.comment : ''}">Hoa rất đẹp và tươi, giao hàng nhanh. Rất hài lòng!</p>
                             </div>
-                            <div th:if="${product.description == null || #strings.isEmpty(product.description)}">
-                                <p>Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo. Thích hợp trang trí nhà cửa, văn phòng hoặc làm quà tặng ý nghĩa cho người thân yêu.</p>
-                                <p>Sản phẩm được đóng gói cẩn thận, giao hàng nhanh chóng trong vòng 2-3 giờ tại khu vực nội thành.</p>
-                                <ul>
-                                    <li>Hoa tươi 100%, nhập khẩu trực tiếp</li>
-                                    <li>Bảo quản được 7-10 ngày</li>
-                                    <li>Miễn phí thiệp chúc mừng</li>
-                                    <li>Đổi trả trong 24h nếu không hài lòng</li>
-                                </ul>
+                            
+                            <!-- Edit Mode (Hidden by default) -->
+                            <div class="review-edit" th:id="'review-edit-' + ${review.id}" style="display: none;">
+                                <form th:attr="data-review-id=${review.id}, data-product-id=${product.id}" class="edit-review-form">
+                                    <div class="form-group">
+                                        <label class="form-label">Đánh giá:</label>
+                                        <div class="rating-input">
+                                            <input type="hidden" th:attr="name='rating', id='editRating-' + ${review.id}" th:value="${review.rating != null ? review.rating : 5}" required>
+                                            <div class="rating-stars-input edit-rating-stars" th:attr="data-review-id=${review.id}">
+                                                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                                    <i th:if="${review.rating != null && review.rating >= i}" class="fas fa-star filled active" th:attr="data-rating=${i}"></i>
+                                                    <i th:if="${review.rating == null || review.rating < i}" class="far fa-star" th:attr="data-rating=${i}"></i>
+                                                </th:block>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Bình luận:</label>
+                                        <textarea class="form-textarea edit-comment" th:attr="name='comment', id='editComment-' + ${review.id}" rows="4" required th:text="${review.comment != null ? review.comment : ''}"></textarea>
+                                    </div>
+                                    <div class="edit-form-actions">
+                                        <button type="submit" class="save-review-btn">Lưu</button>
+                                        <button type="button" class="cancel-edit-btn" th:attr="data-review-id=${review.id}">Hủy</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
 
-                    <div class="tab-content-detail" id="reviews">
-                        <h3>Đánh giá từ khách hàng</h3>
-                        <div class="reviews-summary" th:if="${product != null}">
-                            <div class="average-rating">
-                                <div class="rating-number" th:text="${#numbers.formatDecimal(product.getAverageRating(), 1, 'POINT', 1, 'POINT')}">5.0</div>
-                                <div class="rating-stars-large">
-                                    <th:block th:each="i : ${#numbers.sequence(1, 5)}">
-                                        <i th:if="${product.isStarFilled(i)}" class="fas fa-star filled"></i>
-                                        <i th:if="${product.isStarHalfFilled(i)}" class="fas fa-star-half-alt"></i>
-                                        <i th:if="${product.isStarEmpty(i)}" class="far fa-star"></i>
-                                    </th:block>
-                                </div>
-                                <div class="rating-count-text" th:text="'Dựa trên ' + ${product.getReviewCount()} + ' đánh giá'">Dựa trên 0 đánh giá</div>
-                            </div>
-                        </div>
-
-                        <div class="reviews-list">
-                            <div th:if="${reviews == null || reviews.isEmpty()}" class="no-reviews">
-                                <p>Chưa có đánh giá nào cho sản phẩm này.</p>
-                            </div>
-                            <div th:each="review : ${reviews}" class="review-item">
-                                <div class="reviewer-info">
-                                    <div class="reviewer-avatar" th:text="${review.account.fullName != null ? review.account.fullName.charAt(0).toUpperCase() : (review.account.username != null ? review.account.username.charAt(0).toUpperCase() : 'U')}">N</div>
-                                    <div class="reviewer-details">
-                                        <h4 class="reviewer-name" th:text="${review.account.fullName != null ? review.account.fullName : review.account.username}">Nguyễn Văn A</h4>
-                                        <div class="review-stars">
-                                            <th:block th:each="i : ${#numbers.sequence(1, 5)}">
-                                                <i th:if="${review.rating >= i}" class="fas fa-star"></i>
-                                                <i th:if="${review.rating < i}" class="far fa-star"></i>
-                                            </th:block>
-                                        </div>
+                    <!-- Right Column: Add Review Form -->
+                    <div class="add-review-column">
+                        <h3 class="add-review-title">Thêm đánh giá</h3>
+                        <form id="addReviewForm" class="add-review-form" th:action="@{/product/detail/{id}/review(id=${product.id})}" method="post">
+                            <div class="form-group">
+                                <label class="form-label">Đánh giá của bạn:</label>
+                                <div class="rating-input">
+                                    <input type="hidden" name="rating" id="reviewRating" value="5" required>
+                                    <div class="rating-stars-input" id="ratingStarsInput">
+                                        <i class="fas fa-star filled active" data-rating="1"></i>
+                                        <i class="fas fa-star filled active" data-rating="2"></i>
+                                        <i class="fas fa-star filled active" data-rating="3"></i>
+                                        <i class="fas fa-star filled active" data-rating="4"></i>
+                                        <i class="fas fa-star filled active" data-rating="5"></i>
                                     </div>
                                 </div>
-                                <p class="review-text" th:text="${review.comment != null ? review.comment : ''}">Hoa rất đẹp và tươi, giao hàng nhanh. Rất hài lòng!</p>
-                                <span class="review-date" th:text="${review.reviewDate != null ? #temporals.format(review.reviewDate, 'dd/MM/yyyy') : ''}">15/11/2024</span>
                             </div>
-                        </div>
+                            <div class="form-group">
+                                <label class="form-label" for="reviewComment">Bình luận:</label>
+                                <textarea id="reviewComment" name="comment" class="form-textarea" placeholder="Nhập bình luận của bạn..." rows="6" required></textarea>
+                            </div>
+                            <button type="submit" class="submit-review-btn">GỬI ĐÁNH GIÁ</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -204,9 +247,26 @@
     </section>
 
     <!-- Toast Notification -->
-    <div class="toast" id="toast">
+    <div class="toast" id="toast" style="display: none;">
         <i class="fas fa-check-circle"></i>
-        <span>Đã thêm vào giỏ!</span>
+        <span></span>
+    </div>
+
+    <!-- Delete Review Confirmation Modal -->
+    <div class="delete-confirm-modal" id="deleteConfirmModal">
+        <div class="delete-confirm-modal-content">
+            <div class="delete-confirm-modal-header">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Xác nhận xóa đánh giá</h3>
+            </div>
+            <div class="delete-confirm-modal-body">
+                <p>Bạn có chắc chắn muốn xóa đánh giá này? Hành động này không thể hoàn tác.</p>
+            </div>
+            <div class="delete-confirm-modal-footer">
+                <button type="button" class="cancel-delete-btn" id="cancelDeleteBtn">Hủy</button>
+                <button type="button" class="confirm-delete-btn" id="confirmDeleteBtn">Xóa</button>
+            </div>
+        </div>
     </div>
 
     <!-- Footer -->

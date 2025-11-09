@@ -9,6 +9,7 @@ public interface ReviewService {
     Review updateReview(Long id,Review review);
     boolean deleteReview(Long id);
     List<Review> findAllReviews();
+    Review findReviewById(Long id);
 
     // ← THÊM MỚI
     List<Review> findByProductId(Long productId);
