@@ -1,10 +1,13 @@
-package org.example.website_sellflower.service.Impl;
+package org.example.website_sellflower.service.impl;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.example.website_sellflower.entity.Review;
 import org.example.website_sellflower.repository.ReviewRepository;
 import org.example.website_sellflower.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,13 +18,16 @@ public class ReviewServiceImpl implements ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @Override
     public Review createReview(Review review) {
         return reviewRepository.save(review);
     }
 
     @Override
-    public Review updateReview(Integer id,Review updateReview) {
+    public Review updateReview(Long id,Review updateReview) {
         Optional<Review> existingReview = reviewRepository.findById(id);
         if(existingReview.isPresent()){
             Review review = existingReview.get();
@@ -36,12 +42,53 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public boolean deleteReview(Integer id) {
-        if(reviewRepository.existsById(id)){
-            reviewRepository.deleteById(id);
-            return true;
+    @Transactional
+    public boolean deleteReview(Long id) {
+        try {
+            // First check if review exists
+            if (!reviewRepository.existsById(id)) {
+                return false;
+            }
+
+            // Try using native query first (most reliable for SQL Server)
+            try {
+                int deletedRows = reviewRepository.deleteReviewByIdNative(id);
+                if (deletedRows > 0) {
+                    entityManager.flush();
+                    entityManager.clear();
+                    return true;
+                }
+            } catch (Exception e) {
+                // Fall back to standard deletion
+            }
+
+            // Fall back to EntityManager deletion
+            try {
+                Review review = reviewRepository.findById(id).orElse(null);
+                if (review != null) {
+                    review = entityManager.merge(review);
+                    entityManager.remove(review);
+                    entityManager.flush();
+                    entityManager.clear();
+                    return true;
+                }
+            } catch (Exception e) {
+                // Fall back to repository deleteById
+            }
+
+            // Final fallback: repository deleteById
+            try {
+                reviewRepository.deleteById(id);
+                entityManager.flush();
+                entityManager.clear();
+                return !reviewRepository.existsById(id);
+            } catch (Exception e) {
+                return false;
+            }
+
+        } catch (Exception e) {
+            throw e;
         }
-        return false;
     }
 
     @Override
@@ -53,5 +100,10 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public List<Review> findByProductId(Long productId) {
         return reviewRepository.findByProductId(productId);
+    }
+
+    @Override
+    public Review findReviewById(Long id) {
+        return reviewRepository.findById(id).orElse(null);
     }
 }

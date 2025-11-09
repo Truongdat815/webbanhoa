@@ -33,6 +33,10 @@ public class LoginController {
         Account acc = accountService.login(username, password);
         if (acc != null) {
             session.setAttribute("account", acc);
+            // Redirect to admin if user is admin
+            if ("ADMIN".equals(acc.getRole())) {
+                return "redirect:/admin";
+            }
             return "redirect:/home";
         } else {
             model.addAttribute("error", "Sai tên đăng nhập hoặc mật khẩu!");

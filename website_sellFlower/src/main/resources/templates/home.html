@@ -22,7 +22,8 @@
         <nav class="nav-links">
             <a href="/home" class="active">Trang chủ</a>
             <a href="/product">Sản phẩm</a>
-            <a href="#">Liên hệ</a>
+            <a href="#" th:if="${!isAdmin}">Liên hệ</a>
+            <a href="/admin" th:if="${isAdmin}">Admin</a>
         </nav>
         <div class="utility-nav">
             <div class="user-dropdown" th:if="${isLoggedIn}">
@@ -89,7 +90,7 @@
                             <div class="products-grid carousel-grid">
                                 <!-- Dynamic Products from latestProducts -->
                                 <div th:each="product : ${latestProducts}" class="product-card"
-                                     th:attr="data-product-id=${product.id}, data-product-name=${product.name},data-product-reviews=${product.getReviews().size()},data-product-rating=${product.getAverageRating()}, data-product-price=${product.price}, data-product-image=${product.imageUrl}, data-product-stock=${product.stockQuantity}">
+                                     th:attr="data-product-id=${product.id}, data-product-name=${product.name},data-product-reviews=${product.getReviews().size()},data-product-rating=${product.getAverageRating()}, data-product-price=${product.price}, data-product-image=${product.imageUrl}, data-product-stock=${product.stockQuantity}, data-product-description=${product.description != null ? product.description : ''}">
 <!--                                    <div class="product-badge" th:if="${product.discountPercentage != null and product.discountPercentage > 0}">-->
 <!--                                        <span class="badge-text" th:text="${product.discountPercentage + '%'}">10%</span>-->
 <!--                                    </div>-->
@@ -138,7 +139,7 @@
                             <div class="products-grid carousel-grid">
                                 <!-- Dynamic Products from topOrderedProducts -->
                                 <div th:each="product : ${topOrderedProducts}" class="product-card"
-                                     th:attr="data-product-id=${product.id}, data-product-name=${product.name}, data-product-price=${product.price},data-product-reviews=${product.getReviews().size()},data-product-rating=${product.getAverageRating()}, data-product-image=${product.imageUrl}, data-product-stock=${product.stockQuantity}">
+                                     th:attr="data-product-id=${product.id}, data-product-name=${product.name}, data-product-price=${product.price},data-product-reviews=${product.getReviews().size()},data-product-rating=${product.getAverageRating()}, data-product-image=${product.imageUrl}, data-product-stock=${product.stockQuantity}, data-product-description=${product.description != null ? product.description : ''}">
 <!--                                    <div class="product-badge" th:if="${product.discountPercentage != null and product.discountPercentage > 0}">-->
 <!--                                        <span class="badge-text" th:text="${product.discountPercentage + '%'}">15%</span>-->
 <!--                                    </div>-->
@@ -186,7 +187,7 @@
             <div class="products-grid">
                 <!-- Dynamic Products from topProminentProducts -->
                 <div th:each="product : ${topProminentProducts}" class="product-card"
-                     th:attr="data-product-id=${product.id}, data-product-name=${product.name}, data-product-price=${product.price}, data-product-reviews=${product.getReviews().size()}, data-product-rating=${product.getAverageRating()}, data-product-image=${product.imageUrl}, data-product-stock=${product.stockQuantity}">
+                     th:attr="data-product-id=${product.id}, data-product-name=${product.name}, data-product-price=${product.price}, data-product-reviews=${product.getReviews().size()}, data-product-rating=${product.getAverageRating()}, data-product-image=${product.imageUrl}, data-product-stock=${product.stockQuantity}, data-product-description=${product.description != null ? product.description : ''}">
                     <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
                         <img th:src="${product.imageUrl}" th:alt="${product.name}" class="product-image">
                         <div class="product-overlay">
@@ -327,9 +328,9 @@
     </footer>
 
     <!-- Add to Cart Success Toast -->
-    <div class="toast" id="toast">
+    <div class="toast" id="toast" style="display: none;">
         <i class="fas fa-check-circle"></i>
-        <span>Đã thêm vào giỏ!</span>
+        <span></span>
     </div>
 
     <!-- Quick View Modal -->
@@ -361,7 +362,11 @@
                     </div>
                 </div>
                 <div class="modal-product-description">
-                    <p id="modalProductDescription">Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo. Thích hợp trang trí nhà cửa, văn phòng hoặc làm quà tặng ý nghĩa cho người thân yêu.</p>
+                    <p id="modalProductDescription"><!-- Product description will be loaded dynamically --></p>
+                </div>
+                <div class="modal-product-stock">
+                    <span class="modal-stock-label">Tình trạng:</span>
+                    <span class="modal-stock-status" id="modalStockStatus"></span>
                 </div>
                     <div class="modal-quantity-cart-row">
                         <div class="modal-quantity-section">

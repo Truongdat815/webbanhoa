@@ -23,10 +23,10 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
-    public boolean deleteOrderDetailById(int orderDetailId) {
-        OrderDetail orderDetail = repository.findById((long) orderDetailId).orElse(null);
+    public boolean deleteOrderDetailById(Long orderDetailId) {
+        OrderDetail orderDetail = repository.findById(orderDetailId).orElse(null);
         if (orderDetail != null) {
-            repository.deleteById((long) orderDetailId);
+            repository.deleteById(orderDetailId);
             return true;
         }
         return false;
@@ -34,7 +34,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Override
     public boolean updateOrderDetail(OrderDetail orderDetail) {
-        OrderDetail existingOrderDetail = repository.findById((long) orderDetail.getId()).orElse(null);
+        OrderDetail existingOrderDetail = repository.findById(orderDetail.getId()).orElse(null);
         if (existingOrderDetail != null) {
             repository.save(orderDetail);
             return true;
@@ -43,12 +43,12 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     }
 
     @Override
-    public OrderDetail getOrderDetailById(int orderDetailId) {
-        return repository.findById((long) orderDetailId).orElse(null);
+    public OrderDetail getOrderDetailById(Long orderDetailId) {
+        return repository.findById(orderDetailId).orElse(null);
     }
 
     @Override
-    public List<OrderDetail> getAllOrderDetailsById(int orderId) {
-        return repository.findByOrderId((long) orderId);
+    public List<OrderDetail> getAllOrderDetailsById(Long orderId) {
+        return repository.findByOrderId(orderId);
     }
 }

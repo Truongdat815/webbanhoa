@@ -1123,10 +1123,10 @@ body {
 
 /* SỬA LỖI CĂN CHỈNH MODAL: Dùng Flexbox */
 .modal-product-info {
-    padding: 50px 40px;
+    padding: 40px 35px;
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 15px;
     background-color: #ffffff;
     align-items: flex-start;
 }
@@ -1135,7 +1135,7 @@ body {
     font-size: 28px;
     font-weight: 600;
     color: #2c2c2c;
-    margin: 0 0 12px 0;
+    margin: 0 0 8px 0;
     letter-spacing: 0.5px;
     text-align: left;
     width: 100%;
@@ -1146,7 +1146,7 @@ body {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     flex-wrap: wrap;
     gap: 15px;
 }
@@ -1168,8 +1168,16 @@ body {
 }
 
 .rating-stars i {
-    color: #FFD700;
     font-size: 16px;
+}
+
+.rating-stars .fas.fa-star,
+.rating-stars .fas.fa-star-half-alt {
+    color: #FFD700;
+}
+
+.rating-stars .far.fa-star {
+    color: #d3d3d3;
 }
 
 .rating-text {
@@ -1186,8 +1194,8 @@ body {
 
 .modal-product-description {
     width: 100%;
-    margin-bottom: 20px;
-    padding: 15px;
+    margin-bottom: 12px;
+    padding: 12px;
     background-color: #fafafa;
     border-radius: 8px;
     border-left: 3px solid #E95473;
@@ -1195,9 +1203,29 @@ body {
 
 .modal-product-description p {
     font-size: 14px;
-    line-height: 1.6;
+    line-height: 1.5;
     color: #666;
     margin: 0;
+}
+
+.modal-product-stock {
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-stock-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c2c2c;
+}
+
+.modal-stock-status {
+    font-size: 14px;
+    font-weight: 500;
 }
 
 /* Row chứa số lượng và nút thêm vào giỏ hàng */
@@ -1205,7 +1233,7 @@ body {
     display: flex;
     align-items: flex-end;
     gap: 15px;
-    margin-top: 20px;
+    margin-top: 12px;
     width: 100%;
 }
 
@@ -1213,7 +1241,7 @@ body {
 .modal-quantity-section {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     flex: 0 0 auto;
     min-width: 200px;
 }

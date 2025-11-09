@@ -378,8 +378,16 @@ a {
 }
 
 .rating-stars i {
-    color: #FFD700;
     font-size: 16px;
+}
+
+.rating-stars .fas.fa-star,
+.rating-stars .fas.fa-star-half-alt {
+    color: #FFD700;
+}
+
+.rating-stars .far.fa-star {
+    color: #d3d3d3;
 }
 
 .rating-count {
@@ -671,8 +679,16 @@ a {
 }
 
 .rating-stars-large i {
-    color: #FFD700;
     font-size: 24px;
+}
+
+.rating-stars-large .fas.fa-star,
+.rating-stars-large .fas.fa-star-half-alt {
+    color: #FFD700;
+}
+
+.rating-stars-large .far.fa-star {
+    color: #d3d3d3;
 }
 
 .rating-count-text {
@@ -734,8 +750,15 @@ a {
 }
 
 .review-stars i {
-    color: #FFD700;
     font-size: 14px;
+}
+
+.review-stars .fas.fa-star {
+    color: #FFD700;
+}
+
+.review-stars .far.fa-star {
+    color: #d3d3d3;
 }
 
 .review-text {
@@ -759,7 +782,7 @@ a {
     color: white;
     padding: 16px 24px;
     border-radius: 8px;
-    display: flex;
+    display: none;
     align-items: center;
     gap: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -769,11 +792,14 @@ a {
     z-index: 10000;
     font-size: 15px;
     font-weight: 500;
+    visibility: hidden;
 }
 
 .toast.show {
+    display: flex;
     transform: translateY(0);
     opacity: 1;
+    visibility: visible;
 }
 
 .toast i {
@@ -1399,10 +1425,10 @@ a {
 }
 
 .modal-product-info {
-    padding: 50px 40px;
+    padding: 40px 35px;
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 15px;
     background-color: #ffffff;
     align-items: flex-start;
 }
@@ -1411,7 +1437,7 @@ a {
     font-size: 28px;
     font-weight: 600;
     color: #2c2c2c;
-    margin: 0 0 12px 0;
+    margin: 0 0 8px 0;
     letter-spacing: 0.5px;
     text-align: left;
     width: 100%;
@@ -1422,7 +1448,7 @@ a {
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
     flex-wrap: wrap;
     gap: 15px;
 }
@@ -1444,8 +1470,16 @@ a {
 }
 
 .rating-stars i {
-    color: #FFD700;
     font-size: 16px;
+}
+
+.rating-stars .fas.fa-star,
+.rating-stars .fas.fa-star-half-alt {
+    color: #FFD700;
+}
+
+.rating-stars .far.fa-star {
+    color: #d3d3d3;
 }
 
 .rating-text {
@@ -1462,8 +1496,8 @@ a {
 
 .modal-product-description {
     width: 100%;
-    margin-bottom: 20px;
-    padding: 15px;
+    margin-bottom: 12px;
+    padding: 12px;
     background-color: #fafafa;
     border-radius: 8px;
     border-left: 3px solid #E95473;
@@ -1471,23 +1505,43 @@ a {
 
 .modal-product-description p {
     font-size: 14px;
-    line-height: 1.6;
+    line-height: 1.5;
     color: #666;
     margin: 0;
+}
+
+.modal-product-stock {
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 6px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.modal-stock-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c2c2c;
+}
+
+.modal-stock-status {
+    font-size: 14px;
+    font-weight: 500;
 }
 
 .modal-quantity-cart-row {
     display: flex;
     align-items: flex-end;
     gap: 15px;
-    margin-top: 20px;
+    margin-top: 12px;
     width: 100%;
 }
 
 .modal-quantity-section {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     flex: 0 0 auto;
     min-width: 200px;
 }

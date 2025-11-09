@@ -22,6 +22,7 @@ public class homeController {
             Account account = (Account) session.getAttribute("account");
             model.addAttribute("isLoggedIn", true);
             model.addAttribute("userDisplayName",account.getFullName());
+            model.addAttribute("isAdmin", "ADMIN".equals(account.getRole()));
             model.addAttribute("latestProducts", productService.getLatestProducts(6));
             model.addAttribute("topOrderedProducts", productService.getTopProductsByOrderByIdDesc(6));
             model.addAttribute("topProminentProducts", productService.getTopProminentProducts(6));

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${product.id != null ? 'Sửa Sản phẩm' : 'Thêm Sản phẩm'}">Thêm Sản phẩm - Admin FIAMA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body class="admin-page">
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="admin-header-content">
+            <div class="logo">
+                <a href="/admin">
+                    <h1>FIAMA</h1>
+                    <span class="admin-badge">ADMIN</span>
+                </a>
+            </div>
+            <div class="admin-user-info">
+                <div class="user-dropdown">
+                    <a href="#" class="user-link">
+                        <i class="fas fa-user-shield"></i>
+                        <span th:text="${userDisplayName}">Admin</span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="/logout">Đăng xuất</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Main Content -->
+    <main class="admin-main">
+        <div class="admin-container">
+            <!-- Sidebar -->
+            <aside class="admin-sidebar">
+                <div class="sidebar-header">
+                    <h2><i class="fas fa-shield-alt"></i> Admin Panel</h2>
+                </div>
+                <nav class="sidebar-nav">
+                    <a href="/admin" class="nav-item">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="/admin/products" class="nav-item active">
+                        <i class="fas fa-box"></i>
+                        <span>Sản phẩm</span>
+                    </a>
+                    <a href="/admin/orders" class="nav-item">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Đơn hàng</span>
+                    </a>
+                    <a href="/admin/accounts" class="nav-item">
+                        <i class="fas fa-users"></i>
+                        <span>Tài khoản</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Content Area -->
+            <div class="admin-content">
+                <div class="content-header">
+                    <div>
+                        <h1 th:text="${product.id != null ? 'Sửa Sản phẩm' : 'Thêm Sản phẩm'}">Thêm Sản phẩm</h1>
+                        <p th:text="${product.id != null ? 'Cập nhật thông tin sản phẩm' : 'Thêm sản phẩm mới vào hệ thống'}">Thêm sản phẩm mới vào hệ thống</p>
+                    </div>
+                    <a href="/admin/products" class="btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Quay lại
+                    </a>
+                </div>
+
+                <!-- Form -->
+                <div class="admin-form-container">
+                    <form id="productForm" class="admin-form">
+                        <input type="hidden" id="productId" th:value="${product.id}">
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">Tên sản phẩm <span class="required">*</span></label>
+                                <input type="text" id="name" th:value="${product.name}" required>
+                                <span class="error-message" id="nameError"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="category">Danh mục <span class="required">*</span></label>
+                                <select id="category" th:value="${product.category}" required>
+                                    <option value="">Chọn danh mục</option>
+                                    <option value="Hoa hồng">Hoa hồng</option>
+                                    <option value="Hoa tulip">Hoa tulip</option>
+                                    <option value="Hoa ly">Hoa ly</option>
+                                    <option value="Hoa cúc">Hoa cúc</option>
+                                    <option value="Hoa hướng dương">Hoa hướng dương</option>
+                                    <option value="Hoa cẩm chướng">Hoa cẩm chướng</option>
+                                    <option value="Hoa lan">Hoa lan</option>
+                                    <option value="Hoa baby">Hoa baby</option>
+                                    <option value="Hoa đồng tiền">Hoa đồng tiền</option>
+                                    <option value="Hoa lavender">Hoa lavender</option>
+                                </select>
+                                <span class="error-message" id="categoryError"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="price">Giá (₫) <span class="required">*</span></label>
+                                <input type="number" id="price" th:value="${product.price}" min="0" step="1000" required>
+                                <span class="error-message" id="priceError"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="stockQuantity">Số lượng tồn kho <span class="required">*</span></label>
+                                <input type="number" id="stockQuantity" th:value="${product.stockQuantity}" min="0" required>
+                                <span class="error-message" id="stockQuantityError"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="imageUrl">URL hình ảnh <span class="required">*</span></label>
+                            <input type="url" id="imageUrl" th:value="${product.imageUrl}" placeholder="https://example.com/image.jpg" required>
+                            <span class="error-message" id="imageUrlError"></span>
+                            <div class="image-preview" id="imagePreview" style="display: none;">
+                                <img id="previewImage" src="" alt="Preview">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="description">Mô tả</label>
+                            <textarea id="description" rows="4" th:text="${product.description}" placeholder="Nhập mô tả sản phẩm..."></textarea>
+                            <span class="error-message" id="descriptionError"></span>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" onclick="window.location.href='/admin/products'">
+                                Hủy
+                            </button>
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-save"></i>
+                                <span th:text="${product.id != null ? 'Cập nhật' : 'Tạo mới'}">Tạo mới</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Admin Footer -->
+    <footer class="admin-footer">
+        <div class="admin-footer-content">
+            <p>&copy; 2025 FIAMA Admin Panel. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/js/admin.js"></script>
+</body>
+</html>
+

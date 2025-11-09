@@ -1,8 +1,6 @@
 package org.example.website_sellflower.entity;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -115,9 +113,43 @@ public class Product {
             return 0.0;
         }
         double sum = 0.0;
+        int count = 0;
         for (Review review : reviews) {
-            sum += review.getRating();
+            if (review != null && review.getRating() != null) {
+                sum += review.getRating();
+                count++;
+            }
         }
-        return sum / reviews.size();
+        return count > 0 ? sum / count : 0.0;
+    }
+
+    /**
+     * Get the number of reviews for this product
+     */
+    public int getReviewCount() {
+        return reviews != null ? reviews.size() : 0;
+    }
+
+    /**
+     * Check if a star at position (1-5) should be fully filled
+     */
+    public boolean isStarFilled(int starPosition) {
+        double avgRating = getAverageRating();
+        return avgRating >= starPosition;
+    }
+
+    /**
+     * Check if a star at position (1-5) should be half-filled
+     */
+    public boolean isStarHalfFilled(int starPosition) {
+        double avgRating = getAverageRating();
+        return avgRating >= (starPosition - 0.5) && avgRating < starPosition;
+    }
+
+    /**
+     * Check if a star at position (1-5) should be empty
+     */
+    public boolean isStarEmpty(int starPosition) {
+        return !isStarFilled(starPosition) && !isStarHalfFilled(starPosition);
     }
 }

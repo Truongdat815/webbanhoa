@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết Đơn hàng - Admin FIAMA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body class="admin-page">
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="admin-header-content">
+            <div class="logo">
+                <a href="/admin">
+                    <h1>FIAMA</h1>
+                    <span class="admin-badge">ADMIN</span>
+                </a>
+            </div>
+            <div class="admin-user-info">
+                <div class="user-dropdown">
+                    <a href="#" class="user-link">
+                        <i class="fas fa-user-shield"></i>
+                        <span th:text="${userDisplayName}">Admin</span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="/logout">Đăng xuất</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Main Content -->
+    <main class="admin-main">
+        <div class="admin-container">
+            <!-- Sidebar -->
+            <aside class="admin-sidebar">
+                <div class="sidebar-header">
+                    <h2><i class="fas fa-shield-alt"></i> Admin Panel</h2>
+                </div>
+                <nav class="sidebar-nav">
+                    <a href="/admin" class="nav-item">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="/admin/products" class="nav-item">
+                        <i class="fas fa-box"></i>
+                        <span>Sản phẩm</span>
+                    </a>
+                    <a href="/admin/orders" class="nav-item active">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Đơn hàng</span>
+                    </a>
+                    <a href="/admin/accounts" class="nav-item">
+                        <i class="fas fa-users"></i>
+                        <span>Tài khoản</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Content Area -->
+            <div class="admin-content">
+                <div class="content-header">
+                    <div>
+                        <h1>Chi tiết Đơn hàng #<span th:text="${order.id}">1</span></h1>
+                        <p>Thông tin chi tiết đơn hàng</p>
+                    </div>
+                    <a href="/admin/orders" class="btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Quay lại
+                    </a>
+                </div>
+
+                <!-- Order Info -->
+                <div class="order-detail-container">
+                    <div class="order-info-card">
+                        <h3>Thông tin đơn hàng</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Mã đơn hàng:</label>
+                                <span th:text="${order.id}">1</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Ngày đặt:</label>
+                                <span th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm') : 'N/A'}">Ngày</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Trạng thái:</label>
+                                <select class="status-select" th:data-id="${order.id}" th:value="${order.status}">
+                                    <option value="pending_payment">Chờ thanh toán</option>
+                                    <option value="paid">Đã thanh toán</option>
+                                    <option value="processing">Đang xử lý</option>
+                                    <option value="shipped">Đang giao hàng</option>
+                                    <option value="delivered">Đã giao hàng</option>
+                                    <option value="cancelled">Đã hủy</option>
+                                </select>
+                            </div>
+                            <div class="info-item">
+                                <label>Tổng tiền:</label>
+                                <span class="price" th:text="${order.totalAmount != null ? '₫' + #numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') : '₫0'}">₫0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-info-card" th:if="${order.account != null}">
+                        <h3>Thông tin khách hàng</h3>
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <label>Họ tên:</label>
+                                <span th:text="${order.account.getFullName()}">Khách hàng</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Email:</label>
+                                <span th:text="${order.account.getEmail()}">Email</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Số điện thoại:</label>
+                                <span th:text="${order.phone != null ? order.phone : order.account.getPhone()}">SĐT</span>
+                            </div>
+                            <div class="info-item">
+                                <label>Địa chỉ giao hàng:</label>
+                                <span th:text="${order.shippingAddress != null ? order.shippingAddress : order.account.getAddress()}">Địa chỉ</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="order-info-card" th:if="${order.orderDetails != null && !order.orderDetails.isEmpty()}">
+                        <h3>Chi tiết sản phẩm</h3>
+                        <div class="admin-table-container">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Sản phẩm</th>
+                                        <th>Số lượng</th>
+                                        <th>Đơn giá</th>
+                                        <th>Thành tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="detail, iterStat : ${order.orderDetails}">
+                                        <td th:text="${iterStat.index + 1}">1</td>
+                                        <td th:text="${detail.product != null ? detail.product.name : 'N/A'}">Sản phẩm</td>
+                                        <td th:text="${detail.quantity}">1</td>
+                                        <td th:text="${detail.price != null ? '₫' + #numbers.formatDecimal(detail.price, 0, 'COMMA', 0, 'POINT') : '₫0'}">₫0</td>
+                                        <td th:text="${detail.quantity * (detail.price != null ? detail.price : 0) != null ? '₫' + #numbers.formatDecimal(detail.quantity * (detail.price != null ? detail.price : 0), 0, 'COMMA', 0, 'POINT') : '₫0'}">₫0</td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="4" style="text-align: right; font-weight: 600;">Tổng cộng:</td>
+                                        <td style="font-weight: 700; color: #E95473;" th:text="${order.totalAmount != null ? '₫' + #numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') : '₫0'}">₫0</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Admin Footer -->
+    <footer class="admin-footer">
+        <div class="admin-footer-content">
+            <p>&copy; 2025 FIAMA Admin Panel. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="/js/admin.js"></script>
+    <style>
+        .order-detail-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .order-info-card {
+            background-color: #ffffff;
+            border-radius: 4px;
+            padding: 25px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .order-info-card h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c2c2c;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .info-item label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-item span {
+            font-size: 15px;
+            color: #2c2c2c;
+        }
+
+        .info-item .price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #E95473;
+        }
+
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</body>
+</html>
+
