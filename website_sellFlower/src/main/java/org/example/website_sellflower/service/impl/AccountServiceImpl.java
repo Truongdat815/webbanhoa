@@ -6,6 +6,8 @@ import org.example.website_sellflower.entity.Account;
 import org.example.website_sellflower.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 @Service
 public class AccountServiceImpl implements AccountService {
     @Autowired
@@ -45,21 +47,38 @@ public class AccountServiceImpl implements AccountService {
         return repository.findById(id).orElse(null);
     }
 
-
-        @Override
-        public boolean existsByName (String name){
-            return repository.findByUsername(name).isPresent();
-        }
-
-        @Override
-        public boolean existsByEmail (String email){
-            return repository.findByEmail(email).isPresent();
-        }
-
-        @Override
-        public boolean existsByPhone (String phone){
-            return repository.findByPhone(phone).isPresent();
-
-        }
+    @Override
+    public Account findByUsername(String username) {
+        return repository.findByUsername(username).orElse(null);
     }
+
+    @Override
+    public List<Account> findAllAccounts() {
+        return repository.findAll();
+    }
+
+    @Override
+    public boolean deleteAccount(Long id) {
+        if (repository.existsById(id)) {
+            repository.deleteById(id);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean existsByName (String name){
+        return repository.findByUsername(name).isPresent();
+    }
+
+    @Override
+    public boolean existsByEmail (String email){
+        return repository.findByEmail(email).isPresent();
+    }
+
+    @Override
+    public boolean existsByPhone (String phone){
+        return repository.findByPhone(phone).isPresent();
+    }
+}
 

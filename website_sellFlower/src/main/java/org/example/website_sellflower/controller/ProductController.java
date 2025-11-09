@@ -34,6 +34,7 @@ public class ProductController {
         
         model.addAttribute("isLoggedIn", true);
         model.addAttribute("userDisplayName", account.getFullName());
+        model.addAttribute("isAdmin", "ADMIN".equals(account.getRole()));
         List<Product> products = productService.findAllProducts();
         model.addAttribute("products", products);
         return "product";
@@ -55,6 +56,7 @@ public class ProductController {
         
         model.addAttribute("isLoggedIn", true);
         model.addAttribute("userDisplayName", account.getFullName());
+        model.addAttribute("isAdmin", "ADMIN".equals(account.getRole()));
         model.addAttribute("product", product);
         model.addAttribute("reviews", reviews);
         

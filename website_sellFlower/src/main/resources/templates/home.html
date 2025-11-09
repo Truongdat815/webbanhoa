@@ -22,7 +22,8 @@
         <nav class="nav-links">
             <a href="/home" class="active">Trang chủ</a>
             <a href="/product">Sản phẩm</a>
-            <a href="#">Liên hệ</a>
+            <a href="#" th:if="${!isAdmin}">Liên hệ</a>
+            <a href="/admin" th:if="${isAdmin}">Admin</a>
         </nav>
         <div class="utility-nav">
             <div class="user-dropdown" th:if="${isLoggedIn}">
