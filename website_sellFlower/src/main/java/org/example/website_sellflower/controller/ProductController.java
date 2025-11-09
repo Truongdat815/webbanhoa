@@ -37,6 +37,11 @@ public class ProductController {
             return "redirect:/login";
         }
 
+        if (account.getRole().equals("USER")) {
+            model.addAttribute("isAdmin", false);
+        }else {
+            model.addAttribute("isAdmin", true);
+        }
         model.addAttribute("isLoggedIn", true);
         model.addAttribute("userDisplayName", account.getFullName());
         List<Product> products = productService.findAllProducts();
@@ -54,6 +59,11 @@ public class ProductController {
                 return "redirect:/product";
             }
 
+            if (account.getRole().equals("USER")) {
+                model.addAttribute("isAdmin", false);
+            }else {
+                model.addAttribute("isAdmin", true);
+            }
             // Load reviews separately to ensure account is loaded
             List<Review> reviews = reviewService.findByProductId(id);
             if (reviews == null) {

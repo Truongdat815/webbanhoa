@@ -49,7 +49,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public Account findByUsername(String username) {
-        return null;
+        return repository.findByUsername(username).orElse(null);
     }
 
     @Override
@@ -59,6 +59,11 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public boolean deleteAccount(Long id) {
+        var existingAccount = repository.findById(id);
+        if (existingAccount.isPresent()) {
+            repository.deleteById(id);
+            return true;
+        }
         return false;
     }
 
