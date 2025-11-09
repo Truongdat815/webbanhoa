@@ -52,8 +52,8 @@
                     <div class="avatar">
                         <i class="fas fa-user"></i>
                     </div>
-                    <h2 class="user-name">Nguyễn Văn A</h2>
-                    <p class="user-email">user1@test.com</p>
+                    <h2 class="user-name" th:text="${accountName != null ? accountName : 'User'}">User</h2>
+                    <p class="user-email" th:text="${accountEmail != null ? accountEmail : ''}"></p>
                 </div>
                 <nav class="account-nav">
                     <a href="#overview" class="nav-item active" data-section="overview">
@@ -94,7 +94,7 @@
                             </div>
                             <div class="card-content">
                                 <h3>Tổng đơn hàng</h3>
-                                <p class="card-value">12</p>
+                                <p class="card-value" th:text="${totalOrders != null ? totalOrders : 0}">0</p>
                             </div>
                         </div>
                         <div class="overview-card">
@@ -103,7 +103,8 @@
                             </div>
                             <div class="card-content">
                                 <h3>Tổng chi tiêu</h3>
-                                <p class="card-value">450.000₫</p>
+                                <p class="card-value" th:if="${totalSpending != null}" th:text="${#numbers.formatDecimal(totalSpending, 0, 'COMMA', 0, 'POINT')} + '₫'">0₫</p>
+                                <p class="card-value" th:if="${totalSpending == null}">0₫</p>
                             </div>
                         </div>
                         <div class="overview-card">
@@ -112,29 +113,28 @@
                             </div>
                             <div class="card-content">
                                 <h3>Đánh giá</h3>
-                                <p class="card-value">3</p>
+                                <p class="card-value" data-review-count="0">0</p>
                             </div>
                         </div>
                     </div>
-                    <div class="recent-orders">
+                    <div class="recent-orders" th:if="${recentOrders != null && !recentOrders.isEmpty()}">
                         <h2 class="subsection-title">Đơn hàng gần đây</h2>
                         <div class="orders-list">
-                            <div class="order-item">
+                            <div class="order-item" th:each="order : ${recentOrders}">
                                 <div class="order-info">
-                                    <span class="order-id">#ORD-2024-001</span>
-                                    <span class="order-date">15/01/2024</span>
+                                    <span class="order-id" th:text="'#ORD-' + ${order.orderId}">#ORD-</span>
+                                    <span class="order-date" th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy') : ''}"></span>
                                 </div>
-                                <div class="order-status completed">Hoàn thành</div>
-                                <div class="order-total">45.000₫</div>
+                                <div class="order-status" th:classappend="${recentOrderStatusClassMap != null && recentOrderStatusClassMap.containsKey(order.orderId) ? recentOrderStatusClassMap.get(order.orderId) : 'pending'}" th:text="${order.status != null ? order.status : ''}"></div>
+                                <div class="order-total" th:if="${order.totalAmount != null}" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + '₫'"></div>
+                                <div class="order-total" th:if="${order.totalAmount == null}">0₫</div>
                             </div>
-                            <div class="order-item">
-                                <div class="order-info">
-                                    <span class="order-id">#ORD-2024-002</span>
-                                    <span class="order-date">10/01/2024</span>
-                                </div>
-                                <div class="order-status processing">Đang xử lý</div>
-                                <div class="order-total">32.000₫</div>
-                            </div>
+                        </div>
+                    </div>
+                    <div class="recent-orders" th:if="${recentOrders == null || recentOrders.isEmpty()}">
+                        <h2 class="subsection-title">Đơn hàng gần đây</h2>
+                        <div class="orders-list">
+                            <p class="no-orders-message">Bạn chưa có đơn hàng nào</p>
                         </div>
                     </div>
                 </div>
@@ -154,8 +154,20 @@
                                 </tr>
                             </thead>
                             <tbody id="ordersTableBody">
-                                <tr>
-                                    <td colspan="5" class="no-orders">Đang tải...</td>
+                                <tr th:if="${orders == null || orders.isEmpty()}">
+                                    <td colspan="5" class="no-orders">Bạn chưa có đơn hàng nào</td>
+                                </tr>
+                                <tr th:each="order : ${orders}">
+                                    <td th:text="${order.orderId}"></td>
+                                    <td th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy') : ''}"></td>
+                                    <td>
+                                        <span class="order-status-badge" th:classappend="${orderStatusClassMap != null && orderStatusClassMap.containsKey(order.orderId) ? orderStatusClassMap.get(order.orderId) : 'pending'}" th:text="${order.status != null ? order.status : ''}"></span>
+                                    </td>
+                                    <td th:if="${order.totalAmount != null}" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+                                    <td th:if="${order.totalAmount == null}">0₫</td>
+                                    <td>
+                                        <a th:href="@{/order/{id}(id=${order.orderId})}" class="view-order-link">Xem</a>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -171,24 +183,18 @@
                     <div th:if="${error}" class="flash-message error" th:text="${error}"></div>
                     
                     <form class="profile-form">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="firstName">Họ</label>
-                                <input type="text" id="firstName" value="Nguyễn Văn" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="lastName">Tên</label>
-                                <input type="text" id="lastName" value="A" required>
-                            </div>
+                        <div class="form-group full-width">
+                            <label for="name">Họ và tên</label>
+                            <input type="text" id="name" name="name" th:value="${accountName != null ? accountName : ''}" required>
                         </div>
                         <div class="form-group full-width">
                             <label for="email">Email</label>
-                            <input type="email" id="email" value="user1@test.com" required>
+                            <input type="email" id="email" name="email" th:value="${accountEmail != null ? accountEmail : ''}" required readonly>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="phone">Số điện thoại</label>
-                                <input type="tel" id="phone" value="0987654321">
+                                <input type="tel" id="phone" name="phone" th:value="${accountPhone != null ? accountPhone : ''}">
                             </div>
                             <div class="form-group">
                                 <label>Mật khẩu</label>
@@ -231,16 +237,15 @@
                 <div class="content-section" id="addresses">
                     <h1 class="section-title">Địa chỉ của tôi</h1>
                     <div class="addresses-grid">
-                        <div class="address-card">
+                        <div class="address-card" th:if="${accountAddress != null && !accountAddress.isEmpty()}">
                             <div class="address-header">
                                 <h3>Địa chỉ mặc định</h3>
                                 <span class="default-badge">Mặc định</span>
                             </div>
                             <div class="address-content">
-                                <p>Nguyễn Văn A</p>
-                                <p>123 Đường ABC, Phường XYZ, Quận 1,</p>
-                                <p>TP.HCM</p>
-                                <p>Điện thoại: 0987654321</p>
+                                <p th:text="${accountName != null ? accountName : ''}"></p>
+                                <p th:text="${accountAddress != null ? accountAddress : ''}"></p>
+                                <p th:if="${accountPhone != null && !accountPhone.isEmpty()}" th:text="'Điện thoại: ' + ${accountPhone}"></p>
                             </div>
                             <div class="address-actions">
                                 <button class="edit-btn">Sửa</button>

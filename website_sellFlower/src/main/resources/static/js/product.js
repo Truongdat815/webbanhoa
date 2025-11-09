@@ -1,62 +1,5 @@
-// Sample products data (will be replaced with API call later)
-const sampleProducts = [
-    {
-        id: 1,
-        name: "Cây Hoa Hồng Hồng",
-        price: 420000,
-        image: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400",
-        stock: 50
-    },
-    {
-        id: 2,
-        name: "Hoa Hạnh Phúc Cao Cấp",
-        price: 420000,
-        image: "https://images.unsplash.com/photo-1520763185298-1b434c919102?w=400",
-        stock: 30
-    },
-    {
-        id: 3,
-        name: "Hoa Hồng Trắng",
-        price: 380000,
-        image: "https://images.unsplash.com/photo-1462275646964-a0e3386b89fa?w=400",
-        stock: 40
-    },
-    {
-        id: 4,
-        name: "Bó Hoa Hồng Đỏ",
-        price: 480000,
-        image: "https://images.unsplash.com/photo-1563241529-0c3e8b3d3e3f?w=400",
-        stock: 25
-    },
-    {
-        id: 5,
-        name: "Khát Vọng Trái Tim",
-        price: 360000,
-        image: "https://images.unsplash.com/photo-1606041008023-472dfb5e530f?w=400",
-        stock: 60
-    },
-    {
-        id: 6,
-        name: "Bó Hoa Hồng Đỏ",
-        price: 480000,
-        image: "https://images.unsplash.com/photo-1597848212624-e593b98b8c9a?w=400",
-        stock: 35
-    },
-    {
-        id: 7,
-        name: "Khát Vọng Trái Tim",
-        price: 360000,
-        image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400",
-        stock: 20
-    },
-    {
-        id: 8,
-        name: "Hoa Hồng Đỏ Tươi",
-        price: 450000,
-        image: "https://images.unsplash.com/photo-1518895949257-7621c3c786d7?w=400",
-        stock: 45
-    }
-];
+// Sample products data removed - will be loaded from API/database
+// const sampleProducts = [ ... ];
 
 // Helper function to format price
 function formatPrice(price) {
@@ -94,6 +37,7 @@ function createProductCard(product) {
 }
 
 // Function to load and display products
+// This function will be implemented to load products from API/database
 function loadProducts() {
     const productsGrid = document.getElementById('productsGrid');
     
@@ -105,14 +49,20 @@ function loadProducts() {
     // Clear existing content
     productsGrid.innerHTML = '';
 
-    // Display products
-    sampleProducts.forEach(product => {
-        const productCard = createProductCard(product);
-        productsGrid.innerHTML += productCard;
-    });
-
-    // Initialize quantity selectors and add to cart buttons
-    initProductInteractions();
+    // TODO: Load products from API/database
+    // Example:
+    // fetch('/api/products')
+    //     .then(response => response.json())
+    //     .then(products => {
+    //         products.forEach(product => {
+    //             const productCard = createProductCard(product);
+    //             productsGrid.innerHTML += productCard;
+    //         });
+    //         initProductInteractions();
+    //     })
+    //     .catch(error => {
+    //         console.error('Error loading products:', error);
+    //     });
 }
 
 // Function to navigate to product detail page
@@ -443,8 +393,9 @@ function showToast(message, type = 'success') {
 }
 
 // Initialize on page load
+// Note: loadProducts() is commented out until API/database is implemented
 document.addEventListener('DOMContentLoaded', function() {
-    loadProducts();
+    // loadProducts(); // Uncomment when API/database is ready
     initModalHandlers();
 });
 
