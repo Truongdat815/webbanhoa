@@ -31,7 +31,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public boolean updateProfile(Account account) {
-        Account existingAccount = repository.findById(account.getId());
+        Account existingAccount = repository.findById(account.getId()).orElse(null);
         if (existingAccount != null) {
             repository.save(account);
             return true;
@@ -42,7 +42,7 @@ public class AccountServiceImpl implements AccountService {
     // ← THÊM MỚI
     @Override
     public Account findById(Long id) {
-        return repository.findById(id);
+        return repository.findById(id).orElse(null);
     }
 
 
