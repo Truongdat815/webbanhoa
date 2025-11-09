@@ -744,3 +744,35 @@ document.addEventListener('visibilitychange', function() {
 window.addEventListener('focus', function() {
     resetToastState();
 });
+
+async function addToCart(productId, productName, productPrice, quantity, productImage, productStock) {
+    try {
+        const response = await fetch('/cart/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                productId,
+                quantity
+            })
+        });
+
+        const data = await response.json();
+
+        // Nếu backend trả về số lượng giỏ hàng -> cập nhật hiển thị
+        if (data.cartCount !== undefined) {
+            updateCartCount(data.cartCount);
+        }
+
+        return data;
+    } catch (error) {
+        console.error('Error calling addToCart:', error);
+        return { success: false, message: 'Không thể kết nối tới máy chủ!' };
+    }
+}
+
+function updateCartCount(count) {
+    const cartCounts = document.querySelectorAll('.cart-count');
+    cartCounts.forEach(el => el.textContent = count);
+}
