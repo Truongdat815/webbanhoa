@@ -59,6 +59,11 @@ public class ProductController {
                 return "redirect:/product";
             }
 
+            if (account.getRole().equals("USER")) {
+                model.addAttribute("isAdmin", false);
+            }else {
+                model.addAttribute("isAdmin", true);
+            }
             // Load reviews separately to ensure account is loaded
             List<Review> reviews = reviewService.findByProductId(id);
             if (reviews == null) {
