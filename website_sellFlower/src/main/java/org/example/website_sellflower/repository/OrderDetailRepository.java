@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface OrderDetailRepository extends JpaRepository<OrderDetail, Integer> {
-    @Query("SELECT od FROM OrderDetail od WHERE od.order.orderId = :orderId")
-    List<OrderDetail> findByOrderId(Integer orderId);
+public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
+    @Query("SELECT od FROM OrderDetail od WHERE od.order.id = :orderId")
+    List<OrderDetail> findByOrderId(Long orderId);
 }

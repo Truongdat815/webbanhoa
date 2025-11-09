@@ -1,4 +1,4 @@
-package org.example.website_sellflower.service.impl;
+package org.example.website_sellflower.service.Impl;
 
 import org.example.website_sellflower.entity.OrderDetail;
 import org.example.website_sellflower.repository.OrderDetailRepository;
@@ -10,26 +10,23 @@ import java.util.List;
 
 @Service
 public class OrderDetailServiceImpl implements OrderDetailService {
-    @Autowired(required = false)
+    @Autowired
     private OrderDetailRepository repository;
 
     @Override
     public boolean saveOrderDetail(OrderDetail orderDetail) {
-        if (repository == null) {
-            return false;
-        }
         OrderDetail orderDetail1 = repository.save(orderDetail);
-        return orderDetail1 != null;
+        if (orderDetail1 != null) {
+            return true;
+        }
+        return false;
     }
 
     @Override
-    public boolean deleteOrderDetailByOrderDetailId(int orderDetailId) {
-        if (repository == null) {
-            return false;
-        }
-        OrderDetail orderDetail = repository.findById(orderDetailId).orElse(null);
+    public boolean deleteOrderDetailById(int orderDetailId) {
+        OrderDetail orderDetail = repository.findById((long) orderDetailId).orElse(null);
         if (orderDetail != null) {
-            repository.deleteById(orderDetailId);
+            repository.deleteById((long) orderDetailId);
             return true;
         }
         return false;
@@ -37,10 +34,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Override
     public boolean updateOrderDetail(OrderDetail orderDetail) {
-        if (repository == null) {
-            return false;
-        }
-        OrderDetail existingOrderDetail = repository.findById(orderDetail.getOrderDetailId()).orElse(null);
+        OrderDetail existingOrderDetail = repository.findById((long) orderDetail.getId()).orElse(null);
         if (existingOrderDetail != null) {
             repository.save(orderDetail);
             return true;
@@ -50,17 +44,11 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
     @Override
     public OrderDetail getOrderDetailById(int orderDetailId) {
-        if (repository == null) {
-            return null;
-        }
-        return repository.findById(orderDetailId).orElse(null);
+        return repository.findById((long) orderDetailId).orElse(null);
     }
 
     @Override
-    public List<OrderDetail> getAllOrderDetailsByOrderId(int orderId) {
-        if (repository == null) {
-            return List.of();
-        }
-        return repository.findByOrderId(orderId);
+    public List<OrderDetail> getAllOrderDetailsById(int orderId) {
+        return repository.findByOrderId((long) orderId);
     }
 }

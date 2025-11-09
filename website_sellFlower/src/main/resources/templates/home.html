@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
 
@@ -85,8 +86,38 @@
                     </button>
                     <div class="carousel-container">
                         <div class="carousel-track" id="newArrivalTrack">
-                            <div class="products-grid carousel-grid" id="newArrivalProductsGrid">
-                                <!-- Products will be loaded dynamically here -->
+                            <div class="products-grid carousel-grid">
+                                <!-- Dynamic Products from latestProducts -->
+                                <div th:each="product : ${latestProducts}" class="product-card"
+                                     th:attr="data-product-id=${product.id}, data-product-name=${product.name},data-product-reviews=${product.getReviews().size()},data-product-rating=${product.getAverageRating()}, data-product-price=${product.price}, data-product-image=${product.imageUrl}, data-product-stock=${product.stockQuantity}">
+<!--                                    <div class="product-badge" th:if="${product.discountPercentage != null and product.discountPercentage > 0}">-->
+<!--                                        <span class="badge-text" th:text="${product.discountPercentage + '%'}">10%</span>-->
+<!--                                    </div>-->
+                                    <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                                        <img th:src="${product.imageUrl}" th:alt="${product.name}" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name" th:text="${product.name}">Tên sản phẩm</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price" th:text="'₫' + ${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}">₫420,000</span>
+<!--                                            <span th:if="${product.originalPrice != null and product.originalPrice > product.price}"-->
+<!--                                                  class="product-price-old"-->
+<!--                                                  th:text="'₫' + ${#numbers.formatDecimal(product.originalPrice, 0, 'COMMA', 0, 'POINT')}">₫500,000</span>-->
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" th:max="${product.stockQuantity}" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -104,8 +135,38 @@
                     </button>
                     <div class="carousel-container">
                         <div class="carousel-track" id="topSalesTrack">
-                            <div class="products-grid carousel-grid" id="topSalesProductsGrid">
-                                <!-- Products will be loaded dynamically here -->
+                            <div class="products-grid carousel-grid">
+                                <!-- Dynamic Products from topOrderedProducts -->
+                                <div th:each="product : ${topOrderedProducts}" class="product-card"
+                                     th:attr="data-product-id=${product.id}, data-product-name=${product.name}, data-product-price=${product.price},data-product-reviews=${product.getReviews().size()},data-product-rating=${product.getAverageRating()}, data-product-image=${product.imageUrl}, data-product-stock=${product.stockQuantity}">
+<!--                                    <div class="product-badge" th:if="${product.discountPercentage != null and product.discountPercentage > 0}">-->
+<!--                                        <span class="badge-text" th:text="${product.discountPercentage + '%'}">15%</span>-->
+<!--                                    </div>-->
+                                    <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                                        <img th:src="${product.imageUrl}" th:alt="${product.name}" class="product-image">
+                                        <div class="product-overlay">
+                                            <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                                        </div>
+                                    </div>
+                                    <div class="product-info">
+                                        <h3 class="product-name" th:text="${product.name}">Tên sản phẩm</h3>
+                                        <div class="product-price-container">
+                                            <span class="product-price" th:text="'₫' + ${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}">₫350,000</span>
+<!--                                            <span th:if="${product.originalPrice != null and product.originalPrice > product.price}" -->
+<!--                                                  class="product-price-old" -->
+<!--                                                  th:text="'₫' + ${#numbers.formatDecimal(product.originalPrice, 0, 'COMMA', 0, 'POINT')}">₫420,000</span>-->
+                                        </div>
+                                        <div class="quantity-selector">
+                                            <button class="qty-btn minus-btn">-</button>
+                                            <input type="number" value="1" min="1" th:max="${product.stockQuantity}" class="qty-input">
+                                            <button class="qty-btn plus-btn">+</button>
+                                        </div>
+                                        <button class="add-to-cart-btn">
+                                            <span>THÊM VÀO GIỎ</span>
+                                            <i class="fas fa-shopping-bag"></i>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -122,8 +183,32 @@
     <section class="top-products-section">
         <div class="container">
             <h2 class="section-title">SẢN PHẨM NỔI BẬT</h2>
-            <div class="products-grid" id="topProductsGrid">
-                <!-- Products will be loaded dynamically here -->
+            <div class="products-grid">
+                <!-- Dynamic Products from topProminentProducts -->
+                <div th:each="product : ${topProminentProducts}" class="product-card"
+                     th:attr="data-product-id=${product.id}, data-product-name=${product.name}, data-product-price=${product.price}, data-product-reviews=${product.getReviews().size()}, data-product-rating=${product.getAverageRating()}, data-product-image=${product.imageUrl}, data-product-stock=${product.stockQuantity}">
+                    <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                        <img th:src="${product.imageUrl}" th:alt="${product.name}" class="product-image">
+                        <div class="product-overlay">
+                            <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-name" th:text="${product.name}">Tên sản phẩm</h3>
+                        <div class="product-price-container">
+                            <span class="product-price" th:text="'₫' + ${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}">₫420,000</span>
+                        </div>
+                        <div class="quantity-selector">
+                            <button class="qty-btn minus-btn">-</button>
+                            <input type="number" value="1" min="1" th:max="${product.stockQuantity}" class="qty-input">
+                            <button class="qty-btn plus-btn">+</button>
+                        </div>
+                        <button class="add-to-cart-btn">
+                            <span>THÊM VÀO GIỎ</span>
+                            <i class="fas fa-shopping-bag"></i>
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -301,4 +386,3 @@
 <script src="js/home.js"></script>
 </body>
 </html>
-

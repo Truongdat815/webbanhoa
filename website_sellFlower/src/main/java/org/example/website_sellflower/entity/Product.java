@@ -3,41 +3,63 @@ package org.example.website_sellflower.entity;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer productId;
+    private Long id;
 
-    private String productName;
-    @Column(columnDefinition = "TEXT")
+    @Column(nullable = false, length = 255, columnDefinition = "NVARCHAR(255)")
+    private String name;
+
+    @Column(length = 1000, columnDefinition = "NVARCHAR(1000)")
     private String description;
 
-    private BigDecimal price;
-    private Integer stock;
+    @Column(nullable = false)
+    private Double price;
+
+    @Column(name = "stock_quantity", nullable = false)
+    private Integer stockQuantity;
+
+    @Column(name = "image_url", columnDefinition = "NVARCHAR(500)")
     private String imageUrl;
+
+    @Column(length = 100, columnDefinition = "NVARCHAR(100)")
     private String category;
-    private LocalDateTime createAt;
 
-    // Getters & Setters
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Review> reviews;
 
+    public Product() {
 
-    public Integer getProductId() {
-        return productId;
     }
 
-    public void setProductId(Integer productId) {
-        this.productId = productId;
+    public Product(String name, String description, Double price, Integer stockQuantity, String imageUrl, String category) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stockQuantity = stockQuantity;
+        this.imageUrl = imageUrl;
+        this.category = category;
     }
 
-    public String getProductName() {
-        return productName;
+    public Long getId() {
+        return id;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDescription() {
@@ -48,20 +70,20 @@ public class Product {
         this.description = description;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
-    public Integer getStock() {
-        return stock;
+    public Integer getStockQuantity() {
+        return stockQuantity;
     }
 
-    public void setStock(Integer stock) {
-        this.stock = stock;
+    public void setStockQuantity(Integer stockQuantity) {
+        this.stockQuantity = stockQuantity;
     }
 
     public String getImageUrl() {
@@ -80,11 +102,22 @@ public class Product {
         this.category = category;
     }
 
-    public LocalDateTime getCreateAt() {
-        return createAt;
+    public List<Review> getReviews() {
+        return reviews;
     }
 
-    public void setCreateAt(LocalDateTime createAt) {
-        this.createAt = createAt;
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public double getAverageRating() {
+        if (reviews == null || reviews.isEmpty()) {
+            return 0.0;
+        }
+        double sum = 0.0;
+        for (Review review : reviews) {
+            sum += review.getRating();
+        }
+        return sum / reviews.size();
     }
 }

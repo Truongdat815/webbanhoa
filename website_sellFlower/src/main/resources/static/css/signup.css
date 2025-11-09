@@ -40,3 +40,9 @@
     display: block;
 }
 
+.form-group input.error,
+.form-group input.error:focus {
+    border-color: #FF9800 !important;
+    box-shadow: 0 0 0 3px rgba(255, 152, 0, 0.1) !important;
+}
+

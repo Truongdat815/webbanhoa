@@ -9,5 +9,11 @@ public interface ProductService {
     List<Product> findAllProducts();
     Product updateProduct(Integer id,Product product);
     boolean deleteProduct(Integer id);
+    // ← THÊM MỚI
+    Product findProductById(Long id);
 
+    List<Product> getLatestProducts(int numberOfProducts);
+
+    List<Product> getTopProductsByOrderByIdDesc(int numberOfProducts);
+    List<Product> getTopProminentProducts(int numberOfProducts);
 }

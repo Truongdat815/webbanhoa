@@ -202,6 +202,9 @@ function openQuickViewModal(productCard) {
     const productName = productCard.getAttribute('data-product-name');
     const productPrice = productCard.getAttribute('data-product-price');
     const productImage = productCard.getAttribute('data-product-image');
+    const averageRating = productCard.getAttribute('data-product-rating');
+    const numberOfReviews = productCard.getAttribute('data-product-reviews');
+
 
     // Lấy max stock từ quantity input của product card
     const qtyInput = productCard.querySelector('.qty-input');
@@ -211,6 +214,17 @@ function openQuickViewModal(productCard) {
     document.getElementById('modalProductImage').src = productImage;
     document.getElementById('modalProductName').textContent = productName;
     document.getElementById('modalProductPrice').textContent = formatPrice(productPrice);
+    document.querySelector(".modal-body .rating-text").textContent = `(${numberOfReviews} đánh giá)`;
+    document.querySelectorAll('.modal-body .rating-stars .fas.fa-star').forEach((star, index) => {
+        if (index>= averageRating) {
+            star.classList.remove('fas')
+            star.classList.remove('fa-star')
+            star.classList.add('fa-regular')
+            star.classList.add('fa-star')
+        }
+    });
+
+    // Reset modal quantity input
     const modalQtyInput = document.getElementById('modalQuantity');
     modalQtyInput.value = '1';
 

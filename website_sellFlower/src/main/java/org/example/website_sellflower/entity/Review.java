@@ -8,40 +8,42 @@ import java.time.LocalDateTime;
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer reviewId;
+    private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "account_id")
-    private Account account;
-
-    @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    private int rating;
+    @ManyToOne
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account account;
 
-    @Column(columnDefinition = "TEXT")
+    private Integer rating;
+
+    @Column(length = 1000, columnDefinition = "NVARCHAR(1000)")
     private String comment;
 
+    @Column(name = "review_date")
     private LocalDateTime reviewDate;
 
-    // Getters & Setters
-
-
-    public Integer getReviewId() {
-        return reviewId;
+    public  Review() {
     }
 
-    public void setReviewId(Integer reviewId) {
-        this.reviewId = reviewId;
-    }
-
-    public Account getAccount() {
-        return account;
-    }
-
-    public void setAccount(Account account) {
+    public Review(Long id, Product product, Account account, Integer rating, String comment, LocalDateTime reviewDate) {
+        this.id = id;
+        this.product = product;
         this.account = account;
+        this.rating = rating;
+        this.comment = comment;
+        this.reviewDate = reviewDate;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Product getProduct() {
@@ -52,11 +54,19 @@ public class Review {
         this.product = product;
     }
 
-    public int getRating() {
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public Integer getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Integer rating) {
         this.rating = rating;
     }
 

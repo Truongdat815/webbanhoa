@@ -1,78 +1,67 @@
-package org.example.website_sellflower.service.impl;
+package org.example.website_sellflower.service.Impl;
 
-import org.example.website_sellflower.entity.Account;
-import org.example.website_sellflower.repository.AccountRepository;
 import org.example.website_sellflower.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.util.Optional;
+import org.example.website_sellflower.entity.Account;
+import org.example.website_sellflower.repository.AccountRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 public class AccountServiceImpl implements AccountService {
-    
     @Autowired
-    private AccountRepository accountRepository;
-    
+    private AccountRepository repository;
+
     @Override
-    public boolean login(String username, String password) {
-        // Kiểm tra trong database
-        Account account = accountRepository.isExist(username, password);
-        return account != null;
+    public Account login(String username, String password) {
+        return repository.findByUsernameAndPassword(username, password);
     }
-    
-    @Override
-    public boolean register(Account account) {
-        // Kiểm tra email đã tồn tại chưa
-        Optional<Account> existingAccount = accountRepository.findByEmail(account.getEmail());
-        if (existingAccount.isPresent()) {
-            return false; // Email đã tồn tại
-        }
-        
-        // Set default values
-        if (account.getCreateAt() == null) {
-            account.setCreateAt(LocalDateTime.now());
-        }
-        if (account.getRole() == null || account.getRole().isEmpty()) {
-            account.setRole("user"); // Mặc định là user
-        }
-        
-        // Lưu vào database
-        try {
-            accountRepository.save(account);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+
+    public boolean register(String name, String email, String phone, String password, String address) {
+
+        Account account = new Account();
+        account.setUsername(name);
+        account.setEmail(email);
+        account.setPhone(phone);
+        account.setPassword(password);
+        account.setAddress(address);
+
+        repository.save(account);
+        return true;
     }
 
     @Override
     public boolean updateProfile(Account account) {
-        // Kiểm tra account có tồn tại không
-        Optional<Account> existingAccountOpt = accountRepository.findByEmail(account.getEmail());
-        if (existingAccountOpt.isPresent()) {
-            Account existingAccount = existingAccountOpt.get();
-            // Cập nhật thông tin
-            existingAccount.setName(account.getName());
-            existingAccount.setPhone(account.getPhone());
-            existingAccount.setAddress(account.getAddress());
-            if (account.getPassword() != null && !account.getPassword().isEmpty()) {
-                existingAccount.setPassword(account.getPassword());
-            }
-            try {
-                accountRepository.save(existingAccount);
-                return true;
-            } catch (Exception e) {
-                return false;
-            }
+        Account existingAccount = repository.findById(account.getId());
+        if (existingAccount != null) {
+            repository.save(account);
+            return true;
         }
         return false;
     }
-    
+
+    // ← THÊM MỚI
     @Override
-    public Account getAccountByEmail(String email) {
-        Optional<Account> account = accountRepository.findByEmail(email);
-        return account.orElse(null);
+    public Account findById(Long id) {
+        return repository.findById(id);
     }
-}
+
+
+        @Override
+        public boolean existsByName (String name){
+            return repository.findByUsername(name).isPresent();
+        }
+
+        @Override
+        public boolean existsByEmail (String email){
+            return repository.findByEmail(email).isPresent();
+        }
+
+        @Override
+        public boolean existsByPhone (String phone){
+            return repository.findByPhone(phone).isPresent();
+
+        }
+    }
+
+
