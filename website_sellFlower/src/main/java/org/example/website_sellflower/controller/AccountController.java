@@ -76,6 +76,7 @@ public class AccountController {
         model.addAttribute("account", accountDetails);
         model.addAttribute("isLoggedIn", true);
         model.addAttribute("userDisplayName", accountDetails.getFullName());
+        model.addAttribute("isAdmin", "ADMIN".equals(accountDetails.getRole()));
         model.addAttribute("accountName", accountDetails.getFullName());
         model.addAttribute("accountEmail", accountDetails.getEmail());
         model.addAttribute("accountPhone", accountDetails.getPhone());
