@@ -146,4 +146,30 @@ public class Account {
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
     }
+
+    /**
+     * Get the first character of the display name (fullName or username) for avatar
+     */
+    public String getAvatarChar() {
+        if (fullName != null && !fullName.trim().isEmpty()) {
+            return fullName.trim().substring(0, 1).toUpperCase();
+        }
+        if (username != null && !username.trim().isEmpty()) {
+            return username.trim().substring(0, 1).toUpperCase();
+        }
+        return "U";
+    }
+
+    /**
+     * Get the display name (fullName or username)
+     */
+    public String getDisplayName() {
+        if (fullName != null && !fullName.trim().isEmpty()) {
+            return fullName;
+        }
+        if (username != null && !username.trim().isEmpty()) {
+            return username;
+        }
+        return "Anonymous";
+    }
 }

@@ -26,7 +26,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Product updateProduct(Integer id, Product updateproduct) {
+    public Product updateProduct(Long id, Product updateproduct) {
         Optional<Product> existingProduct = productRepository.findById(id);
         if(existingProduct.isPresent()) {
             Product product = existingProduct.get();
@@ -37,13 +37,13 @@ public class ProductServiceImpl implements ProductService {
             product.setImageUrl(updateproduct.getImageUrl());
             product.setCategory(updateproduct.getCategory());
 
-             return productRepository.save(product);
+            return productRepository.save(product);
         }
         return null;
     }
 
     @Override
-    public boolean deleteProduct(Integer id) {
+    public boolean deleteProduct(Long id) {
         if(productRepository.existsById(id)){
             productRepository.deleteById(id);
             return true;
@@ -53,7 +53,7 @@ public class ProductServiceImpl implements ProductService {
     // ← THÊM MỚI
     @Override
     public Product findProductById(Long id) {
-        return productRepository.findById(id.intValue()).orElse(null);
+        return productRepository.findById(id).orElse(null);
     }
 
     @Override

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ProductRepository extends JpaRepository<Product,Integer> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query(value = "SELECT TOP(:numberOfProducts) * FROM product p ORDER BY p.id DESC", nativeQuery = true)
     List<Product> getLatestProducts(@Param("numberOfProducts") int numberOfProducts);

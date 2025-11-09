@@ -13,8 +13,6 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query("SELECT a FROM Account a WHERE a.email = :email AND a.password = :password")
     Account isExist(String email, String password);
 
-//    Account findById(Long id);
-
     Account findByUsernameAndPassword(String username, String password);
     boolean existsByEmail(String email);
     boolean existsByPhone(String phone);

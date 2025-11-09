@@ -31,8 +31,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public boolean updateProfile(Account account) {
-        Account existingAccount = repository.findById(account.getId()).orElse(null);
-        if (existingAccount != null) {
+        var existingAccount = repository.findById(account.getId());
+        if (existingAccount.isPresent()) {
             repository.save(account);
             return true;
         }
@@ -46,21 +46,19 @@ public class AccountServiceImpl implements AccountService {
     }
 
 
-        @Override
-        public boolean existsByName (String name){
-            return repository.findByUsername(name).isPresent();
-        }
-
-        @Override
-        public boolean existsByEmail (String email){
-            return repository.findByEmail(email).isPresent();
-        }
-
-        @Override
-        public boolean existsByPhone (String phone){
-            return repository.findByPhone(phone).isPresent();
-
-        }
+    @Override
+    public boolean existsByName (String name){
+        return repository.findByUsername(name).isPresent();
     }
 
+    @Override
+    public boolean existsByEmail (String email){
+        return repository.findByEmail(email).isPresent();
+    }
 
+    @Override
+    public boolean existsByPhone (String phone){
+        return repository.findByPhone(phone).isPresent();
+
+    }
+}

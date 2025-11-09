@@ -64,7 +64,31 @@
     <!-- Products Grid -->
     <section class="products-section">
         <div class="products-grid" id="productsGrid">
-            <!-- Products will be loaded here by JavaScript -->
+            <!-- Dynamic Products from Model -->
+            <div th:each="product : ${products}" class="product-card"
+                 th:attr="data-product-id=${product.id}, data-product-name=${product.name}, data-product-price=${product.price}, data-product-image=${product.imageUrl}, data-product-stock=${product.stockQuantity}, data-product-description=${product.description != null ? product.description : ''}, data-product-rating=${product.getAverageRating()}, data-product-reviews=${product.getReviewCount()}">
+                <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+                    <img th:src="${product.imageUrl}" th:alt="${product.name}" class="product-image">
+                    <div class="product-overlay">
+                        <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+                    </div>
+                </div>
+                <div class="product-info">
+                    <h3 class="product-name" th:text="${product.name}">Tên sản phẩm</h3>
+                    <div class="product-price-container">
+                        <span class="product-price" th:text="'₫' + ${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}">₫420,000</span>
+                    </div>
+                    <div class="quantity-selector">
+                        <button class="qty-btn minus-btn">-</button>
+                        <input type="number" value="1" min="1" th:max="${product.stockQuantity}" class="qty-input">
+                        <button class="qty-btn plus-btn">+</button>
+                    </div>
+                    <button class="add-to-cart-btn">
+                        <span>THÊM VÀO GIỎ</span>
+                        <i class="fas fa-shopping-bag"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </section>
     </main>
@@ -100,6 +124,10 @@
                     <div class="modal-product-description">
                         <p id="modalProductDescription">Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo. Thích hợp trang trí nhà cửa, văn phòng hoặc làm quà tặng ý nghĩa cho người thân yêu.</p>
                     </div>
+                    <div class="modal-product-stock">
+                        <span class="modal-stock-label">Tình trạng:</span>
+                        <span class="modal-stock-status" id="modalStockStatus"></span>
+                    </div>
                     <div class="modal-quantity-cart-row">
                         <div class="modal-quantity-section">
                             <label class="modal-quantity-label">Số lượng:</label>
@@ -120,9 +148,9 @@
     </div>
 
     <!-- Toast Notification -->
-    <div class="toast" id="toast">
+    <div class="toast" id="toast" style="display: none;">
         <i class="fas fa-check-circle"></i>
-        <span>Đã thêm vào giỏ!</span>
+        <span></span>
     </div>
 
     <!-- Footer -->

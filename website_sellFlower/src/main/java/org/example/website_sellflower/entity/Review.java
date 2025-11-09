@@ -14,7 +14,7 @@ public class Review {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
