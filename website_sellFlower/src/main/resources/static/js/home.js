@@ -6,6 +6,33 @@ function formatPrice(price) {
     return '₫' + numPrice.toLocaleString('vi-VN');
 }
 
+// Helper function to render stars with half star support
+function renderStars(selector, rating) {
+    const starsContainer = document.querySelector(selector);
+    if (!starsContainer) return;
+    
+    // Clear existing stars
+    starsContainer.innerHTML = '';
+    
+    // Render 5 stars
+    for (let i = 1; i <= 5; i++) {
+        const star = document.createElement('i');
+        
+        if (rating >= i) {
+            // Full star
+            star.className = 'fas fa-star';
+        } else if (rating >= i - 0.5) {
+            // Half star
+            star.className = 'fas fa-star-half-alt';
+        } else {
+            // Empty star
+            star.className = 'far fa-star';
+        }
+        
+        starsContainer.appendChild(star);
+    }
+}
+
 // Header scroll effect
 window.addEventListener('scroll', function() {
     const header = document.querySelector('.header');
@@ -204,35 +231,68 @@ function openQuickViewModal(productCard) {
     const productImage = productCard.getAttribute('data-product-image');
     const averageRating = productCard.getAttribute('data-product-rating');
     const numberOfReviews = productCard.getAttribute('data-product-reviews');
+    const productDescription = productCard.getAttribute('data-product-description');
 
-
-    // Lấy max stock từ quantity input của product card
+    // Lấy stock từ data attribute hoặc từ quantity input
+    const productStock = productCard.getAttribute('data-product-stock');
     const qtyInput = productCard.querySelector('.qty-input');
-    const maxStock = qtyInput ? qtyInput.getAttribute('max') : null;
+    const maxStock = productStock ? parseInt(productStock) : (qtyInput ? parseInt(qtyInput.getAttribute('max')) : null);
 
     // Fill modal with product data
     document.getElementById('modalProductImage').src = productImage;
     document.getElementById('modalProductName').textContent = productName;
     document.getElementById('modalProductPrice').textContent = formatPrice(productPrice);
-    document.querySelector(".modal-body .rating-text").textContent = `(${numberOfReviews} đánh giá)`;
-    document.querySelectorAll('.modal-body .rating-stars .fas.fa-star').forEach((star, index) => {
-        if (index>= averageRating) {
-            star.classList.remove('fas')
-            star.classList.remove('fa-star')
-            star.classList.add('fa-regular')
-            star.classList.add('fa-star')
+    
+    // Update description in modal
+    const modalDescription = document.getElementById('modalProductDescription');
+    if (modalDescription) {
+        if (productDescription && productDescription.trim() !== '') {
+            modalDescription.textContent = productDescription;
+        } else {
+            modalDescription.textContent = 'Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo.';
         }
-    });
+    }
+    
+    // Update stock status in modal
+    const modalStockStatus = document.getElementById('modalStockStatus');
+    if (modalStockStatus) {
+        if (maxStock && maxStock > 0) {
+            modalStockStatus.textContent = `Còn hàng (${maxStock} sản phẩm)`;
+            modalStockStatus.style.color = '#4caf50';
+        } else {
+            modalStockStatus.textContent = 'Hết hàng';
+            modalStockStatus.style.color = '#f44336';
+        }
+    }
+    
+    // Update rating text with correct review count
+    document.querySelector(".modal-body .rating-text").textContent = `(${numberOfReviews || 0} đánh giá)`;
+    
+    // Render stars with half star support
+    renderStars('.modal-body .rating-stars', parseFloat(averageRating) || 0);
 
     // Reset modal quantity input
     const modalQtyInput = document.getElementById('modalQuantity');
     modalQtyInput.value = '1';
 
-    // Set max stock cho modal quantity input
-    if (maxStock) {
+    // Set max stock cho modal quantity input và disable nếu hết hàng
+    const modalAddToCartBtn = document.getElementById('modalAddToCartBtn');
+    if (maxStock && maxStock > 0) {
         modalQtyInput.setAttribute('max', maxStock);
+        modalQtyInput.disabled = false;
+        if (modalAddToCartBtn) {
+            modalAddToCartBtn.disabled = false;
+            modalAddToCartBtn.style.opacity = '1';
+            modalAddToCartBtn.style.cursor = 'pointer';
+        }
     } else {
-        modalQtyInput.removeAttribute('max');
+        modalQtyInput.setAttribute('max', '0');
+        modalQtyInput.disabled = true;
+        if (modalAddToCartBtn) {
+            modalAddToCartBtn.disabled = true;
+            modalAddToCartBtn.style.opacity = '0.6';
+            modalAddToCartBtn.style.cursor = 'not-allowed';
+        }
     }
 
     // Lưu product ID vào modal để có thể dùng khi thêm vào giỏ hàng

@@ -235,33 +235,10 @@ document.querySelector('.newsletter-form')?.addEventListener('submit', function(
     }
 });
 
-// ← THÊM MỚI: Load dữ liệu từ Backend API
-async function loadAccountData() {
-    try {
-        // 1. Lấy thông tin tài khoản
-        const infoResponse = await fetch('/account/api/info');
-        if (infoResponse.ok) {
-            const accountInfo = await infoResponse.json();
-            displayAccountInfo(accountInfo);
-        }
-
-        // 2. Lấy danh sách đơn hàng
-        const ordersResponse = await fetch('/account/api/orders');
-        if (ordersResponse.ok) {
-            const orders = await ordersResponse.json();
-            displayOrders(orders);
-        }
-
-        // 3. Lấy thống kê
-        const statsResponse = await fetch('/account/api/stats');
-        if (statsResponse.ok) {
-            const stats = await statsResponse.json();
-            displayStats(stats);
-        }
-
-    } catch (error) {
-        console.error('Error loading account data:', error);
-    }
+// NOTE: Account data is now loaded server-side via Thymeleaf
+// This function is no longer needed but kept for reference
+function loadAccountData() {
+    // Account data is now rendered server-side, so we don't need to fetch it
 }
 
 // ← THÊM MỚI: Hiển thị thông tin tài khoản
@@ -384,10 +361,8 @@ function formatPrice(price) {
 }
 
 // Animate overview cards on load
-document.addEventListener('DOMContentLoaded', async function() {
-    // ← GỌI API LẤY DỮ LIỆU TỪ BACKEND
-    await loadAccountData();
-
+// Account data is now loaded server-side via Thymeleaf
+document.addEventListener('DOMContentLoaded', function() {
     // Animate cards
     const cards = document.querySelectorAll('.overview-card');
     cards.forEach((card, index) => {

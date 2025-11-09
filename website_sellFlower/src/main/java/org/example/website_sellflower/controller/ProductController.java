@@ -1,6 +1,7 @@
 package org.example.website_sellflower.controller;
 
 import jakarta.servlet.http.HttpSession;
+import org.example.website_sellflower.entity.Account;
 import org.example.website_sellflower.entity.Product;
 import org.example.website_sellflower.entity.Review;
 import org.example.website_sellflower.service.ProductService;
@@ -26,15 +27,37 @@ public class ProductController {
 
     @GetMapping("/product")
     public String showProductList(Model model, HttpSession session) {
-        if (session.getAttribute("account") == null) {
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) {
             return "redirect:/login";
         }
+        
         model.addAttribute("isLoggedIn", true);
+        model.addAttribute("userDisplayName", account.getFullName());
+        List<Product> products = productService.findAllProducts();
+        model.addAttribute("products", products);
         return "product";
     }
 
     @GetMapping("/product/detail/{id}")
-    public String showProductDetail(@PathVariable Integer id) {
+    public String showProductDetail(@PathVariable Long id, Model model, HttpSession session) {
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            return "redirect:/login";
+        }
+        
+        Product product = productService.findProductById(id);
+        if (product == null) {
+            return "redirect:/product";
+        }
+        
+        List<Review> reviews = reviewService.findByProductId(id);
+        
+        model.addAttribute("isLoggedIn", true);
+        model.addAttribute("userDisplayName", account.getFullName());
+        model.addAttribute("product", product);
+        model.addAttribute("reviews", reviews);
+        
         return "detail";
     }
 

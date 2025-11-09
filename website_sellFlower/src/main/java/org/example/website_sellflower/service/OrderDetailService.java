@@ -6,10 +6,10 @@ import java.util.List;
 
 public interface OrderDetailService {
     public boolean saveOrderDetail(OrderDetail orderDetail);
-    public boolean deleteOrderDetailById(int orderDetailId);
+    public boolean deleteOrderDetailById(Long orderDetailId);
     public boolean updateOrderDetail(OrderDetail orderDetail);
-    public OrderDetail getOrderDetailById(int orderDetailId);
-    public List<OrderDetail> getAllOrderDetailsById(int orderId);
+    public OrderDetail getOrderDetailById(Long orderDetailId);
+    public List<OrderDetail> getAllOrderDetailsById(Long orderId);
 
 
 }

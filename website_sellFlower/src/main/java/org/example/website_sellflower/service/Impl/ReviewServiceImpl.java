@@ -21,7 +21,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Review updateReview(Integer id,Review updateReview) {
+    public Review updateReview(Long id,Review updateReview) {
         Optional<Review> existingReview = reviewRepository.findById(id);
         if(existingReview.isPresent()){
             Review review = existingReview.get();
@@ -36,7 +36,7 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public boolean deleteReview(Integer id) {
+    public boolean deleteReview(Long id) {
         if(reviewRepository.existsById(id)){
             reviewRepository.deleteById(id);
             return true;

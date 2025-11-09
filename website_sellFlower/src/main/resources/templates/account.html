@@ -112,8 +112,8 @@
                                 <i class="fas fa-star"></i>
                             </div>
                             <div class="card-content">
-                                <h3>Đánh giá</h3>
-                                <p class="card-value" data-review-count="0">0</p>
+                                <h3>Điểm thưởng</h3>
+                                <p class="card-value" th:text="${rewardPoints != null ? rewardPoints : 0}">0</p>
                             </div>
                         </div>
                     </div>
@@ -122,10 +122,10 @@
                         <div class="orders-list">
                             <div class="order-item" th:each="order : ${recentOrders}">
                                 <div class="order-info">
-                                    <span class="order-id" th:text="'#ORD-' + ${order.orderId}">#ORD-</span>
+                                    <span class="order-id" th:text="'#ORD-' + ${order.id}">#ORD-</span>
                                     <span class="order-date" th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy') : ''}"></span>
                                 </div>
-                                <div class="order-status" th:classappend="${recentOrderStatusClassMap != null && recentOrderStatusClassMap.containsKey(order.orderId) ? recentOrderStatusClassMap.get(order.orderId) : 'pending'}" th:text="${order.status != null ? order.status : ''}"></div>
+                                <div class="order-status" th:classappend="${recentOrderStatusClassMap != null && recentOrderStatusClassMap.containsKey(order.id) ? recentOrderStatusClassMap.get(order.id) : 'pending'}" th:text="${order.status != null ? #strings.replace(order.status, '_', ' ') : ''}"></div>
                                 <div class="order-total" th:if="${order.totalAmount != null}" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + '₫'"></div>
                                 <div class="order-total" th:if="${order.totalAmount == null}">0₫</div>
                             </div>
@@ -158,15 +158,15 @@
                                     <td colspan="5" class="no-orders">Bạn chưa có đơn hàng nào</td>
                                 </tr>
                                 <tr th:each="order : ${orders}">
-                                    <td th:text="${order.orderId}"></td>
+                                    <td th:text="'#ORD-' + ${order.id}">#ORD-0001</td>
                                     <td th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy') : ''}"></td>
                                     <td>
-                                        <span class="order-status-badge" th:classappend="${orderStatusClassMap != null && orderStatusClassMap.containsKey(order.orderId) ? orderStatusClassMap.get(order.orderId) : 'pending'}" th:text="${order.status != null ? order.status : ''}"></span>
+                                        <span class="order-status-badge" th:classappend="${orderStatusClassMap != null && orderStatusClassMap.containsKey(order.id) ? orderStatusClassMap.get(order.id) : 'pending'}" th:text="${order.status != null ? #strings.replace(order.status, '_', ' ') : ''}"></span>
                                     </td>
                                     <td th:if="${order.totalAmount != null}" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
                                     <td th:if="${order.totalAmount == null}">0₫</td>
                                     <td>
-                                        <a th:href="@{/order/{id}(id=${order.orderId})}" class="view-order-link">Xem</a>
+                                        <a th:href="@{/order/{id}(id=${order.id})}" class="view-order-link">Xem</a>
                                     </td>
                                 </tr>
                             </tbody>

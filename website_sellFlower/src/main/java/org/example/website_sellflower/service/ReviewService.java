@@ -6,8 +6,8 @@ import java.util.List;
 
 public interface ReviewService {
     Review createReview(Review review);
-    Review updateReview(Integer id,Review review);
-    boolean deleteReview(Integer id);
+    Review updateReview(Long id,Review review);
+    boolean deleteReview(Long id);
     List<Review> findAllReviews();
 
     // ← THÊM MỚI

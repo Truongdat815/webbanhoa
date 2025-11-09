@@ -4,6 +4,33 @@ function formatPrice(price) {
     return '₫' + numPrice.toLocaleString('vi-VN');
 }
 
+// Helper function to render stars with half star support
+function renderStars(selector, rating) {
+    const starsContainer = document.querySelector(selector);
+    if (!starsContainer) return;
+    
+    // Clear existing stars
+    starsContainer.innerHTML = '';
+    
+    // Render 5 stars
+    for (let i = 1; i <= 5; i++) {
+        const star = document.createElement('i');
+        
+        if (rating >= i) {
+            // Full star
+            star.className = 'fas fa-star';
+        } else if (rating >= i - 0.5) {
+            // Half star
+            star.className = 'fas fa-star-half-alt';
+        } else {
+            // Empty star
+            star.className = 'far fa-star';
+        }
+        
+        starsContainer.appendChild(star);
+    }
+}
+
 // Function to create product card HTML
 function createProductCard(product) {
     return `
@@ -34,46 +61,12 @@ function createProductCard(product) {
 }
 
 // Function to load and display products FROM BACKEND API
+// NOTE: This function is no longer needed as products are now rendered server-side via Thymeleaf
+// Keeping this for reference but it's not called anymore
 async function loadProducts() {
-    const productsGrid = document.getElementById('productsGrid');
-
-    if (!productsGrid) {
-        console.error('Products grid not found');
-        return;
-    }
-
-    // Show loading message
-    productsGrid.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">Đang tải sản phẩm...</p>';
-
-    try {
-        // ← GỌI API BACKEND
-        const response = await fetch('/api/products');
-        if (!response.ok) throw new Error('Failed to load products');
-
-        const products = await response.json();
-
-        // Clear loading message
-        productsGrid.innerHTML = '';
-
-        // Check if products exist
-        if (!products || products.length === 0) {
-            productsGrid.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">Không có sản phẩm nào.</p>';
-            return;
-        }
-
-        // Display products
-        products.forEach(product => {
-            const productCard = createProductCard(product);
-            productsGrid.innerHTML += productCard;
-        });
-
-        // Initialize quantity selectors and add to cart buttons
-        initProductInteractions();
-
-    } catch (error) {
-        console.error('Error loading products:', error);
-        productsGrid.innerHTML = '<p style="text-align: center; padding: 40px; color: #f44336;">Không thể tải sản phẩm. Vui lòng thử lại sau.</p>';
-    }
+    // Products are now loaded via Thymeleaf template, so this function is deprecated
+    // Just initialize interactions on existing products
+    initProductInteractions();
 }
 
 // Function to navigate to product detail page
@@ -185,17 +178,70 @@ function openQuickViewModal(productCard) {
     const productPrice = productCard.getAttribute('data-product-price');
     const productImage = productCard.getAttribute('data-product-image');
     const productStock = productCard.getAttribute('data-product-stock');
+    const productDescription = productCard.getAttribute('data-product-description');
 
     document.getElementById('modalProductImage').src = productImage;
     document.getElementById('modalProductName').textContent = productName;
     document.getElementById('modalProductPrice').textContent = formatPrice(productPrice);
+    
+    // Update description in modal
+    const modalDescription = document.getElementById('modalProductDescription');
+    if (modalDescription) {
+        if (productDescription && productDescription.trim() !== '') {
+            modalDescription.textContent = productDescription;
+        } else {
+            modalDescription.textContent = 'Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo.';
+        }
+    }
+    
+    // Update stock status in modal
+    const modalStockStatus = document.getElementById('modalStockStatus');
+    const stockQuantity = productStock ? parseInt(productStock) : 0;
+    if (modalStockStatus) {
+        if (stockQuantity > 0) {
+            modalStockStatus.textContent = `Còn hàng (${stockQuantity} sản phẩm)`;
+            modalStockStatus.style.color = '#4caf50';
+        } else {
+            modalStockStatus.textContent = 'Hết hàng';
+            modalStockStatus.style.color = '#f44336';
+        }
+    }
+    
+    // Get rating from data attributes if available (from home page)
+    const productRating = productCard.getAttribute('data-product-rating');
+    const productReviews = productCard.getAttribute('data-product-reviews');
+    
+    // Update rating in modal if elements exist
+    const ratingText = document.querySelector('.modal-product-rating .rating-text');
+    if (ratingText && productReviews !== null) {
+        ratingText.textContent = `(${productReviews || 0} đánh giá)`;
+    }
+    
+    // Render stars with half star support
+    if (productRating !== null) {
+        renderStars('.modal-product-rating .rating-stars', parseFloat(productRating) || 0);
+    }
+    
     const modalQtyInput = document.getElementById('modalQuantity');
     modalQtyInput.value = '1';
 
-    if (productStock) {
-        modalQtyInput.setAttribute('max', productStock);
+    const modalAddToCartBtn = document.getElementById('modalAddToCartBtn');
+    if (stockQuantity > 0) {
+        modalQtyInput.setAttribute('max', stockQuantity);
+        modalQtyInput.disabled = false;
+        if (modalAddToCartBtn) {
+            modalAddToCartBtn.disabled = false;
+            modalAddToCartBtn.style.opacity = '1';
+            modalAddToCartBtn.style.cursor = 'pointer';
+        }
     } else {
-        modalQtyInput.removeAttribute('max');
+        modalQtyInput.setAttribute('max', '0');
+        modalQtyInput.disabled = true;
+        if (modalAddToCartBtn) {
+            modalAddToCartBtn.disabled = true;
+            modalAddToCartBtn.style.opacity = '0.6';
+            modalAddToCartBtn.style.cursor = 'not-allowed';
+        }
     }
 
     modal.setAttribute('data-current-product-id', productId);
@@ -368,8 +414,8 @@ function showToast(message, type = 'success') {
 }
 
 // Initialize on page load
-// Note: loadProducts() is commented out until API/database is implemented
+// Products are now rendered server-side via Thymeleaf, so we just initialize interactions
 document.addEventListener('DOMContentLoaded', function() {
-    // loadProducts(); // Uncomment when API/database is ready
+    initProductInteractions();
     initModalHandlers();
 });

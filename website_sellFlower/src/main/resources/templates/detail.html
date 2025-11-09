@@ -60,50 +60,59 @@
         <div class="container">
             <div class="product-detail-grid">
                 <!-- Product Images -->
-                <div class="product-images">
+                <div class="product-images" th:if="${product != null}">
                     <div class="main-image">
-                        <img id="mainProductImage" src="" alt="Product">
+                        <img id="mainProductImage" th:src="${product.imageUrl}" th:alt="${product.name}" alt="Product">
                     </div>
                     <div class="thumbnail-images">
-                        <img src="" alt="Thumbnail 1" class="thumbnail active" data-index="0">
-                        <img src="" alt="Thumbnail 2" class="thumbnail" data-index="1">
-                        <img src="" alt="Thumbnail 3" class="thumbnail" data-index="2">
-                        <img src="" alt="Thumbnail 4" class="thumbnail" data-index="3">
+                        <img th:src="${product.imageUrl}" alt="Thumbnail 1" class="thumbnail active" data-index="0">
+                        <img th:src="${product.imageUrl}" alt="Thumbnail 2" class="thumbnail" data-index="1">
+                        <img th:src="${product.imageUrl}" alt="Thumbnail 3" class="thumbnail" data-index="2">
+                        <img th:src="${product.imageUrl}" alt="Thumbnail 4" class="thumbnail" data-index="3">
                     </div>
                 </div>
 
                 <!-- Product Info -->
-                <div class="product-info-detail">
-                    <h1 class="product-title" id="productTitle">Cây Hoa Hồng Hồng</h1>
+                <div class="product-info-detail" th:if="${product != null}" 
+                     th:attr="data-product-id=${product.id}, data-product-name=${product.name}, data-product-price=${product.price}, data-product-image=${product.imageUrl}, data-product-stock=${product.stockQuantity}">
+                    <h1 class="product-title" id="productTitle" th:text="${product.name}">Cây Hoa Hồng Hồng</h1>
                     
                     <div class="price-rating-row">
                         <div class="product-price-wrapper">
-                            <span class="product-price" id="productPrice">₫420,000</span>
+                            <span class="product-price" id="productPrice" th:text="'₫' + ${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}">₫420,000</span>
                         </div>
                         <div class="product-rating">
                             <div class="rating-stars">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
+                                <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                    <i th:if="${product.isStarFilled(i)}" class="fas fa-star filled"></i>
+                                    <i th:if="${product.isStarHalfFilled(i)}" class="fas fa-star-half-alt"></i>
+                                    <i th:if="${product.isStarEmpty(i)}" class="far fa-star"></i>
+                                </th:block>
                             </div>
-                            <span class="rating-count">(56 Reviews)</span>
+                            <span class="rating-count" th:text="'(' + ${product.getReviewCount()} + ' đánh giá)'">(0 đánh giá)</span>
                         </div>
                     </div>
 
-                    <div class="product-short-description">
-                        <p id="productShortDesc">Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo.</p>
+                    <div class="product-short-description" th:if="${product != null}">
+                        <p id="productShortDesc" th:if="${product.description != null && !#strings.isEmpty(product.description)}" th:text="${product.description}">Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín.</p>
+                        <p id="productShortDesc" th:if="${product.description == null || #strings.isEmpty(product.description)}">Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo.</p>
                     </div>
 
                     <div class="product-meta">
-                        <div class="meta-item">
+                        <div class="meta-item" th:if="${product.category != null}">
                             <span class="meta-label">Danh mục:</span>
-                            <span class="meta-value">Hoa hồng</span>
+                            <span class="meta-value" th:text="${product.category}">Hoa hồng</span>
                         </div>
                         <div class="meta-item">
                             <span class="meta-label">Tình trạng:</span>
-                            <span class="meta-value stock-status" id="stockStatus">Còn hàng</span>
+                            <span class="meta-value stock-status" id="stockStatus" 
+                                  th:if="${product.stockQuantity > 0}" 
+                                  th:text="'Còn hàng (' + ${product.stockQuantity} + ' sản phẩm)'" 
+                                  style="color: #4caf50;">Còn hàng</span>
+                            <span class="meta-value stock-status" id="stockStatus" 
+                                  th:if="${product.stockQuantity == 0 || product.stockQuantity == null}" 
+                                  th:text="'Hết hàng'" 
+                                  style="color: #f44336;">Hết hàng</span>
                         </div>
                     </div>
 
@@ -112,11 +121,11 @@
                             <label class="quantity-label">Số lượng:</label>
                             <div class="quantity-selector-detail">
                                 <button class="qty-btn-detail minus-btn-detail">-</button>
-                                <input type="number" id="productQuantity" value="1" min="1" class="qty-input-detail">
+                                <input type="number" id="productQuantity" value="1" min="1" th:max="${product.stockQuantity}" class="qty-input-detail">
                                 <button class="qty-btn-detail plus-btn-detail">+</button>
                             </div>
                         </div>
-                        <button class="add-to-cart-btn-detail" id="addToCartBtn">
+                        <button class="add-to-cart-btn-detail" id="addToCartBtn" th:disabled="${product.stockQuantity == 0 || product.stockQuantity == null}">
                             <i class="fas fa-shopping-cart"></i>
                             Thêm vào giỏ hàng
                         </button>
@@ -132,71 +141,60 @@
                 </div>
 
                 <div class="tab-contents">
-                    <div class="tab-content-detail active" id="description">
+                    <div class="tab-content-detail active" id="description" th:if="${product != null}">
                         <h3>Mô tả sản phẩm</h3>
-                        <div id="productFullDescription">
-                            <p>Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo. Thích hợp trang trí nhà cửa, văn phòng hoặc làm quà tặng ý nghĩa cho người thân yêu.</p>
-                            <p>Sản phẩm được đóng gói cẩn thận, giao hàng nhanh chóng trong vòng 2-3 giờ tại khu vực nội thành.</p>
-                            <ul>
-                                <li>Hoa tươi 100%, nhập khẩu trực tiếp</li>
-                                <li>Bảo quản được 7-10 ngày</li>
-                                <li>Miễn phí thiệp chúc mừng</li>
-                                <li>Đổi trả trong 24h nếu không hài lòng</li>
-                            </ul>
+                        <div id="productFullDescription" style="white-space: pre-line;">
+                            <div th:if="${product.description != null && !#strings.isEmpty(product.description)}">
+                                <p th:text="${product.description}">Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín.</p>
+                            </div>
+                            <div th:if="${product.description == null || #strings.isEmpty(product.description)}">
+                                <p>Hoa tươi cao cấp được chọn lọc kỹ lưỡng từ vườn ươm uy tín. Mỗi bông hoa đều được chăm sóc cẩn thận để đảm bảo độ tươi và vẻ đẹp hoàn hảo. Thích hợp trang trí nhà cửa, văn phòng hoặc làm quà tặng ý nghĩa cho người thân yêu.</p>
+                                <p>Sản phẩm được đóng gói cẩn thận, giao hàng nhanh chóng trong vòng 2-3 giờ tại khu vực nội thành.</p>
+                                <ul>
+                                    <li>Hoa tươi 100%, nhập khẩu trực tiếp</li>
+                                    <li>Bảo quản được 7-10 ngày</li>
+                                    <li>Miễn phí thiệp chúc mừng</li>
+                                    <li>Đổi trả trong 24h nếu không hài lòng</li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
 
                     <div class="tab-content-detail" id="reviews">
                         <h3>Đánh giá từ khách hàng</h3>
-                        <div class="reviews-summary">
+                        <div class="reviews-summary" th:if="${product != null}">
                             <div class="average-rating">
-                                <div class="rating-number">5.0</div>
+                                <div class="rating-number" th:text="${#numbers.formatDecimal(product.getAverageRating(), 1, 'POINT', 1, 'POINT')}">5.0</div>
                                 <div class="rating-stars-large">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
+                                    <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                        <i th:if="${product.isStarFilled(i)}" class="fas fa-star filled"></i>
+                                        <i th:if="${product.isStarHalfFilled(i)}" class="fas fa-star-half-alt"></i>
+                                        <i th:if="${product.isStarEmpty(i)}" class="far fa-star"></i>
+                                    </th:block>
                                 </div>
-                                <div class="rating-count-text">Dựa trên 56 đánh giá</div>
+                                <div class="rating-count-text" th:text="'Dựa trên ' + ${product.getReviewCount()} + ' đánh giá'">Dựa trên 0 đánh giá</div>
                             </div>
                         </div>
 
                         <div class="reviews-list">
-                            <div class="review-item">
-                                <div class="reviewer-info">
-                                    <div class="reviewer-avatar">N</div>
-                                    <div class="reviewer-details">
-                                        <h4 class="reviewer-name">Nguyễn Văn A</h4>
-                                        <div class="review-stars">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="review-text">Hoa rất đẹp và tươi, giao hàng nhanh. Rất hài lòng!</p>
-                                <span class="review-date">15/11/2024</span>
+                            <div th:if="${reviews == null || reviews.isEmpty()}" class="no-reviews">
+                                <p>Chưa có đánh giá nào cho sản phẩm này.</p>
                             </div>
-
-                            <div class="review-item">
+                            <div th:each="review : ${reviews}" class="review-item">
                                 <div class="reviewer-info">
-                                    <div class="reviewer-avatar">T</div>
+                                    <div class="reviewer-avatar" th:text="${review.account.fullName != null ? review.account.fullName.charAt(0).toUpperCase() : (review.account.username != null ? review.account.username.charAt(0).toUpperCase() : 'U')}">N</div>
                                     <div class="reviewer-details">
-                                        <h4 class="reviewer-name">Trần Thị B</h4>
+                                        <h4 class="reviewer-name" th:text="${review.account.fullName != null ? review.account.fullName : review.account.username}">Nguyễn Văn A</h4>
                                         <div class="review-stars">
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
-                                            <i class="fas fa-star"></i>
+                                            <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                                <i th:if="${review.rating >= i}" class="fas fa-star"></i>
+                                                <i th:if="${review.rating < i}" class="far fa-star"></i>
+                                            </th:block>
                                         </div>
                                     </div>
                                 </div>
-                                <p class="review-text">Chất lượng tuyệt vời, đóng gói cẩn thận. Sẽ ủng hộ shop lâu dài!</p>
-                                <span class="review-date">10/11/2024</span>
+                                <p class="review-text" th:text="${review.comment != null ? review.comment : ''}">Hoa rất đẹp và tươi, giao hàng nhanh. Rất hài lòng!</p>
+                                <span class="review-date" th:text="${review.reviewDate != null ? #temporals.format(review.reviewDate, 'dd/MM/yyyy') : ''}">15/11/2024</span>
                             </div>
                         </div>
                     </div>

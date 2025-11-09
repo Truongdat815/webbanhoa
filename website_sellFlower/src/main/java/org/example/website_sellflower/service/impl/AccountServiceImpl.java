@@ -1,7 +1,6 @@
 package org.example.website_sellflower.service.Impl;
 
 import org.example.website_sellflower.service.AccountService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.example.website_sellflower.entity.Account;
 import org.example.website_sellflower.repository.AccountRepository;
@@ -32,8 +31,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public boolean updateProfile(Account account) {
-        Account existingAccount = repository.findById(account.getId());
-        if (existingAccount != null) {
+        var existingAccount = repository.findById(account.getId());
+        if (existingAccount.isPresent()) {
             repository.save(account);
             return true;
         }
@@ -43,7 +42,7 @@ public class AccountServiceImpl implements AccountService {
     // ← THÊM MỚI
     @Override
     public Account findById(Long id) {
-        return repository.findById(id);
+        return repository.findById(id).orElse(null);
     }
 
 
@@ -63,5 +62,4 @@ public class AccountServiceImpl implements AccountService {
 
         }
     }
-
 

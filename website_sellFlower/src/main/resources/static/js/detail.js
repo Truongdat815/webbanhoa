@@ -22,103 +22,11 @@ function formatPrice(price) {
     return '₫' + numPrice.toLocaleString('vi-VN');
 }
 
-// Load product details FROM BACKEND API
-async function loadProductDetails() {
-    const productId = getProductIdFromURL();
-
-    if (!productId) {
-        window.location.href = '/product';
-        return;
-    }
-
-    try {
-        // ← GỌI API BACKEND LẤY CHI TIẾT SẢN PHẨM
-        const response = await fetch(`/api/products/${productId}`);
-        if (!response.ok) {
-            throw new Error('Product not found');
-        }
-
-        const product = await response.json();
-
-        // Update product details on page
-        document.getElementById('productTitle').textContent = product.name || 'Sản phẩm';
-        document.getElementById('productPrice').textContent = formatPrice(product.price || 0);
-        document.getElementById('mainProductImage').src = product.imageUrl || productImages[0];
-
-        const qtyInput = document.getElementById('productQuantity');
-        const stock = parseInt(product.stockQuantity) || 50;
-        qtyInput.setAttribute('max', stock);
-
-        // Update short description if available
-        if (product.description && document.getElementById('productShortDesc')) {
-            document.getElementById('productShortDesc').textContent = product.description;
-        }
-
-        // Set main image source
-        const mainImage = document.getElementById('mainProductImage');
-        mainImage.src = product.imageUrl || productImages[0];
-
-        // Update thumbnails
-        const thumbnails = document.querySelectorAll('.thumbnail');
-        thumbnails.forEach((thumb, index) => {
-            thumb.src = index === 0 ? product.imageUrl : productImages[index];
-        });
-
-        // Update stock status
-        const stockStatus = document.getElementById('stockStatus');
-        if (stock > 0) {
-            stockStatus.textContent = `Còn hàng (${stock} sản phẩm)`;
-            stockStatus.style.color = '#4caf50';
-        } else {
-            stockStatus.textContent = 'Hết hàng';
-            stockStatus.style.color = '#f44336';
-        }
-
-        // ← GỌI API BACKEND LẤY REVIEWS
-        await loadProductReviews(productId);
-
-    } catch (error) {
-        console.error('Error loading product details:', error);
-        alert('Không tìm thấy sản phẩm!');
-        window.location.href = '/product';
-    }
-}
-
-// ← THÊM MỚI: Function load reviews từ Backend
-async function loadProductReviews(productId) {
-    try {
-        const response = await fetch(`/api/products/${productId}/reviews`);
-        if (!response.ok) return;
-
-        const reviews = await response.json();
-
-        const reviewsList = document.querySelector('.reviews-list');
-        if (!reviewsList || reviews.length === 0) return;
-
-        reviewsList.innerHTML = '';
-
-        reviews.forEach(review => {
-            const reviewCard = `
-                <div class="review-item">
-                    <div class="reviewer-info">
-                        <div class="reviewer-avatar">${review.account.fullName ? review.account.fullName.charAt(0).toUpperCase() : 'U'}</div>
-                        <div class="reviewer-details">
-                            <h4 class="reviewer-name">${review.account.fullName || review.account.username}</h4>
-                            <div class="review-stars">
-                                ${'<i class="fas fa-star"></i>'.repeat(review.rating)}
-                            </div>
-                        </div>
-                    </div>
-                    <p class="review-text">${review.comment || ''}</p>
-                    <span class="review-date">${new Date(review.reviewDate).toLocaleDateString('vi-VN')}</span>
-                </div>
-            `;
-            reviewsList.innerHTML += reviewCard;
-        });
-
-    } catch (error) {
-        console.error('Error loading reviews:', error);
-    }
+// NOTE: Product details and reviews are now loaded server-side via Thymeleaf
+// This function is no longer needed but kept for reference
+function loadProductDetails() {
+    // Products are now rendered server-side, so we just need to initialize interactions
+    // Product data is available in the DOM via data attributes
 }
 
 // Thumbnail click handler
@@ -202,26 +110,32 @@ function animateInput(input) {
 // Add to cart
 function initAddToCart() {
     const addToCartBtn = document.getElementById('addToCartBtn');
+    if (!addToCartBtn) return;
 
     addToCartBtn.addEventListener('click', async function() {
-        const productId = getProductIdFromURL();
+        // Get product info from data attributes on product-info-detail div
+        const productInfoDiv = document.querySelector('.product-info-detail');
+        if (!productInfoDiv) {
+            showToast('Không tìm thấy sản phẩm!', 'warning');
+            return;
+        }
+
+        const productId = productInfoDiv.getAttribute('data-product-id');
+        const productName = productInfoDiv.getAttribute('data-product-name');
+        const productPrice = parseFloat(productInfoDiv.getAttribute('data-product-price')) || 0;
+        const productImage = productInfoDiv.getAttribute('data-product-image') || '';
+        const productStock = productInfoDiv.getAttribute('data-product-stock') ? parseInt(productInfoDiv.getAttribute('data-product-stock')) : null;
+        const quantity = parseInt(document.getElementById('productQuantity').value);
+
         if (!productId) {
             showToast('Không tìm thấy sản phẩm!', 'warning');
             return;
         }
 
-        const quantity = parseInt(document.getElementById('productQuantity').value);
-
-        // Get product info from page
-        const productName = document.getElementById('productTitle').textContent;
-        const productPriceText = document.getElementById('productPrice').textContent;
-        const productPrice = parseFloat(productPriceText.replace(/[^\d]/g, ''));
-        const productImage = document.getElementById('mainProductImage').src;
-        const productStock = parseInt(document.getElementById('productQuantity').getAttribute('max'));
-
         // Disable button during request
+        const originalHTML = addToCartBtn.innerHTML;
         addToCartBtn.disabled = true;
-        addToCartBtn.textContent = 'Đang thêm...';
+        addToCartBtn.innerHTML = '<i class="fas fa-shopping-cart"></i> Đang thêm...';
 
         try {
             const result = await addToCart(
@@ -229,7 +143,7 @@ function initAddToCart() {
                 productName,
                 productPrice,
                 quantity,
-                productImage || '',
+                productImage,
                 productStock
             );
 
@@ -243,8 +157,7 @@ function initAddToCart() {
             showToast('Có lỗi xảy ra khi thêm vào giỏ hàng!', 'warning');
         } finally {
             addToCartBtn.disabled = false;
-            const icon = addToCartBtn.querySelector('i');
-            addToCartBtn.innerHTML = icon ? icon.outerHTML + ' Thêm vào giỏ hàng' : 'Thêm vào giỏ hàng';
+            addToCartBtn.innerHTML = originalHTML;
         }
     });
 }
@@ -303,8 +216,8 @@ function initTabs() {
 }
 
 // Initialize on page load
+// Product data is now loaded server-side via Thymeleaf, so we just initialize interactions
 document.addEventListener('DOMContentLoaded', function() {
-    loadProductDetails();
     initThumbnailGallery();
     initQuantitySelector();
     initAddToCart();
