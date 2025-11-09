@@ -6,6 +6,8 @@ import org.example.website_sellflower.entity.Account;
 import org.example.website_sellflower.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 @Service
 public class AccountServiceImpl implements AccountService {
     @Autowired
@@ -43,6 +45,21 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Account findById(Long id) {
         return repository.findById(id).orElse(null);
+    }
+
+    @Override
+    public Account findByUsername(String username) {
+        return null;
+    }
+
+    @Override
+    public List<Account> findAllAccounts() {
+        return repository.findAll();
+    }
+
+    @Override
+    public boolean deleteAccount(Long id) {
+        return false;
     }
 
 

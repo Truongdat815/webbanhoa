@@ -36,12 +36,12 @@ public class SignupController {
         }
 
         if (accountService.existsByPhone(phone)) {
-            model.addAttribute("phoneError", "Số điện thoại đã được sử dụng!");
+            model.addAttribute("phoneError", "Số điện thoại đã được sử dụng");
             hasError = true;
         }
 
         if (accountService.existsByName(name)) {
-            model.addAttribute("nameError", "Tên đăng nhập đã tồn tại!");
+            model.addAttribute("nameError", "Tên đăng nhập đã được sử dụng");
             hasError = true;
         }
 
