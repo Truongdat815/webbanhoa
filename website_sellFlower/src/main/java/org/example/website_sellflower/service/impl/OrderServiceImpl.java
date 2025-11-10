@@ -1,4 +1,4 @@
-package org.example.website_sellflower.service.Impl;
+package org.example.website_sellflower.service.impl;
 
 import org.example.website_sellflower.entity.Order;
 import org.example.website_sellflower.repository.OrderRepository;
@@ -40,12 +40,19 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public boolean deleteOrder(Long id) {
-        Order existingOrder = repository.findById(id).orElse(null);
-        if (existingOrder != null) {
-            repository.deleteById(id);
-            return true;
+        try {
+            Order existingOrder = repository.findById(id).orElse(null);
+            if (existingOrder != null) {
+                // Cascade will handle OrderDetail deletion automatically
+                repository.delete(existingOrder);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            System.err.println("Error deleting order: " + e.getMessage());
+            e.printStackTrace();
+            throw new RuntimeException("Không thể xóa đơn hàng: " + e.getMessage(), e);
         }
-        return false;
     }
     // ← THÊM MỚI
     @Override

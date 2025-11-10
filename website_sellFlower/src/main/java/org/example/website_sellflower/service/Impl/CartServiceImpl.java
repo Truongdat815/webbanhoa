@@ -1,5 +1,5 @@
-// File: src/main/java/org/example/website_sellflower/service/Impl/CartServiceImpl.java
-package org.example.website_sellflower.service.Impl;
+// File: src/main/java/org/example/website_sellflower/service/impl/CartServiceImpl.java
+package org.example.website_sellflower.service.impl;
 
 import org.example.website_sellflower.entity.*;
 import org.example.website_sellflower.repository.*;
@@ -131,7 +131,13 @@ public class CartServiceImpl implements CartService {
     public void clearCart(Long accountId) {
         Cart cart = getCartByAccountId(accountId);
         if (cart != null) {
-            cart.clearItems();
+            // Delete all cart items from database
+            List<CartItem> items = new ArrayList<>(cart.getItems());
+            for (CartItem item : items) {
+                cartItemRepository.delete(item);
+            }
+            cart.getItems().clear();
+            cart.setUpdatedDate(LocalDateTime.now());
             cartRepository.save(cart);
         }
     }

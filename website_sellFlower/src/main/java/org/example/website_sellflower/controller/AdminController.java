@@ -321,6 +321,34 @@ public class AdminController {
         }
     }
 
+    // API: Delete Order
+    @DeleteMapping("/api/orders/{id}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> deleteOrder(@PathVariable Long id, HttpSession session) {
+        if (!isAdmin(session)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        try {
+            boolean deleted = orderService.deleteOrder(id);
+            Map<String, Object> response = new HashMap<>();
+            if (deleted) {
+                response.put("success", true);
+                response.put("message", "Xóa đơn hàng thành công");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "Không tìm thấy đơn hàng");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Lỗi: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
     // ==================== ACCOUNT MANAGEMENT ====================
     @GetMapping("/accounts")
     public String accounts(HttpSession session, Model model) {

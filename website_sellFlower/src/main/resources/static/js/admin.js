@@ -21,71 +21,51 @@ function showToast(message, type = 'success') {
 
 // Delete Product
 document.addEventListener('DOMContentLoaded', function() {
-    // Delete Product/Account Modal
-    const deleteButtons = document.querySelectorAll('.btn-delete[data-id]');
-    const deleteModal = document.getElementById('deleteModal');
-    const closeDeleteModal = document.getElementById('closeDeleteModal');
-    const cancelDelete = document.getElementById('cancelDelete');
-    const confirmDelete = document.getElementById('confirmDelete');
-    let itemIdToDelete = null;
-    let itemNameToDelete = '';
-    let deleteType = 'product'; // 'product' or 'account'
-
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            itemIdToDelete = this.getAttribute('data-id');
-            itemNameToDelete = this.getAttribute('data-name');
-            
-            // Determine delete type based on context
-            const isAccountPage = window.location.pathname.includes('/accounts');
-            deleteType = isAccountPage ? 'account' : 'product';
-            
-            // Update modal content
-            const nameElement = document.getElementById('deleteProductName') || document.getElementById('deleteAccountName');
-            if (nameElement) {
-                nameElement.textContent = itemNameToDelete;
-            }
-            
-            if (deleteModal) {
-                deleteModal.classList.add('active');
-            }
-        });
-    });
-
-    if (closeDeleteModal) {
-        closeDeleteModal.addEventListener('click', () => {
-            if (deleteModal) deleteModal.classList.remove('active');
-        });
-    }
-
-    if (cancelDelete) {
-        cancelDelete.addEventListener('click', () => {
-            if (deleteModal) deleteModal.classList.remove('active');
-        });
-    }
-
-    if (confirmDelete) {
-        confirmDelete.addEventListener('click', async () => {
-            if (itemIdToDelete) {
-                if (deleteType === 'account') {
-                    await deleteAccount(itemIdToDelete);
-                } else {
-                    await deleteProduct(itemIdToDelete);
-                }
-                if (deleteModal) deleteModal.classList.remove('active');
-            }
-        });
-    }
-
-    // Close modal when clicking overlay
-    if (deleteModal) {
-        const overlay = deleteModal.querySelector('.modal-overlay');
-        if (overlay) {
-            overlay.addEventListener('click', () => {
-                deleteModal.classList.remove('active');
-            });
+    // Delete Product/Account/Order Confirmation
+    document.addEventListener('click', async function(e) {
+        const deleteButton = e.target.closest('.btn-delete[data-id]');
+        if (!deleteButton) {
+            return;
         }
-    }
+
+        e.preventDefault();
+        e.stopPropagation();
+
+        const itemId = deleteButton.getAttribute('data-id');
+        const itemName = deleteButton.getAttribute('data-name') || '';
+
+        const onAccountsPage = window.location.pathname.includes('/accounts');
+        const onOrdersPage = window.location.pathname.includes('/orders');
+
+        let deleteType = 'product';
+        let confirmMessage = `Bạn có chắc chắn muốn xóa sản phẩm "${itemName}"?`;
+
+        if (onAccountsPage) {
+            deleteType = 'account';
+            confirmMessage = `Bạn có chắc chắn muốn xóa tài khoản "${itemName}"?`;
+        } else if (onOrdersPage) {
+            deleteType = 'order';
+            confirmMessage = `Bạn có chắc chắn muốn xóa ${itemName}?`;
+        }
+
+        const confirmed = window.confirm(confirmMessage);
+        if (!confirmed) {
+            return;
+        }
+
+        try {
+            if (deleteType === 'account') {
+                await deleteAccount(itemId);
+            } else if (deleteType === 'order') {
+                await deleteOrder(itemId);
+            } else {
+                await deleteProduct(itemId);
+            }
+        } catch (error) {
+            console.error('Error deleting item:', error);
+            showToast('Có lỗi xảy ra khi xóa: ' + error.message, 'error');
+        }
+    });
 
     // Product Form
     const productForm = document.getElementById('productForm');
@@ -150,6 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Delete Product Function
 async function deleteProduct(productId) {
     try {
+        console.log('Deleting product:', productId);
         const response = await fetch(`/admin/api/products/${productId}`, {
             method: 'DELETE',
             headers: {
@@ -157,25 +138,47 @@ async function deleteProduct(productId) {
             }
         });
 
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        }
+
         const data = await response.json();
+        console.log('Delete product response:', data);
 
         if (data.success) {
             showToast(data.message || 'Xóa sản phẩm thành công', 'success');
-            // Remove row from table
-            const row = document.querySelector(`tr:has(.btn-delete[data-id="${productId}"])`);
-            if (row) {
-                row.style.animation = 'fadeOut 0.3s ease-out';
-                setTimeout(() => {
-                    row.remove();
-                    checkEmptyState();
-                }, 300);
+            // Remove row from table - find button first, then get parent row
+            const deleteButton = document.querySelector(`.btn-delete[data-id="${productId}"]`);
+            if (deleteButton) {
+                const row = deleteButton.closest('tr');
+                if (row) {
+                    row.style.animation = 'fadeOut 0.3s ease-out';
+                    setTimeout(() => {
+                        row.remove();
+                        // Check if table is empty
+                        const productsTable = document.querySelector('#productsTableBody');
+                        if (productsTable) {
+                            const remainingRows = productsTable.querySelectorAll('tr');
+                            checkEmptyState(remainingRows.length);
+                        }
+                    }, 300);
+                } else {
+                    console.error('Row not found for product:', productId);
+                    // Reload page to refresh
+                    setTimeout(() => window.location.reload(), 1000);
+                }
+            } else {
+                console.error('Delete button not found for product:', productId);
+                // Reload page to refresh
+                setTimeout(() => window.location.reload(), 1000);
             }
         } else {
             showToast(data.message || 'Có lỗi xảy ra khi xóa sản phẩm', 'error');
         }
     } catch (error) {
         console.error('Error deleting product:', error);
-        showToast('Có lỗi xảy ra khi xóa sản phẩm', 'error');
+        showToast('Có lỗi xảy ra khi xóa sản phẩm: ' + error.message, 'error');
     }
 }
 
@@ -189,25 +192,92 @@ async function deleteAccount(accountId) {
             }
         });
 
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
 
         if (data.success) {
             showToast(data.message || 'Xóa tài khoản thành công', 'success');
-            // Remove row from table
-            const row = document.querySelector(`tr:has(.btn-delete[data-id="${accountId}"])`);
-            if (row) {
-                row.style.animation = 'fadeOut 0.3s ease-out';
-                setTimeout(() => {
-                    row.remove();
-                    checkEmptyState();
-                }, 300);
+            // Remove row from table - find button first, then get parent row
+            const deleteButton = document.querySelector(`.btn-delete[data-id="${accountId}"]`);
+            if (deleteButton) {
+                const row = deleteButton.closest('tr');
+                if (row) {
+                    row.style.animation = 'fadeOut 0.3s ease-out';
+                    setTimeout(() => {
+                        row.remove();
+                        // Check if table is empty
+                        const accountsTable = document.querySelector('#accountsTableBody');
+                        if (accountsTable) {
+                            const remainingRows = accountsTable.querySelectorAll('tr');
+                            checkEmptyState(remainingRows.length);
+                        }
+                    }, 300);
+                }
             }
         } else {
             showToast(data.message || 'Có lỗi xảy ra khi xóa tài khoản', 'error');
         }
     } catch (error) {
         console.error('Error deleting account:', error);
-        showToast('Có lỗi xảy ra khi xóa tài khoản', 'error');
+        showToast('Có lỗi xảy ra khi xóa tài khoản: ' + error.message, 'error');
+    }
+}
+
+// Delete Order Function
+async function deleteOrder(orderId) {
+    try {
+        console.log('Deleting order:', orderId);
+        const response = await fetch(`/admin/api/orders/${orderId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        }
+
+        const data = await response.json();
+        console.log('Delete order response:', data);
+
+        if (data.success) {
+            showToast(data.message || 'Xóa đơn hàng thành công', 'success');
+            // Remove row from table
+            const deleteButton = document.querySelector(`.btn-delete[data-id="${orderId}"]`);
+            if (deleteButton) {
+                const row = deleteButton.closest('tr');
+                if (row) {
+                    row.style.animation = 'fadeOut 0.3s ease-out';
+                    setTimeout(() => {
+                        row.remove();
+                        // Check if table is empty
+                        const ordersTable = document.querySelector('#ordersTableBody');
+                        if (ordersTable) {
+                            const remainingRows = ordersTable.querySelectorAll('tr');
+                            checkEmptyState(remainingRows.length);
+                        }
+                    }, 300);
+                } else {
+                    console.error('Row not found for order:', orderId);
+                    // Reload page to refresh
+                    setTimeout(() => window.location.reload(), 1000);
+                }
+            } else {
+                console.error('Delete button not found for order:', orderId);
+                // Reload page to refresh
+                setTimeout(() => window.location.reload(), 1000);
+            }
+        } else {
+            showToast(data.message || 'Có lỗi xảy ra khi xóa đơn hàng', 'error');
+        }
+    } catch (error) {
+        console.error('Error deleting order:', error);
+        showToast('Có lỗi xảy ra khi xóa đơn hàng: ' + error.message, 'error');
     }
 }
 

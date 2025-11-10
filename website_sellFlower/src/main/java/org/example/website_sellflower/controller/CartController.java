@@ -86,7 +86,7 @@ public class CartController {
     }
 
     // API: Add to cart
-    @PostMapping("/add")
+    @PostMapping("/api/add")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> addToCart(
             @RequestParam("productId") Long productId,
@@ -288,6 +288,7 @@ public class CartController {
             response.put("success", true);
             response.put("message", "Đã đặt hàng thành công!");
             response.put("orderId", createdOrder.getId());
+            response.put("cartCount", 0);
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
