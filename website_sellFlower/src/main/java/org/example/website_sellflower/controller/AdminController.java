@@ -554,21 +554,18 @@ public class AdminController {
         }
     }
 
-    // API: Delete Account
-    @DeleteMapping("/api/accounts/{id}")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> deleteAccount(@PathVariable Long id, HttpSession session) {
+    //API: Delete Account
+
+    @GetMapping("/api/accounts/{id}/delete")
+    public String deleteAccountGet(@PathVariable Long id, HttpSession session) {
         if (!isAdmin(session)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return "redirect:/login?error=Không có quyền truy cập";
         }
 
         try {
             Account accountToDelete = accountService.findById(id);
             if (accountToDelete == null) {
-                Map<String, Object> response = new HashMap<>();
-                response.put("success", false);
-                response.put("message", "Không tìm thấy tài khoản");
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+                return "redirect:/admin/accounts?error=Không tìm thấy tài khoản";
             }
 
             // Prevent deleting the last admin account
@@ -578,27 +575,65 @@ public class AdminController {
                     .filter(acc -> "ADMIN".equals(acc.getRole()))
                     .count();
                 if (adminCount <= 1) {
-                    Map<String, Object> response = new HashMap<>();
-                    response.put("success", false);
-                    response.put("message", "Không thể xóa tài khoản admin cuối cùng");
-                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+                    return "redirect:/admin/accounts?error=Không thể xóa tài khoản admin cuối cùng";
                 }
             }
 
             // Delete account using repository
             // Note: We need to add delete method or use repository directly
             accountService.deleteAccount(id);
-            
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", true);
-            response.put("message", "Xóa tài khoản thành công");
-            return ResponseEntity.ok(response);
+
+            return "redirect:/admin/accounts?success=Xóa tài khoản thành công";
         } catch (Exception e) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("success", false);
-            response.put("message", "Lỗi: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            return "redirect:/admin/accounts?error=Lỗi: " + e.getMessage();
         }
     }
+
+    // API: Delete Account
+//    @DeleteMapping("/api/accounts/{id}")
+//    @ResponseBody
+//    public ResponseEntity<Map<String, Object>> deleteAccount(@PathVariable Long id, HttpSession session) {
+//        if (!isAdmin(session)) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+//        }
+//
+//        try {
+//            Account accountToDelete = accountService.findById(id);
+//            if (accountToDelete == null) {
+//                Map<String, Object> response = new HashMap<>();
+//                response.put("success", false);
+//                response.put("message", "Không tìm thấy tài khoản");
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+//            }
+//
+//            // Prevent deleting the last admin account
+//            if ("ADMIN".equals(accountToDelete.getRole())) {
+//                List<Account> allAccounts = accountService.findAllAccounts();
+//                long adminCount = allAccounts.stream()
+//                    .filter(acc -> "ADMIN".equals(acc.getRole()))
+//                    .count();
+//                if (adminCount <= 1) {
+//                    Map<String, Object> response = new HashMap<>();
+//                    response.put("success", false);
+//                    response.put("message", "Không thể xóa tài khoản admin cuối cùng");
+//                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+//                }
+//            }
+//
+//            // Delete account using repository
+//            // Note: We need to add delete method or use repository directly
+//            accountService.deleteAccount(id);
+//
+//            Map<String, Object> response = new HashMap<>();
+//            response.put("success", true);
+//            response.put("message", "Xóa tài khoản thành công");
+//            return ResponseEntity.ok(response);
+//        } catch (Exception e) {
+//            Map<String, Object> response = new HashMap<>();
+//            response.put("success", false);
+//            response.put("message", "Lỗi: " + e.getMessage());
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+//        }
+//    }
 }
 

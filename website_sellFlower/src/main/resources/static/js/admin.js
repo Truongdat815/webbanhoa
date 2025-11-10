@@ -32,20 +32,21 @@ document.addEventListener('DOMContentLoaded', function() {
     let deleteType = 'product'; // 'product' or 'account'
 
     deleteButtons.forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function(e) {
             itemIdToDelete = this.getAttribute('data-id');
             itemNameToDelete = this.getAttribute('data-name');
-            
+
             // Determine delete type based on context
             const isAccountPage = window.location.pathname.includes('/accounts');
             deleteType = isAccountPage ? 'account' : 'product';
-            
+
             // Update modal content
             const nameElement = document.getElementById('deleteProductName') || document.getElementById('deleteAccountName');
+
             if (nameElement) {
                 nameElement.textContent = itemNameToDelete;
             }
-            
+
             if (deleteModal) {
                 deleteModal.classList.add('active');
             }
