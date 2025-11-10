@@ -10,382 +10,377 @@
     <link rel="stylesheet" th:href="@{/css/home.css}">
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">
-            <a href="/home">
-                <h1>FIAMA</h1>
-            </a>
-        </div>
-        <nav class="nav-links">
-            <a href="/home">Trang chủ</a>
-            <a href="/product">Sản phẩm</a>
-            <a href="#" th:if="${!isAdmin}">Liên hệ</a>
-            <a href="/admin" th:if="${isAdmin}">Admin</a>
-        </nav>
-        <div class="utility-nav">
-            <div th:if="${isLoggedIn}" class="user-dropdown">
-                <a href="#" class="user-link">
-                    <i class="fas fa-user"></i>
-                    <span th:text="${userDisplayName}">User</span>
-                </a>
-                <div class="dropdown-menu">
-                    <a href="/account">Tài khoản</a>
-                    <a href="/logout">Đăng xuất</a>
-                </div>
-            </div>
-            <a th:if="${!isLoggedIn}" href="/login" class="user-link">
+<!-- Header -->
+<header class="header">
+    <div class="logo">
+        <a href="/home">
+            <h1>FIAMA</h1>
+        </a>
+    </div>
+    <nav class="nav-links">
+        <a href="/home">Trang chủ</a>
+        <a href="/product">Sản phẩm</a>
+        <a href="#" th:if="${!isAdmin}">Liên hệ</a>
+        <a href="/admin" th:if="${isAdmin}">Admin</a>
+    </nav>
+    <div class="utility-nav">
+        <div th:if="${isLoggedIn}" class="user-dropdown">
+            <a href="#" class="user-link">
                 <i class="fas fa-user"></i>
-                <span>Đăng nhập</span>
+                <span th:text="${userDisplayName}">User</span>
             </a>
-            <a href="/cart" class="cart-icon-wrapper">
-                <i class="fas fa-shopping-bag"></i>
-                <span class="cart-count" id="cartCount">0</span>
-            </a>
+            <div class="dropdown-menu">
+                <a href="/account">Tài khoản</a>
+                <a href="/logout">Đăng xuất</a>
+            </div>
         </div>
-    </header>
+        <a th:if="${!isLoggedIn}" href="/login" class="user-link">
+            <i class="fas fa-user"></i>
+            <span>Đăng nhập</span>
+        </a>
+        <a href="/cart" class="cart-icon-wrapper">
+            <i class="fas fa-shopping-bag"></i>
+            <span class="cart-count" id="cartCount">0</span>
+        </a>
+    </div>
+</header>
 
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="account-container">
-            <div class="account-sidebar">
-                <div class="user-profile">
-                    <div class="avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <h2 class="user-name" th:text="${accountName != null ? accountName : 'User'}">User</h2>
-                    <p class="user-email" th:text="${accountEmail != null ? accountEmail : ''}"></p>
+<!-- Main Content -->
+<main class="main-content">
+    <div class="account-container">
+        <div class="account-sidebar">
+            <div class="user-profile">
+                <div class="avatar">
+                    <i class="fas fa-user"></i>
                 </div>
-                <nav class="account-nav">
-                    <a href="#overview" class="nav-item active" data-section="overview">
-                        <i class="fas fa-home"></i>
-                        <span>Tổng quan</span>
-                    </a>
-                    <a href="#orders" class="nav-item" data-section="orders">
-                        <i class="fas fa-shopping-bag"></i>
-                        <span>Đơn hàng</span>
-                    </a>
-                    <a href="#profile" class="nav-item" data-section="profile">
-                        <i class="fas fa-user-circle"></i>
-                        <span>Hồ sơ</span>
-                    </a>
-                    <a href="#addresses" class="nav-item" data-section="addresses">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>Địa chỉ</span>
-                    </a>
-                    <a href="#settings" class="nav-item" data-section="settings">
-                        <i class="fas fa-cog"></i>
-                        <span>Cài đặt</span>
-                    </a>
-                    <a href="/logout" class="nav-item logout">
-                        <i class="fas fa-sign-out-alt"></i>
-                        <span>Đăng xuất</span>
-                    </a>
-                </nav>
+                <h2 class="user-name" th:text="${accountName != null ? accountName : 'User'}">User</h2>
+                <p class="user-email" th:text="${accountEmail != null ? accountEmail : ''}"></p>
+            </div>
+            <nav class="account-nav">
+                <a href="#overview" class="nav-item active" data-section="overview">
+                    <i class="fas fa-home"></i>
+                    <span>Tổng quan</span>
+                </a>
+                <a href="#orders" class="nav-item" data-section="orders">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span>Đơn hàng</span>
+                </a>
+                <a href="#profile" class="nav-item" data-section="profile">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Hồ sơ</span>
+                </a>
+                <a href="#addresses" class="nav-item" data-section="addresses">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>Địa chỉ</span>
+                </a>
+                <a href="#settings" class="nav-item" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>Cài đặt</span>
+                </a>
+                <a href="/logout" class="nav-item logout">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Đăng xuất</span>
+                </a>
+            </nav>
+        </div>
+
+        <div class="account-content">
+            <!-- Overview Section -->
+            <div class="content-section active" id="overview">
+                <h1 class="section-title">Tổng quan tài khoản</h1>
+                <div class="overview-grid">
+                    <div class="overview-card">
+                        <div class="card-icon orders">
+                            <i class="fas fa-shopping-bag"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Tổng đơn hàng</h3>
+                            <p class="card-value" th:text="${totalOrders != null ? totalOrders : 0}">0</p>
+                        </div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="card-icon spending">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Tổng chi tiêu</h3>
+                            <p class="card-value" th:if="${totalSpending != null}" th:text="${#numbers.formatDecimal(totalSpending, 0, 'COMMA', 0, 'POINT')} + '₫'">0₫</p>
+                            <p class="card-value" th:if="${totalSpending == null}">0₫</p>
+                        </div>
+                    </div>
+                    <div class="overview-card">
+                        <div class="card-icon points">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="card-content">
+                            <h3>Điểm thưởng</h3>
+                            <p class="card-value" th:text="${rewardPoints != null ? rewardPoints : 0}">0</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="recent-orders" th:if="${recentOrders != null && !recentOrders.isEmpty()}">
+                    <h2 class="subsection-title">Đơn hàng gần đây</h2>
+                    <div class="orders-list">
+                        <div class="order-item" th:each="order : ${recentOrders}">
+                            <div class="order-info">
+                                <span class="order-id" th:text="'#ORD-' + ${order.id}">#ORD-</span>
+                                <span class="order-date" th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy') : ''}"></span>
+                            </div>
+                            <div class="order-status" th:classappend="${recentOrderStatusClassMap != null && recentOrderStatusClassMap.containsKey(order.id) ? recentOrderStatusClassMap.get(order.id) : 'pending'}" th:text="${order.status != null ? #strings.replace(order.status, '_', ' ') : ''}"></div>
+                            <div class="order-total" th:if="${order.totalAmount != null}" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + '₫'"></div>
+                            <div class="order-total" th:if="${order.totalAmount == null}">0₫</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="recent-orders" th:if="${recentOrders == null || recentOrders.isEmpty()}">
+                    <h2 class="subsection-title">Đơn hàng gần đây</h2>
+                    <div class="orders-list">
+                        <p class="no-orders-message">Bạn chưa có đơn hàng nào</p>
+                    </div>
+                </div>
             </div>
 
-            <div class="account-content">
-                <!-- Overview Section -->
-                <div class="content-section active" id="overview">
-                    <h1 class="section-title">Tổng quan tài khoản</h1>
-                    <div class="overview-grid">
-                        <div class="overview-card">
-                            <div class="card-icon orders">
-                                <i class="fas fa-shopping-bag"></i>
-                            </div>
-                            <div class="card-content">
-                                <h3>Tổng đơn hàng</h3>
-                                <p class="card-value" th:text="${totalOrders != null ? totalOrders : 0}">0</p>
-                            </div>
-                        </div>
-                        <div class="overview-card">
-                            <div class="card-icon spending">
-                                <i class="fas fa-dollar-sign"></i>
-                            </div>
-                            <div class="card-content">
-                                <h3>Tổng chi tiêu</h3>
-                                <p class="card-value" th:if="${totalSpending != null}" th:text="${#numbers.formatDecimal(totalSpending, 0, 'COMMA', 0, 'POINT')} + '₫'">0₫</p>
-                                <p class="card-value" th:if="${totalSpending == null}">0₫</p>
-                            </div>
-                        </div>
-                        <div class="overview-card">
-                            <div class="card-icon points">
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <div class="card-content">
-                                <h3>Điểm thưởng</h3>
-                                <p class="card-value" th:text="${rewardPoints != null ? rewardPoints : 0}">0</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="recent-orders" th:if="${recentOrders != null && !recentOrders.isEmpty()}">
-                        <h2 class="subsection-title">Đơn hàng gần đây</h2>
-                        <div class="orders-list">
-                            <div class="order-item" th:each="order : ${recentOrders}">
-                                <div class="order-info">
-                                    <span class="order-id" th:text="'#ORD-' + ${order.id}">#ORD-</span>
-                                    <span class="order-date" th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy') : ''}"></span>
-                                </div>
-                                <div class="order-status" th:classappend="${recentOrderStatusClassMap != null && recentOrderStatusClassMap.containsKey(order.id) ? recentOrderStatusClassMap.get(order.id) : 'pending'}" th:text="${order.status != null ? #strings.replace(order.status, '_', ' ') : ''}"></div>
-                                <div class="order-total" th:if="${order.totalAmount != null}" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + '₫'"></div>
-                                <div class="order-total" th:if="${order.totalAmount == null}">0₫</div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="recent-orders" th:if="${recentOrders == null || recentOrders.isEmpty()}">
-                        <h2 class="subsection-title">Đơn hàng gần đây</h2>
-                        <div class="orders-list">
-                            <p class="no-orders-message">Bạn chưa có đơn hàng nào</p>
-                        </div>
-                    </div>
+            <!-- Orders Section - BỎ CỘT "HÀNH ĐỘNG" -->
+            <div class="content-section" id="orders">
+                <h1 class="section-title">Đơn hàng của tôi</h1>
+                <div class="orders-table-container">
+                    <table class="orders-table">
+                        <thead>
+                        <tr>
+                            <th>Đơn hàng</th>
+                            <th>Ngày</th>
+                            <th>Trạng thái</th>
+                            <th>Tổng tiền</th>
+                        </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                        <tr th:if="${orders == null || orders.isEmpty()}">
+                            <td colspan="4" class="no-orders">Bạn chưa có đơn hàng nào</td>
+                        </tr>
+                        <tr th:each="order : ${orders}">
+                            <td th:text="'#ORD-' + ${order.id}">#ORD-0001</td>
+                            <td th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy') : ''}"></td>
+                            <td>
+                                <span class="order-status-badge" th:classappend="${orderStatusClassMap != null && orderStatusClassMap.containsKey(order.id) ? orderStatusClassMap.get(order.id) : 'pending'}" th:text="${order.status != null ? #strings.replace(order.status, '_', ' ') : ''}"></span>
+                            </td>
+                            <td th:if="${order.totalAmount != null}" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
+                            <td th:if="${order.totalAmount == null}">0₫</td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
+            </div>
 
-                <!-- Orders Section -->
-                <div class="content-section" id="orders">
-                    <h1 class="section-title">Đơn hàng của tôi</h1>
-                    <div class="orders-table-container">
-                        <table class="orders-table">
-                            <thead>
-                                <tr>
-                                    <th>Đơn hàng</th>
-                                    <th>Ngày</th>
-                                    <th>Trạng thái</th>
-                                    <th>Tổng tiền</th>
-                                    <th>Hành động</th>
-                                </tr>
-                            </thead>
-                            <tbody id="ordersTableBody">
-                                <tr th:if="${orders == null || orders.isEmpty()}">
-                                    <td colspan="5" class="no-orders">Bạn chưa có đơn hàng nào</td>
-                                </tr>
-                                <tr th:each="order : ${orders}">
-                                    <td th:text="'#ORD-' + ${order.id}">#ORD-0001</td>
-                                    <td th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy') : ''}"></td>
-                                    <td>
-                                        <span class="order-status-badge" th:classappend="${orderStatusClassMap != null && orderStatusClassMap.containsKey(order.id) ? orderStatusClassMap.get(order.id) : 'pending'}" th:text="${order.status != null ? #strings.replace(order.status, '_', ' ') : ''}"></span>
-                                    </td>
-                                    <td th:if="${order.totalAmount != null}" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
-                                    <td th:if="${order.totalAmount == null}">0₫</td>
-                                    <td>
-                                        <a th:href="@{/order/{id}(id=${order.id})}" class="view-order-link">Xem</a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+            <!-- Profile Section -->
+            <div class="content-section" id="profile">
+                <h1 class="section-title">Chỉnh sửa hồ sơ</h1>
+
+                <!-- Flash Messages -->
+                <div th:if="${success}" class="flash-message success" th:text="${success}"></div>
+                <div th:if="${error}" class="flash-message error" th:text="${error}"></div>
+
+                <form class="profile-form">
+                    <div class="form-group full-width">
+                        <label for="name">Họ và tên</label>
+                        <input type="text" id="name" name="name" th:value="${accountName != null ? accountName : ''}" required>
                     </div>
-                </div>
-
-                <!-- Profile Section -->
-                <div class="content-section" id="profile">
-                    <h1 class="section-title">Chỉnh sửa hồ sơ</h1>
-                    
-                    <!-- Flash Messages -->
-                    <div th:if="${success}" class="flash-message success" th:text="${success}"></div>
-                    <div th:if="${error}" class="flash-message error" th:text="${error}"></div>
-                    
-                    <form class="profile-form">
-                        <div class="form-group full-width">
-                            <label for="name">Họ và tên</label>
-                            <input type="text" id="name" name="name" th:value="${accountName != null ? accountName : ''}" required>
+                    <div class="form-group full-width">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" th:value="${accountEmail != null ? accountEmail : ''}" required readonly>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Số điện thoại</label>
+                            <input type="tel" id="phone" name="phone" th:value="${accountPhone != null ? accountPhone : ''}">
                         </div>
+                        <div class="form-group">
+                            <label>Mật khẩu</label>
+                            <button type="button" class="change-password-toggle-btn" id="changePasswordBtn">
+                                <i class="fas fa-key"></i>
+                                <span>Đổi mật khẩu</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Password Change Section (Hidden by default) -->
+                    <div class="password-change-section" id="passwordChangeSection" style="display: none;">
                         <div class="form-group full-width">
-                            <label for="email">Email</label>
-                            <input type="email" id="email" name="email" th:value="${accountEmail != null ? accountEmail : ''}" required readonly>
+                            <label for="oldPassword">Mật khẩu cũ</label>
+                            <input type="password" id="oldPassword" name="oldPassword" placeholder="Nhập mật khẩu cũ" minlength="6">
+                            <span class="error-message" id="oldPasswordError"></span>
                         </div>
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="phone">Số điện thoại</label>
-                                <input type="tel" id="phone" name="phone" th:value="${accountPhone != null ? accountPhone : ''}">
+                                <label for="newPassword">Mật khẩu mới</label>
+                                <input type="password" id="newPassword" name="newPassword" placeholder="Nhập mật khẩu mới (tối thiểu 6 ký tự)" minlength="6">
+                                <span class="error-message" id="newPasswordError"></span>
                             </div>
                             <div class="form-group">
-                                <label>Mật khẩu</label>
-                                <button type="button" class="change-password-toggle-btn" id="changePasswordBtn">
-                                    <i class="fas fa-key"></i>
-                                    <span>Đổi mật khẩu</span>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <!-- Password Change Section (Hidden by default) -->
-                        <div class="password-change-section" id="passwordChangeSection" style="display: none;">
-                            <div class="form-group full-width">
-                                <label for="oldPassword">Mật khẩu cũ</label>
-                                <input type="password" id="oldPassword" name="oldPassword" placeholder="Nhập mật khẩu cũ" minlength="6">
-                                <span class="error-message" id="oldPasswordError"></span>
-                            </div>
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label for="newPassword">Mật khẩu mới</label>
-                                    <input type="password" id="newPassword" name="newPassword" placeholder="Nhập mật khẩu mới (tối thiểu 6 ký tự)" minlength="6">
-                                    <span class="error-message" id="newPasswordError"></span>
-                                </div>
-                                <div class="form-group">
-                                    <label for="confirmPassword">Xác nhận mật khẩu mới</label>
-                                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu mới" minlength="6">
-                                    <span class="error-message" id="confirmPasswordError"></span>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <button type="submit" class="save-btn">
-                            <span>Lưu thay đổi</span>
-                            <i class="fas fa-check"></i>
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Addresses Section -->
-                <div class="content-section" id="addresses">
-                    <h1 class="section-title">Địa chỉ của tôi</h1>
-                    <div class="addresses-grid">
-                        <div class="address-card" th:if="${accountAddress != null && !accountAddress.isEmpty()}">
-                            <div class="address-header">
-                                <h3>Địa chỉ mặc định</h3>
-                                <span class="default-badge">Mặc định</span>
-                            </div>
-                            <div class="address-content">
-                                <p th:text="${accountName != null ? accountName : ''}"></p>
-                                <p th:text="${accountAddress != null ? accountAddress : ''}"></p>
-                                <p th:if="${accountPhone != null && !accountPhone.isEmpty()}" th:text="'Điện thoại: ' + ${accountPhone}"></p>
-                            </div>
-                            <div class="address-actions">
-                                <button class="edit-btn">Sửa</button>
-                                <button class="delete-btn">Xóa</button>
-                            </div>
-                        </div>
-                        <div class="address-card add-address">
-                            <div class="add-address-content">
-                                <i class="fas fa-plus"></i>
-                                <span>Thêm địa chỉ mới</span>
+                                <label for="confirmPassword">Xác nhận mật khẩu mới</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Nhập lại mật khẩu mới" minlength="6">
+                                <span class="error-message" id="confirmPasswordError"></span>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Settings Section -->
-                <div class="content-section" id="settings">
-                    <h1 class="section-title">Cài đặt tài khoản</h1>
-                    <div class="settings-list">
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <h3>Thông báo Email</h3>
-                                <p>Nhận cập nhật qua email về đơn hàng của bạn</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" checked>
-                                <span class="slider"></span>
-                            </label>
+                    <button type="submit" class="save-btn">
+                        <span>Lưu thay đổi</span>
+                        <i class="fas fa-check"></i>
+                    </button>
+                </form>
+            </div>
+
+            <!-- Addresses Section -->
+            <div class="content-section" id="addresses">
+                <h1 class="section-title">Địa chỉ của tôi</h1>
+                <div class="addresses-grid">
+                    <div class="address-card" th:if="${accountAddress != null && !accountAddress.isEmpty()}">
+                        <div class="address-header">
+                            <h3>Địa chỉ mặc định</h3>
+                            <span class="default-badge">Mặc định</span>
                         </div>
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <h3>Thông báo SMS</h3>
-                                <p>Nhận cập nhật qua SMS về đơn hàng của bạn</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox">
-                                <span class="slider"></span>
-                            </label>
+                        <div class="address-content">
+                            <p th:text="${accountName != null ? accountName : ''}"></p>
+                            <p th:text="${accountAddress != null ? accountAddress : ''}"></p>
+                            <p th:if="${accountPhone != null && !accountPhone.isEmpty()}" th:text="'Điện thoại: ' + ${accountPhone}"></p>
                         </div>
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <h3>Bản tin</h3>
-                                <p>Nhận bản tin hàng tuần của chúng tôi</p>
-                            </div>
-                            <label class="toggle-switch">
-                                <input type="checkbox" checked>
-                                <span class="slider"></span>
-                            </label>
+                        <div class="address-actions">
+                            <button class="edit-btn">Sửa</button>
+                            <button class="delete-btn">Xóa</button>
                         </div>
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <h3>Đổi mật khẩu</h3>
-                                <p>Cập nhật mật khẩu tài khoản của bạn</p>
-                            </div>
-                            <button class="change-password-btn">Đổi mật khẩu</button>
+                    </div>
+                    <div class="address-card add-address">
+                        <div class="add-address-content">
+                            <i class="fas fa-plus"></i>
+                            <span>Thêm địa chỉ mới</span>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div class="content-section" id="settings">
+                <h1 class="section-title">Cài đặt tài khoản</h1>
+                <div class="settings-list">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h3>Thông báo Email</h3>
+                            <p>Nhận cập nhật qua email về đơn hàng của bạn</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h3>Thông báo SMS</h3>
+                            <p>Nhận cập nhật qua SMS về đơn hàng của bạn</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h3>Bản tin</h3>
+                            <p>Nhận bản tin hàng tuần của chúng tôi</p>
+                        </div>
+                        <label class="toggle-switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <h3>Đổi mật khẩu</h3>
+                            <p>Cập nhật mật khẩu tài khoản của bạn</p>
+                        </div>
+                        <button class="change-password-btn">Đổi mật khẩu</button>
                     </div>
                 </div>
             </div>
         </div>
-    </main>
+    </div>
+</main>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <!-- Column 1: Opening Time -->
-            <div class="footer-column">
-                <h4>Giờ mở cửa</h4>
-                <div class="footer-opening-time">
-                    <div class="opening-time-row">
-                        <span class="opening-day">Thứ 2 - Thứ 6:</span>
-                        <span class="opening-hours">8:00 - 22:00</span>
-                    </div>
-                    <div class="opening-time-row">
-                        <span class="opening-day">Thứ 7:</span>
-                        <span class="opening-hours">9:00 - 20:00</span>
-                    </div>
-                    <div class="opening-time-row">
-                        <span class="opening-day">Chủ nhật:</span>
-                        <span class="opening-hours">14:00 - 18:00</span>
-                    </div>
-                    <p class="footer-holiday">Chúng tôi làm việc cả ngày lễ</p>
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <!-- Column 1: Opening Time -->
+        <div class="footer-column">
+            <h4>Giờ mở cửa</h4>
+            <div class="footer-opening-time">
+                <div class="opening-time-row">
+                    <span class="opening-day">Thứ 2 - Thứ 6:</span>
+                    <span class="opening-hours">8:00 - 22:00</span>
                 </div>
-            </div>
-            
-            <!-- Column 2: Contact -->
-            <div class="footer-column">
-                <h4>Liên hệ</h4>
-                <div class="footer-contact-info">
-                    <p><i class="fas fa-map-marker-alt"></i> Thành phố Hồ Chí Minh, Việt Nam</p>
-                    <p><i class="fas fa-phone"></i> +84 123 456 789</p>
-                    <p><i class="fas fa-envelope"></i> info@fiama.com</p>
+                <div class="opening-time-row">
+                    <span class="opening-day">Thứ 7:</span>
+                    <span class="opening-hours">9:00 - 20:00</span>
                 </div>
-            </div>
-            
-            <!-- Column 3: Central Section with Logo, Social, Apps -->
-            <div class="footer-column footer-center-column">
-                <div class="footer-logo-center">FIAMA</div>
-                <div class="footer-social-icons">
-                    <a href="#" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social-icon" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-icon" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                <div class="opening-time-row">
+                    <span class="opening-day">Chủ nhật:</span>
+                    <span class="opening-hours">14:00 - 18:00</span>
                 </div>
-                <div class="footer-app-buttons">
-                    <a href="#" class="app-button app-store">
-                        <i class="fab fa-apple"></i>
-                        <span>Tải từ APP STORE</span>
-                    </a>
-                    <a href="#" class="app-button google-play">
-                        <i class="fab fa-google-play"></i>
-                        <span>Tải từ GOOGLE PLAY</span>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Column 4: My Account -->
-            <div class="footer-column">
-                <h4>Tài khoản của tôi</h4>
-                <ul>
-                    <li><a href="/account">Tài khoản của tôi</a></li>
-                    <li><a href="/cart">Giỏ hàng</a></li>
-                    <li><a href="/account#orders">Lịch sử đơn hàng</a></li>
-                </ul>
-            </div>
-            
-            <!-- Column 5: Customer Service -->
-            <div class="footer-column">
-                <h4>Dịch vụ khách hàng</h4>
-                <ul>
-                    <li><a href="#">Điều khoản sử dụng</a></li>
-                    <li><a href="#">Chính sách bảo mật</a></li>
-                </ul>
+                <p class="footer-holiday">Chúng tôi làm việc cả ngày lễ</p>
             </div>
         </div>
-    </footer>
 
-    <script src="/js/cart-utils.js"></script>
-    <script src="/js/account.js"></script>
+        <!-- Column 2: Contact -->
+        <div class="footer-column">
+            <h4>Liên hệ</h4>
+            <div class="footer-contact-info">
+                <p><i class="fas fa-map-marker-alt"></i> Thành phố Hồ Chí Minh, Việt Nam</p>
+                <p><i class="fas fa-phone"></i> +84 123 456 789</p>
+                <p><i class="fas fa-envelope"></i> info@fiama.com</p>
+            </div>
+        </div>
+
+        <!-- Column 3: Central Section with Logo, Social, Apps -->
+        <div class="footer-column footer-center-column">
+            <div class="footer-logo-center">FIAMA</div>
+            <div class="footer-social-icons">
+                <a href="#" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+            <div class="footer-app-buttons">
+                <a href="#" class="app-button app-store">
+                    <i class="fab fa-apple"></i>
+                    <span>Tải từ APP STORE</span>
+                </a>
+                <a href="#" class="app-button google-play">
+                    <i class="fab fa-google-play"></i>
+                    <span>Tải từ GOOGLE PLAY</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Column 4: My Account -->
+        <div class="footer-column">
+            <h4>Tài khoản của tôi</h4>
+            <ul>
+                <li><a href="/account">Tài khoản của tôi</a></li>
+                <li><a href="/cart">Giỏ hàng</a></li>
+                <li><a href="/account#orders">Lịch sử đơn hàng</a></li>
+            </ul>
+        </div>
+
+        <!-- Column 5: Customer Service -->
+        <div class="footer-column">
+            <h4>Dịch vụ khách hàng</h4>
+            <ul>
+                <li><a href="#">Điều khoản sử dụng</a></li>
+                <li><a href="#">Chính sách bảo mật</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+
+<script src="/js/cart-utils.js"></script>
+<script src="/js/account.js"></script>
 </body>
 </html>
-
