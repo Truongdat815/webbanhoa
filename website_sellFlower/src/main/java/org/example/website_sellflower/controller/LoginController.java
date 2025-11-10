@@ -12,36 +12,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping({"/","/login"})
+@RequestMapping("/login")
 public class LoginController {
 
     @Autowired
-    AccountService accountService;
+    private AccountService accountService;
 
     @GetMapping
     public String showLoginPage(@RequestParam(value = "error", required = false) String error,
-                                Model model) {
-        model.addAttribute("isLoggedIn", false);
+                                Model model,
+                                HttpSession session) {
+        // Kiểm tra xem người dùng có đang đăng nhập không
+        Account acc = (Account) session.getAttribute("account");
+        boolean isLoggedIn = (acc != null);
+
+        model.addAttribute("isLoggedIn", isLoggedIn);
+        model.addAttribute("error", error);
+
         return "login";
     }
 
-    @PostMapping("/login")
+    @PostMapping
     public String login(@RequestParam("username") String username,
                         @RequestParam("password") String password,
-                        Model model, HttpSession session) {
+                        Model model,
+                        HttpSession session) {
 
         Account acc = accountService.login(username, password);
         if (acc != null) {
             session.setAttribute("account", acc);
-            // Redirect to admin if user is admin
-            if ("ADMIN".equals(acc.getRole())) {
+
+            if ("ADMIN".equalsIgnoreCase(acc.getRole())) {
                 return "redirect:/admin";
             }
             return "redirect:/home";
         } else {
             model.addAttribute("error", "Sai tên đăng nhập hoặc mật khẩu!");
+            model.addAttribute("isLoggedIn", false); // thêm dòng này để tránh null
             return "login";
         }
     }
-
 }
