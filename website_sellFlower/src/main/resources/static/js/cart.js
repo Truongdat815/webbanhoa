@@ -1,3 +1,5 @@
+// File: src/main/resources/static/js/cart.js
+
 // Helper function to format price
 function formatPrice(price) {
     const numPrice = typeof price === 'string' ? parseFloat(price) : price;
@@ -9,24 +11,24 @@ async function loadCartItems(skipAnimation = false) {
     try {
         const response = await fetch('/cart/api');
         if (!response.ok) throw new Error('Failed to load cart');
-        
+
         const cartItems = await response.json();
         const cartItemsList = document.getElementById('cartItemsList');
         const emptyCart = document.getElementById('emptyCart');
         const cartWithItems = document.getElementById('cartWithItems');
-        
+
         if (!cartItems || cartItems.length === 0) {
             emptyCart.style.display = 'block';
             cartWithItems.style.display = 'none';
             return;
         }
-        
+
         emptyCart.style.display = 'none';
         cartWithItems.style.display = 'grid';
-        
+
         // Clear existing items
         cartItemsList.innerHTML = '';
-        
+
         // Render cart items
         cartItems.forEach(item => {
             const cartItemElement = createCartItemElement(item);
@@ -36,13 +38,13 @@ async function loadCartItems(skipAnimation = false) {
             }
             cartItemsList.appendChild(cartItemElement);
         });
-        
+
         // Initialize cart item interactions
         initCartItemInteractions();
-        
+
         // Update cart summary
         updateCartSummary(cartItems);
-        
+
         // Validate and correct quantities after loading (async, runs after DOM is ready)
         setTimeout(async () => {
             await validateAndCorrectQuantities(cartItems);
@@ -57,27 +59,27 @@ function createCartItemElement(item) {
     const cartItem = document.createElement('div');
     cartItem.className = 'cart-item';
     cartItem.setAttribute('data-product-id', item.productId);
-    
+
     // Use price directly in VND
     const price = parseFloat(item.price);
-    
+
     // Sửa logic kiểm tra stock. Dùng !== null để giữ lại giá trị 0
     const stock = (item.stock !== null && item.stock !== undefined) ? parseInt(item.stock) : null;
-    
+
     // Nếu stock không phải là null (có thể là 0), dùng nó làm max. Nếu là null, dùng 999999
     const maxQuantity = (stock !== null) ? stock : 999999;
-    
+
     // Validate and adjust quantity if it exceeds stock
     let quantity = item.quantity;
     // Kiểm tra stock !== null trước
     if (stock !== null && quantity > stock) {
         quantity = stock;
     }
-    
+
     const totalPrice = price * quantity;
     // Gán data-stock chính xác
     const stockAttribute = (stock !== null) ? `data-stock="${stock}"` : '';
-    
+
     cartItem.innerHTML = `
         <button class="remove-item-btn" data-product-id="${item.productId}">
             <i class="fas fa-times"></i>
@@ -98,7 +100,7 @@ function createCartItemElement(item) {
             <span class="total-price">${formatPrice(totalPrice)}</span>
         </div>
     `;
-    
+
     return cartItem;
 }
 
@@ -112,11 +114,11 @@ function initCartItemInteractions() {
         const cartItem = quantitySelector.closest('.cart-item');
         const productId = parseInt(qtyInput.getAttribute('data-product-id'));
         const unitPrice = parseFloat(qtyInput.getAttribute('data-unit-price'));
-        
+
         // Sửa logic đọc stock
         const hasStock = qtyInput.hasAttribute('data-stock');
         const stock = hasStock ? parseInt(qtyInput.getAttribute('data-stock')) : null;
-        
+
         const totalPriceElement = cartItem.querySelector('.total-price');
 
         // Hàm helper để xác định max (bao gồm cả trường hợp stock = 0)
@@ -139,13 +141,13 @@ function initCartItemInteractions() {
         plusBtn.addEventListener('click', async function() {
             let currentValue = parseInt(qtyInput.value);
             const max = getMax(); // Dùng hàm helper
-            
+
             if (currentValue >= max) { // Sửa: kiểm tra >=
                 showToast(`Số lượng vượt quá tồn kho! Tồn kho hiện có: ${max}`, 'warning');
                 qtyInput.value = max; // Đảm bảo giá trị không vượt quá
                 return;
             }
-            
+
             qtyInput.value = currentValue + 1;
             animateInput(qtyInput);
             const result = await updateCartItemQuantity(productId, parseInt(qtyInput.value));
@@ -174,7 +176,7 @@ function initCartItemInteractions() {
                 showToast(`Số lượng vượt quá tồn kho! Tồn kho hiện có: ${max}`, 'warning');
             }
             this.value = finalValue; // Cập nhật giá trị input ngay lập tức
-            
+
             // Only update cart if value is valid
             if (finalValue >= min && finalValue <= max) {
                 const result = await updateCartItemQuantity(productId, finalValue);
@@ -193,18 +195,18 @@ function initCartItemInteractions() {
                 }
             }
         });
-        
+
         // Also validate on input event to prevent invalid values (real-time validation)
         qtyInput.addEventListener('input', function() {
             const min = parseInt(this.getAttribute('min')) || 1;
             const max = getMax(); // Dùng hàm helper
             let value = parseInt(this.value);
-            
+
             // Handle empty input
             if (isNaN(value) || this.value === '') {
                 return; // Allow empty input temporarily
             }
-            
+
             if (value < min) {
                 this.value = min;
                 value = min;
@@ -214,13 +216,13 @@ function initCartItemInteractions() {
                 showToast(`Số lượng vượt quá tồn kho! Tồn kho hiện có: ${max}`, 'warning');
             }
         });
-        
+
         // Validate on blur to ensure final value is correct
         qtyInput.addEventListener('blur', function() {
             const min = parseInt(this.getAttribute('min')) || 1;
             const max = getMax(); // Dùng hàm helper
             let value = parseInt(this.value) || min;
-            
+
             if (value < min) {
                 this.value = min;
                 value = min;
@@ -230,7 +232,7 @@ function initCartItemInteractions() {
                 // Không cần toast ở đây vì 'change' event sẽ xử lý
             }
         });
-        
+
         // Store previous value for revert
         qtyInput.addEventListener('focus', function() {
             this.setAttribute('data-previous-value', this.value);
@@ -242,7 +244,7 @@ function initCartItemInteractions() {
         btn.addEventListener('click', async function() {
             const productId = parseInt(this.getAttribute('data-product-id'));
             const cartItem = this.closest('.cart-item');
-            
+
             cartItem.style.animation = 'slideOut 0.5s ease-out';
             setTimeout(async () => {
                 await removeCartItem(productId);
@@ -255,11 +257,11 @@ function initCartItemInteractions() {
 // Validate and correct quantities that exceed stock
 async function validateAndCorrectQuantities(cartItems) {
     let needsUpdate = false;
-    
+
     for (const item of cartItems) {
         // Sửa: Kiểm tra stock rõ ràng
         const stock = (item.stock !== null && item.stock !== undefined) ? parseInt(item.stock) : null;
-        
+
         if (stock !== null && item.quantity > stock) {
             // Find the input element for this item
             const qtyInput = document.querySelector(`.qty-input[data-product-id="${item.productId}"]`);
@@ -267,20 +269,20 @@ async function validateAndCorrectQuantities(cartItems) {
                 const cartItem = qtyInput.closest('.cart-item');
                 const unitPrice = parseFloat(qtyInput.getAttribute('data-unit-price'));
                 const totalPriceElement = cartItem.querySelector('.total-price');
-                
+
                 // Update quantity to stock limit
                 qtyInput.value = stock;
                 updateItemTotal(stock, unitPrice, totalPriceElement);
-                
+
                 // Update cart in backend
                 await updateCartItemQuantity(item.productId, stock);
                 needsUpdate = true;
-                
+
                 showToast(`Số lượng "${item.productName}" đã được điều chỉnh về ${stock} (tồn kho hiện có)`, 'warning');
             }
         }
     }
-    
+
     if (needsUpdate) {
         await updateCartSummaryOnly();
     }
@@ -296,9 +298,9 @@ async function updateCartItemQuantity(productId, quantity) {
             },
             body: `productId=${productId}&quantity=${quantity}`
         });
-        
+
         if (!response.ok) throw new Error('Failed to update cart item');
-        
+
         const result = await response.json();
         if (result.success) {
             updateCartCountInHeaderLocal(result.cartCount);
@@ -322,9 +324,9 @@ async function removeCartItem(productId) {
         const response = await fetch(`/cart/api/remove/${productId}`, {
             method: 'DELETE'
         });
-        
+
         if (!response.ok) throw new Error('Failed to remove cart item');
-        
+
         const result = await response.json();
         if (result.success) {
             updateCartCountInHeaderLocal(result.cartCount);
@@ -342,7 +344,7 @@ async function removeCartItem(productId) {
 function updateItemTotal(quantity, price, totalElement) {
     const total = quantity * price;
     totalElement.textContent = formatPrice(total);
-    
+
     // No animation to prevent jumping
 }
 
@@ -359,7 +361,7 @@ async function updateCartSummaryOnly() {
     try {
         const response = await fetch('/cart/api');
         if (!response.ok) return;
-        
+
         const cartItems = await response.json();
         updateCartSummary(cartItems);
     } catch (error) {
@@ -370,21 +372,21 @@ async function updateCartSummaryOnly() {
 // Update cart summary
 function updateCartSummary(cartItems) {
     let subtotal = 0;
-    
+
     cartItems.forEach(item => {
         const price = parseFloat(item.price);
         subtotal += price * item.quantity;
     });
-    
+
     const shipping = 15000; // 15,000 VND
     const vat = 0;
     const total = subtotal + shipping + vat;
-    
+
     document.querySelector('.subtotal').textContent = formatPrice(subtotal);
     document.querySelector('.shipping').textContent = formatPrice(shipping);
     document.querySelector('.vat').textContent = formatPrice(vat);
     document.querySelector('.total').textContent = formatPrice(total);
-    
+
     // Remove animation to prevent jumping
     const summary = document.querySelector('.cart-summary');
     if (summary) {
@@ -404,22 +406,22 @@ function showToast(message, type = 'success') {
         toast.innerHTML = '<i class="fas fa-check-circle"></i><span></span>';
         document.body.appendChild(toast);
     }
-    
+
     const toastSpan = toast.querySelector('span');
     const toastIcon = toast.querySelector('i');
-    
+
     if (toastSpan) toastSpan.textContent = message;
-    
+
     // Remove existing type classes
     toast.classList.remove('warning', 'error', 'success');
-    
+
     // Add type class
     if (type !== 'success') {
         toast.classList.add(type);
     } else {
         toast.classList.add('success');
     }
-    
+
     // Update icon based on type
     if (toastIcon) {
         if (type === 'warning') {
@@ -430,9 +432,9 @@ function showToast(message, type = 'success') {
             toastIcon.className = 'fas fa-check-circle';
         }
     }
-    
+
     toast.classList.add('show');
-    
+
     setTimeout(() => {
         toast.classList.remove('show');
     }, 3000);
@@ -454,42 +456,76 @@ function updateCartCountInHeaderLocal(count) {
 document.getElementById('updateCartBtn')?.addEventListener('click', async function() {
     // Reload cart items to ensure all changes are saved
     await loadCartItems();
-    alert('Đã cập nhật giỏ hàng thành công!');
+    showToast('Đã cập nhật giỏ hàng thành công!', 'success');
 });
 
+// Checkout confirmation modal
+function showCheckoutConfirmation() {
+    return new Promise((resolve) => {
+        const confirmed = confirm('Bạn có chắc chắn muốn đặt hàng?\n\nĐơn hàng sẽ được tạo với địa chỉ và số điện thoại trong tài khoản của bạn.');
+        resolve(confirmed);
+    });
+}
 
-// Checkout button - Hard coded to just clear cart
+// Checkout button - Create order from cart
 document.getElementById('checkoutBtn')?.addEventListener('click', async function(e) {
     e.preventDefault();
-    
+
+    // Kiểm tra nếu giỏ hàng trống
+    const cartItems = document.querySelectorAll('.cart-item');
+    if (cartItems.length === 0) {
+        showToast('Giỏ hàng trống!', 'warning');
+        return;
+    }
+
+    // Show confirmation
+    const confirmed = await showCheckoutConfirmation();
+    if (!confirmed) {
+        return;
+    }
+
+    // Hiển thị loading
+    const originalText = this.innerHTML;
+    this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý...';
+    this.disabled = true;
+
     try {
-        // Clear cart
-        const response = await fetch('/cart/api/clear', {
+        // Create order from cart
+        const response = await fetch('/cart/api/checkout', {
             method: 'POST'
         });
-        
+
         const result = await response.json();
-        
+
         if (result.success) {
             // Update cart count
             updateCartCountInHeaderLocal(0);
-            // Also update via shared function
             if (typeof updateCartCountInHeader === 'function') {
                 updateCartCountInHeader();
             }
-            
-            // Show success message
-            showToast('Đã đặt hàng thành công!', 'success');
-            
-            // Reload cart to show empty state
-            await loadCartItems();
+
+            // Show success message with order ID
+            showToast('✅ Đặt hàng thành công! Mã đơn hàng: #' + result.orderId, 'success');
+
+            // Redirect to account orders page after 2 seconds
+            setTimeout(() => {
+                window.location.href = '/account#orders';
+            }, 2000);
         } else {
             // Show error message
-            showToast('Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.', 'error');
+            showToast(result.message || 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.', 'error');
+
+            // Restore button
+            this.innerHTML = originalText;
+            this.disabled = false;
         }
     } catch (error) {
         console.error('Error during checkout:', error);
         showToast('Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.', 'error');
+
+        // Restore button
+        this.innerHTML = originalText;
+        this.disabled = false;
     }
 });
 
@@ -507,9 +543,9 @@ window.addEventListener('scroll', function() {
 document.querySelector('.newsletter-form')?.addEventListener('submit', function(e) {
     e.preventDefault();
     const email = this.querySelector('input[type="email"]').value;
-    
+
     if (email) {
-        alert('Đăng ký thành công!');
+        showToast('Đăng ký thành công!', 'success');
         this.reset();
     }
 });
@@ -517,7 +553,7 @@ document.querySelector('.newsletter-form')?.addEventListener('submit', function(
 // Initialize cart on page load
 document.addEventListener('DOMContentLoaded', async function() {
     await loadCartItems();
-    
+
     // Load cart count in header (uses shared function from cart-utils.js)
     if (typeof updateCartCountInHeader === 'function') {
         updateCartCountInHeader();

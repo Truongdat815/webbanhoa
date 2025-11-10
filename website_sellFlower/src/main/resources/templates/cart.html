@@ -8,179 +8,199 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" th:href="@{/css/cart.css}">
     <link rel="stylesheet" th:href="@{/css/home.css}">
+    <style>
+        /* Additional styles for loading state */
+        .checkout-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .checkout-btn i.fa-spinner {
+            margin-right: 8px;
+        }
+
+        /* Animation for spinner */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .fa-spin {
+            animation: spin 1s linear infinite;
+        }
+    </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo">
-            <a href="/home">
-                <h1>FIAMA</h1>
-            </a>
-        </div>
-        <nav class="nav-links">
-            <a href="/home">Trang chủ</a>
-            <a href="/product">Sản phẩm</a>
-            <a href="#">Liên hệ</a>
-        </nav>
-        <div class="utility-nav">
-            <div th:if="${isLoggedIn}" class="user-dropdown">
-                <a href="#" class="user-link">
-                    <i class="fas fa-user"></i>
-                    <span th:text="${userDisplayName}">User</span>
-                </a>
-                <div class="dropdown-menu">
-                    <a href="/account">Tài khoản</a>
-                    <a href="/logout">Đăng xuất</a>
-                </div>
-            </div>
-            <a th:if="${!isLoggedIn}" href="/login" class="user-link">
-                <i class="fas fa-user"></i>
-                <span>Đăng nhập</span>
-            </a>
-            <a href="/cart" class="cart-icon-wrapper">
-                <i class="fas fa-shopping-bag"></i>
-                <span class="cart-count" id="cartCount">0</span>
-            </a>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <main class="main-content">
-        <div class="cart-container">
-            <h1 class="cart-title">Giỏ hàng của tôi</h1>
-            
-            <!-- Empty Cart State -->
-            <div class="cart-empty" id="emptyCart">
-                <div class="empty-cart-icon">
-                    <i class="fas fa-shopping-bag"></i>
-                </div>
-                <p class="empty-cart-message">Giỏ hàng trống</p>
-                <a href="/home" class="continue-browsing">Tiếp tục mua sắm</a>
-            </div>
-
-            <!-- Cart with Items -->
-            <div class="cart-with-items" id="cartWithItems" style="display: none;">
-                <div class="cart-items-section">
-                    <div class="cart-items" id="cartItemsList">
-                        <!-- Cart items will be dynamically loaded here -->
-                    </div>
-                    
-                    <!-- Update Cart Section -->
-                    <div class="cart-actions">
-                        <button class="update-cart-btn" id="updateCartBtn">Cập nhật giỏ hàng</button>
-                    </div>
-                </div>
-
-                <div class="cart-summary">
-                    <h2 class="summary-title">Tổng giỏ hàng</h2>
-                    <div class="summary-row">
-                        <span>Tạm tính</span>
-                        <span class="subtotal">₫0</span>
-                    </div>
-                    <div class="summary-row">
-                        <span>Phí vận chuyển</span>
-                        <span class="shipping">₫15.000</span>
-                    </div>
-                    <div class="summary-row">
-                        <span>Thuế VAT</span>
-                        <span class="vat">₫0</span>
-                    </div>
-                    <div class="summary-divider"></div>
-                    <div class="summary-row total-row">
-                        <span>Tổng cộng</span>
-                        <span class="total">₫0</span>
-                    </div>
-                    <button class="checkout-btn" id="checkoutBtn">
-                        <span>Đặt hàng</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-content">
-            <!-- Column 1: Opening Time -->
-            <div class="footer-column">
-                <h4>Giờ mở cửa</h4>
-                <div class="footer-opening-time">
-                    <div class="opening-time-row">
-                        <span class="opening-day">Thứ 2 - Thứ 6:</span>
-                        <span class="opening-hours">8:00 - 22:00</span>
-                    </div>
-                    <div class="opening-time-row">
-                        <span class="opening-day">Thứ 7:</span>
-                        <span class="opening-hours">9:00 - 20:00</span>
-                    </div>
-                    <div class="opening-time-row">
-                        <span class="opening-day">Chủ nhật:</span>
-                        <span class="opening-hours">14:00 - 18:00</span>
-                    </div>
-                    <p class="footer-holiday">Chúng tôi làm việc cả ngày lễ</p>
-                </div>
-            </div>
-            
-            <!-- Column 2: Contact -->
-            <div class="footer-column">
-                <h4>Liên hệ</h4>
-                <div class="footer-contact-info">
-                    <p><i class="fas fa-map-marker-alt"></i> Thành phố Hồ Chí Minh, Việt Nam</p>
-                    <p><i class="fas fa-phone"></i> +84 123 456 789</p>
-                    <p><i class="fas fa-envelope"></i> info@fiama.com</p>
-                </div>
-            </div>
-            
-            <!-- Column 3: Central Section with Logo, Social, Apps -->
-            <div class="footer-column footer-center-column">
-                <div class="footer-logo-center">FIAMA</div>
-                <div class="footer-social-icons">
-                    <a href="#" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social-icon" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-icon" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                </div>
-                <div class="footer-app-buttons">
-                    <a href="#" class="app-button app-store">
-                        <i class="fab fa-apple"></i>
-                        <span>Tải từ APP STORE</span>
-                    </a>
-                    <a href="#" class="app-button google-play">
-                        <i class="fab fa-google-play"></i>
-                        <span>Tải từ GOOGLE PLAY</span>
-                    </a>
-                </div>
-            </div>
-            
-            <!-- Column 4: My Account -->
-            <div class="footer-column">
-                <h4>Tài khoản của tôi</h4>
-                <ul>
-                    <li><a href="/account">Tài khoản của tôi</a></li>
-                    <li><a href="/cart">Giỏ hàng</a></li>
-                    <li><a href="/account#orders">Lịch sử đơn hàng</a></li>
-                </ul>
-            </div>
-            
-            <!-- Column 5: Customer Service -->
-            <div class="footer-column">
-                <h4>Dịch vụ khách hàng</h4>
-                <ul>
-                    <li><a href="#">Điều khoản sử dụng</a></li>
-                    <li><a href="#">Chính sách bảo mật</a></li>
-                </ul>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Toast Notification -->
-    <div class="toast" id="toast">
-        <i class="fas fa-check-circle"></i>
-        <span>Đã cập nhật!</span>
+<!-- Header -->
+<header class="header">
+    <div class="logo">
+        <a href="/home">
+            <h1>FIAMA</h1>
+        </a>
     </div>
+    <nav class="nav-links">
+        <a href="/home">Trang chủ</a>
+        <a href="/product">Sản phẩm</a>
+        <a href="#">Liên hệ</a>
+    </nav>
+    <div class="utility-nav">
+        <div th:if="${isLoggedIn}" class="user-dropdown">
+            <a href="#" class="user-link">
+                <i class="fas fa-user"></i>
+                <span th:text="${userDisplayName}">User</span>
+            </a>
+            <div class="dropdown-menu">
+                <a href="/account">Tài khoản</a>
+                <a href="/logout">Đăng xuất</a>
+            </div>
+        </div>
+        <a th:if="${!isLoggedIn}" href="/login" class="user-link">
+            <i class="fas fa-user"></i>
+            <span>Đăng nhập</span>
+        </a>
+        <a href="/cart" class="cart-icon-wrapper">
+            <i class="fas fa-shopping-bag"></i>
+            <span class="cart-count" id="cartCount">0</span>
+        </a>
+    </div>
+</header>
 
-    <script src="/js/cart-utils.js"></script>
-    <script src="/js/cart.js"></script>
+<!-- Main Content -->
+<main class="main-content">
+    <div class="cart-container">
+        <h1 class="cart-title">Giỏ hàng của tôi</h1>
+
+        <!-- Empty Cart State -->
+        <div class="cart-empty" id="emptyCart">
+            <div class="empty-cart-icon">
+                <i class="fas fa-shopping-bag"></i>
+            </div>
+            <p class="empty-cart-message">Giỏ hàng trống</p>
+            <a href="/home" class="continue-browsing">Tiếp tục mua sắm</a>
+        </div>
+
+        <!-- Cart with Items -->
+        <div class="cart-with-items" id="cartWithItems" style="display: none;">
+            <div class="cart-items-section">
+                <div class="cart-items" id="cartItemsList">
+                    <!-- Cart items will be dynamically loaded here -->
+                </div>
+
+                <!-- Update Cart Section -->
+                <div class="cart-actions">
+                    <button class="update-cart-btn" id="updateCartBtn">Cập nhật giỏ hàng</button>
+                </div>
+            </div>
+
+            <div class="cart-summary">
+                <h2 class="summary-title">Tổng giỏ hàng</h2>
+                <div class="summary-row">
+                    <span>Tạm tính</span>
+                    <span class="subtotal">₫0</span>
+                </div>
+                <div class="summary-row">
+                    <span>Phí vận chuyển</span>
+                    <span class="shipping">₫15.000</span>
+                </div>
+                <div class="summary-row">
+                    <span>Thuế VAT</span>
+                    <span class="vat">₫0</span>
+                </div>
+                <div class="summary-divider"></div>
+                <div class="summary-row total-row">
+                    <span>Tổng cộng</span>
+                    <span class="total">₫0</span>
+                </div>
+                <button class="checkout-btn" id="checkoutBtn">
+                    <span>Đặt hàng</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-content">
+        <!-- Column 1: Opening Time -->
+        <div class="footer-column">
+            <h4>Giờ mở cửa</h4>
+            <div class="footer-opening-time">
+                <div class="opening-time-row">
+                    <span class="opening-day">Thứ 2 - Thứ 6:</span>
+                    <span class="opening-hours">8:00 - 22:00</span>
+                </div>
+                <div class="opening-time-row">
+                    <span class="opening-day">Thứ 7:</span>
+                    <span class="opening-hours">9:00 - 20:00</span>
+                </div>
+                <div class="opening-time-row">
+                    <span class="opening-day">Chủ nhật:</span>
+                    <span class="opening-hours">14:00 - 18:00</span>
+                </div>
+                <p class="footer-holiday">Chúng tôi làm việc cả ngày lễ</p>
+            </div>
+        </div>
+
+        <!-- Column 2: Contact -->
+        <div class="footer-column">
+            <h4>Liên hệ</h4>
+            <div class="footer-contact-info">
+                <p><i class="fas fa-map-marker-alt"></i> Thành phố Hồ Chí Minh, Việt Nam</p>
+                <p><i class="fas fa-phone"></i> +84 123 456 789</p>
+                <p><i class="fas fa-envelope"></i> info@fiama.com</p>
+            </div>
+        </div>
+
+        <!-- Column 3: Central Section with Logo, Social, Apps -->
+        <div class="footer-column footer-center-column">
+            <div class="footer-logo-center">FIAMA</div>
+            <div class="footer-social-icons">
+                <a href="#" class="social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-icon" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            </div>
+            <div class="footer-app-buttons">
+                <a href="#" class="app-button app-store">
+                    <i class="fab fa-apple"></i>
+                    <span>Tải từ APP STORE</span>
+                </a>
+                <a href="#" class="app-button google-play">
+                    <i class="fab fa-google-play"></i>
+                    <span>Tải từ GOOGLE PLAY</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Column 4: My Account -->
+        <div class="footer-column">
+            <h4>Tài khoản của tôi</h4>
+            <ul>
+                <li><a href="/account">Tài khoản của tôi</a></li>
+                <li><a href="/cart">Giỏ hàng</a></li>
+                <li><a href="/account#orders">Lịch sử đơn hàng</a></li>
+            </ul>
+        </div>
+
+        <!-- Column 5: Customer Service -->
+        <div class="footer-column">
+            <h4>Dịch vụ khách hàng</h4>
+            <ul>
+                <li><a href="#">Điều khoản sử dụng</a></li>
+                <li><a href="#">Chính sách bảo mật</a></li>
+            </ul>
+        </div>
+    </div>
+</footer>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span>Đã cập nhật!</span>
+</div>
+
+<script src="/js/cart-utils.js"></script>
+<script src="/js/cart.js"></script>
 </body>
 </html>
-
