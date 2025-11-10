@@ -205,9 +205,10 @@ public class AdminController {
         }
 
         try {
-            boolean deleted = productService.deleteProduct(id);
+//            boolean deleted = productService.deleteProduct(id);
+            Product deleted = productService.deleteProduct(id);
             Map<String, Object> response = new HashMap<>();
-            if (deleted) {
+            if (deleted != null) {
                 response.put("success", true);
                 response.put("message", "Xóa sản phẩm thành công");
                 return ResponseEntity.ok(response);

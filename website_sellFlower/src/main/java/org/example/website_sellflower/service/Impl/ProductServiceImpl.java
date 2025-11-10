@@ -43,17 +43,18 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean deleteProduct(Long id) {
+    public Product deleteProduct(Long id) {
         try {
             Product product = productRepository.findById(id).orElse(null);
             if (product != null) {
                 // Check if product is used in any order
                 // If product has reviews, cascade will handle it
                 // But if product is in order_details, we need to handle it
-                productRepository.delete(product);
-                return true;
+//                productRepository.delete(product);
+                product.setStockQuantity(0);
+                return productRepository.save(product);
             }
-            return false;
+            return null;
         } catch (Exception e) {
             System.err.println("Error deleting product: " + e.getMessage());
             e.printStackTrace();

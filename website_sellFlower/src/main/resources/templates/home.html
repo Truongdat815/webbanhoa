@@ -89,7 +89,9 @@
                         <div class="carousel-track" id="newArrivalTrack">
                             <div class="products-grid carousel-grid">
                                 <!-- Dynamic Products from latestProducts -->
-                                <div th:each="product : ${latestProducts}" class="product-card"
+                                <div th:each="product : ${latestProducts}"
+                                     th:if="${product.stockQuantity > 0}"
+                                     class="product-card"
                                      th:attr="data-product-id=${product.id}, data-product-name=${product.name},data-product-reviews=${product.getReviews().size()},data-product-rating=${product.getAverageRating()}, data-product-price=${product.price}, data-product-image=${product.imageUrl}, data-product-stock=${product.stockQuantity}, data-product-description=${product.description != null ? product.description : ''}">
 <!--                                    <div class="product-badge" th:if="${product.discountPercentage != null and product.discountPercentage > 0}">-->
 <!--                                        <span class="badge-text" th:text="${product.discountPercentage + '%'}">10%</span>-->
@@ -138,7 +140,9 @@
                         <div class="carousel-track" id="topSalesTrack">
                             <div class="products-grid carousel-grid">
                                 <!-- Dynamic Products from topOrderedProducts -->
-                                <div th:each="product : ${topOrderedProducts}" class="product-card"
+                                <div th:each="product : ${topOrderedProducts}"
+                                     th:if="${product.stockQuantity > 0}"
+                                     class="product-card"
                                      th:attr="data-product-id=${product.id}, data-product-name=${product.name}, data-product-price=${product.price},data-product-reviews=${product.getReviews().size()},data-product-rating=${product.getAverageRating()}, data-product-image=${product.imageUrl}, data-product-stock=${product.stockQuantity}, data-product-description=${product.description != null ? product.description : ''}">
 <!--                                    <div class="product-badge" th:if="${product.discountPercentage != null and product.discountPercentage > 0}">-->
 <!--                                        <span class="badge-text" th:text="${product.discountPercentage + '%'}">15%</span>-->
@@ -186,7 +190,9 @@
             <h2 class="section-title">SẢN PHẨM NỔI BẬT</h2>
             <div class="products-grid">
                 <!-- Dynamic Products from topProminentProducts -->
-                <div th:each="product : ${topProminentProducts}" class="product-card"
+                <div th:each="product : ${topProminentProducts}"
+                     th:if="${product.stockQuantity > 0}"
+                     class="product-card"
                      th:attr="data-product-id=${product.id}, data-product-name=${product.name}, data-product-price=${product.price}, data-product-reviews=${product.getReviews().size()}, data-product-rating=${product.getAverageRating()}, data-product-image=${product.imageUrl}, data-product-stock=${product.stockQuantity}, data-product-description=${product.description != null ? product.description : ''}">
                     <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
                         <img th:src="${product.imageUrl}" th:alt="${product.name}" class="product-image">
