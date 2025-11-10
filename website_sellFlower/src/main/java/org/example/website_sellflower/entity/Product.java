@@ -1,5 +1,6 @@
 package org.example.website_sellflower.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class Product {
     private String category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<Review> reviews;
 
     public Product() {
