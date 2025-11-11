@@ -1031,6 +1031,7 @@ body {
     backdrop-filter: blur(0px);
     transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
     backdrop-filter 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: -9999;
 }
 
 .quick-view-modal.active .modal-overlay {

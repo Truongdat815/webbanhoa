@@ -1,4 +1,4 @@
-package org.example.website_sellflower.service.Impl;
+package org.example.website_sellflower.service.impl;
 
 import org.example.website_sellflower.entity.Product;
 import org.example.website_sellflower.repository.ProductRepository;
@@ -35,7 +35,6 @@ public class ProductServiceImpl implements ProductService {
             product.setPrice(updateproduct.getPrice());
             product.setStockQuantity(updateproduct.getStockQuantity());
             product.setImageUrl(updateproduct.getImageUrl());
-            product.setCategory(updateproduct.getCategory());
 
             return productRepository.save(product);
         }

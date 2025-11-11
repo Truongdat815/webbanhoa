@@ -56,11 +56,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         try {
-            if (deleteType === 'order') {
-                await deleteOrder(itemId);
-            } else {
-                await deleteProduct(itemId);
-            }
+            // if (deleteType === 'order') {
+            //     await deleteOrder(itemId);
+            // } else {
+            //     await deleteProduct(itemId);
+            // }
+            await deleteProduct(itemId);
         } catch (error) {
             console.error('Error deleting item:', error);
             showToast('Có lỗi xảy ra khi xóa: ' + error.message, 'error');
@@ -96,12 +97,20 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Order Status Update
-    const statusSelects = document.querySelectorAll('.status-select[data-id]');
-    statusSelects.forEach(select => {
-        select.addEventListener('change', function() {
+    // const statusSelects = document.querySelectorAll('.status-select[data-id]');
+    // statusSelects.forEach(select => {
+    //     select.addEventListener('change', function() {
+    //         const orderId = this.getAttribute('data-id');
+    //         const newStatus = this.value;
+    //         updateOrderStatus(orderId, newStatus);
+    //     });
+    // });
+    const updateStatusButtons = document.querySelectorAll('.btn-update-status[data-id]');
+    updateStatusButtons.forEach(button => {
+        button.addEventListener('click', function() {
             const orderId = this.getAttribute('data-id');
-            const newStatus = this.value;
-            updateOrderStatus(orderId, newStatus);
+            const status = this.getAttribute('data-status');
+            updateOrderStatus(orderId, status);
         });
     });
 
@@ -193,31 +202,31 @@ async function deleteProduct(productId) {
             showToast(data.message || 'Xóa sản phẩm thành công', 'success');
             // Remove row from table - find button first, then get parent row
             const deleteButton = document.querySelector(`.btn-delete[data-id="${productId}"]`);
-            if (deleteButton) {
-                // Support both table row and grid card
-                const row = deleteButton.closest('tr');
-                const card = deleteButton.closest('.product-card-admin');
-                const target = row || card;
-                if (target) {
-                    target.style.animation = 'fadeOut 0.3s ease-out';
-                    setTimeout(() => {
-                        target.remove();
-                        // Check if list is empty
-                        const container = document.querySelector('#productsTableBody');
-                        if (container) {
-                            const remainingRows = container.querySelectorAll('tr, .product-card-admin');
-                            checkEmptyState(remainingRows.length);
-                        }
-                    }, 300);
-                } else {
-                    console.error('Product element not found for:', productId);
-                    setTimeout(() => window.location.reload(), 1000);
-                }
-            } else {
-                console.error('Delete button not found for product:', productId);
-                // Reload page to refresh
-                setTimeout(() => window.location.reload(), 1000);
-            }
+            // if (deleteButton) {
+            //     // Support both table row and grid card
+            //     const row = deleteButton.closest('tr');
+            //     const card = deleteButton.closest('.product-card-admin');
+            //     const target = row || card;
+            //     if (target) {
+            //         target.style.animation = 'fadeOut 0.3s ease-out';
+            //         setTimeout(() => {
+            //             target.remove();
+            //             // Check if list is empty
+            //             const container = document.querySelector('#productsTableBody');
+            //             if (container) {
+            //                 const remainingRows = container.querySelectorAll('tr, .product-card-admin');
+            //                 checkEmptyState(remainingRows.length);
+            //             }
+            //         }, 300);
+            //     } else {
+            //         console.error('Product element not found for:', productId);
+            //         setTimeout(() => window.location.reload(), 1000);
+            //     }
+            // } else {
+            //     console.error('Delete button not found for product:', productId);
+            //     // Reload page to refresh
+            //     setTimeout(() => window.location.reload(), 1000);
+            // }
         } else {
             showToast(data.message || 'Có lỗi xảy ra khi xóa sản phẩm', 'error');
         }
@@ -337,11 +346,11 @@ async function handleProductSubmit(e) {
         price: parseFloat(document.getElementById('price').value),
         stockQuantity: parseInt(document.getElementById('stockQuantity').value),
         imageUrl: document.getElementById('imageUrl').value,
-        category: document.getElementById('category').value
+        // category: document.getElementById('category').value
     };
 
     // Validation
-    if (!formData.name || !formData.price || !formData.stockQuantity || !formData.imageUrl || !formData.category) {
+    if (!formData.name || !formData.price || !formData.stockQuantity || !formData.imageUrl ) {
         showToast('Vui lòng điền đầy đủ thông tin bắt buộc', 'error');
         return;
     }
@@ -449,8 +458,14 @@ async function updateOrderStatus(orderId, status) {
 
         if (data.success) {
             showToast(data.message || 'Cập nhật trạng thái đơn hàng thành công', 'success');
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
         } else {
             showToast(data.message || 'Có lỗi xảy ra khi cập nhật trạng thái', 'error');
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
             // Revert select value
             const select = document.querySelector(`.status-select[data-id="${orderId}"]`);
             if (select) {
@@ -520,7 +535,7 @@ function handleSearch() {
 
         rows.forEach(row => {
             const customer = row.querySelector('td:nth-child(2)')?.textContent.toLowerCase() || '';
-            const status = row.querySelector('.status-select')?.value || '';
+            const status = row.querySelector('.status-select').getAttribute('value') || '';
             const matchesSearch = customer.includes(searchTerm);
             const matchesStatus = !statusFilter || status === statusFilter;
 

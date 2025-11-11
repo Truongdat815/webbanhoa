@@ -2,19 +2,19 @@
 -- This file will be executed automatically by Spring Boot on application startup
 
 -- Insert sample products
-INSERT INTO product (name, description, price, stock_quantity, image_url, category) VALUES
-(N'Hoa hồng đỏ', N'Bó hoa hồng đỏ tươi thắm, biểu tượng của tình yêu', 150000, 50, 'https://i.pinimg.com/736x/41/76/92/417692b48bf67c14ad665effe693866a.jpg', N'Hoa hồng'),
-(N'Hoa tulip vàng', N'Hoa tulip vàng rực rỡ, mang ý nghĩa may mắn', 120000, 30, 'https://i.pinimg.com/736x/ab/a7/e8/aba7e806b3c9adf4c570112ebee82d0f.jpg', N'Hoa tulip'),
-(N'Hoa ly trắng', N'Hoa ly trắng tinh khôi, tượng trưng cho sự thuần khiết', 200000, 25, 'https://i.pinimg.com/736x/14/d0/12/14d0126af345657da1127ddbf63d98c8.jpg', N'Hoa ly'),
-(N'Hoa cúc họa mi', N'Hoa cúc họa mi nhỏ xinh, phù hợp làm quà tặng', 80000, 40, 'https://i.pinimg.com/1200x/43/0b/9d/430b9df34a1238b07047edbf2d1499e9.jpg', N'Hoa cúc'),
-(N'Hoa hướng dương', N'Hoa hướng dương tươi sáng, mang năng lượng tích cực', 100000, 35, 'https://i.pinimg.com/1200x/bc/ef/3d/bcef3d2ad25accd68df4aeb9215f3503.jpg', N'Hoa hướng dương'),
-(N'Hoa hồng trắng', N'Bó hoa hồng trắng tinh khôi, biểu tượng của sự trong sáng', 160000, 45, 'https://i.pinimg.com/736x/fc/98/67/fc98672ec8121f08b9d30717cc02bee3.jpg', N'Hoa hồng'),
-(N'Hoa tulip đỏ', N'Hoa tulip đỏ rực rỡ, mang ý nghĩa đam mê', 125000, 28, 'https://i.pinimg.com/1200x/90/49/a1/9049a1d97734ca5d3152d39bd335fc8b.jpg', N'Hoa tulip'),
-(N'Hoa cẩm chướng hồng', N'Hoa cẩm chướng hồng ngọt ngào, tặng mẹ rất ý nghĩa', 90000, 50, 'https://i.pinimg.com/1200x/5f/2f/d8/5f2fd89f642a94e33c0ebeb03df2f3f0.jpg', N'Hoa cẩm chướng'),
-(N'Hoa thược dược', N'Hoa thược dược quý phái, tượng trưng cho sự sang trọng', 300000, 15, 'https://i.pinimg.com/736x/e6/b9/3b/e6b93bfd05a63d129eec9345a2eba153.jpg', N'Hoa thược dược'),
-(N'Hoa baby mix', N'Hoa baby nhiều màu sắc, trang trí tiệc cưới lý tưởng', 70000, 60, 'https://i.pinimg.com/736x/be/79/62/be79625a94b526b89d2d23a703ea06a7.jpg', N'Hoa baby'),
-(N'Hoa đồng tiền cam', N'Hoa đồng tiền cam tươi sáng, mang lại niềm vui', 110000, 30, 'https://i.pinimg.com/1200x/50/89/1e/50891e0490ba1125f3d7102a990f12f5.jpg', N'Hoa đồng tiền'),
-(N'Hoa lavender', N'Hoa lavender thơm dịu nhẹ, giúp thư giãn tinh thần', 95000, 25, 'https://i.pinimg.com/1200x/64/9e/85/649e85d91161e5996c36deaf626c5f53.jpg', N'Hoa lavender');
+INSERT INTO product (name, description, price, stock_quantity, image_url) VALUES
+(N'Hoa hồng đỏ', N'Bó hoa hồng đỏ tươi thắm, biểu tượng của tình yêu', 150000, 50, 'https://i.pinimg.com/736x/41/76/92/417692b48bf67c14ad665effe693866a.jpg'),
+(N'Hoa tulip vàng', N'Hoa tulip vàng rực rỡ, mang ý nghĩa may mắn', 120000, 30, 'https://i.pinimg.com/736x/ab/a7/e8/aba7e806b3c9adf4c570112ebee82d0f.jpg'),
+(N'Hoa ly trắng', N'Hoa ly trắng tinh khôi, tượng trưng cho sự thuần khiết', 200000, 25, 'https://i.pinimg.com/736x/14/d0/12/14d0126af345657da1127ddbf63d98c8.jpg'),
+(N'Hoa cúc họa mi', N'Hoa cúc họa mi nhỏ xinh, phù hợp làm quà tặng', 80000, 40, 'https://i.pinimg.com/1200x/43/0b/9d/430b9df34a1238b07047edbf2d1499e9.jpg'),
+(N'Hoa hướng dương', N'Hoa hướng dương tươi sáng, mang năng lượng tích cực', 100000, 35, 'https://i.pinimg.com/1200x/bc/ef/3d/bcef3d2ad25accd68df4aeb9215f3503.jpg'),
+(N'Hoa hồng trắng', N'Bó hoa hồng trắng tinh khôi, biểu tượng của sự trong sáng', 160000, 45, 'https://i.pinimg.com/736x/fc/98/67/fc98672ec8121f08b9d30717cc02bee3.jpg'),
+(N'Hoa tulip đỏ', N'Hoa tulip đỏ rực rỡ, mang ý nghĩa đam mê', 125000, 28, 'https://i.pinimg.com/1200x/90/49/a1/9049a1d97734ca5d3152d39bd335fc8b.jpg'),
+(N'Hoa cẩm chướng hồng', N'Hoa cẩm chướng hồng ngọt ngào, tặng mẹ rất ý nghĩa', 90000, 50, 'https://i.pinimg.com/1200x/5f/2f/d8/5f2fd89f642a94e33c0ebeb03df2f3f0.jpg'),
+(N'Hoa thược dược', N'Hoa thược dược quý phái, tượng trưng cho sự sang trọng', 300000, 15, 'https://i.pinimg.com/736x/e6/b9/3b/e6b93bfd05a63d129eec9345a2eba153.jpg'),
+(N'Hoa baby mix', N'Hoa baby nhiều màu sắc, trang trí tiệc cưới lý tưởng', 70000, 60, 'https://i.pinimg.com/736x/be/79/62/be79625a94b526b89d2d23a703ea06a7.jpg'),
+(N'Hoa đồng tiền cam', N'Hoa đồng tiền cam tươi sáng, mang lại niềm vui', 110000, 30, 'https://i.pinimg.com/1200x/50/89/1e/50891e0490ba1125f3d7102a990f12f5.jpg'),
+(N'Hoa lavender', N'Hoa lavender thơm dịu nhẹ, giúp thư giãn tinh thần', 95000, 25, 'https://i.pinimg.com/1200x/64/9e/85/649e85d91161e5996c36deaf626c5f53.jpg');
 
 -- Insert sample accounts
 INSERT INTO account (username, email, password, full_name, phone, address, role, created_date,status) VALUES

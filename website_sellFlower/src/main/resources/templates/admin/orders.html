@@ -78,12 +78,10 @@
                     </div>
                     <select class="filter-select" id="statusFilter">
                         <option value="">Tất cả trạng thái</option>
-                        <option value="pending_payment">Chờ thanh toán</option>
-                        <option value="paid">Đã thanh toán</option>
-<!--                        <option value="processing">Đang xử lý</option>-->
-<!--                        <option value="shipped">Đang giao hàng</option>-->
-<!--                        <option value="delivered">Đã giao hàng</option>-->
-<!--                        <option value="cancelled">Đã hủy</option>-->
+                        <option value="REQUEST">Yêu cầu xác nhận</option>
+                        <option value="DELIVERY">Đang giao</option>
+                        <option value="COMPLETED">Đã hoàn thành</option>
+                        <option value="REJECTED">Đã từ chối</option>
                     </select>
                 </div>
 
@@ -106,22 +104,17 @@
                                 <td th:text="${order.account != null ? order.account.getFullName() : 'N/A'}">Khách hàng</td>
                                 <td th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm') : 'N/A'}">Ngày</td>
                                 <td th:text="${order.totalAmount != null ? '₫' + #numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') : '₫0'}">₫0</td>
-                                <td>
-                                    <select class="status-select" th:data-id="${order.id}" th:value="${order.status}">
-                                        <option value="pending_payment">Chờ thanh toán</option>
-                                        <option value="paid">Đã thanh toán</option>
-<!--                                        <option value="processing">Đang xử lý</option>-->
-<!--                                        <option value="shipped">Đang giao hàng</option>-->
-<!--                                        <option value="delivered">Đã giao hàng</option>-->
-<!--                                        <option value="cancelled">Đã hủy</option>-->
-                                    </select>
+                                <td th:if="${order.status.equals('COMPLETED')}" class="status-select" th:value="${order.getStatus()}">Đã hoàn thành</td>
+                                <td th:if="${order.status.equals('REQUEST')}" class="status-select" th:value="${order.getStatus()}">
+                                    <button class="btn-update-status" th:data-id="${order.id}" th:data-status="DELIVERY">Xác nhận</button>
                                 </td>
+                                <td th:if="${order.status.equals('DELIVERY')}" class="status-select" th:value="${order.getStatus()}">Đang giao</td>
                                 <td>
                                     <div class="action-buttons">
-                                        <a th:href="@{/admin/orders/{id}(id=${order.id})}" class="btn-view" title="Xem chi tiết">
+                                        <a  th:href="@{/admin/orders/{id}(id=${order.id})}" class="btn-view" title="Xem chi tiết">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <button class="btn-delete" th:data-id="${order.id}" th:data-name="${'Đơn hàng #' + order.id}" title="Xóa đơn hàng">
+                                        <button th:if="${order.status.equals('REQUEST')}" class="btn-delete" th:data-id="${order.id}" th:data-name="${'Đơn hàng #' + order.id}" title="Xóa đơn hàng">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>

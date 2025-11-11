@@ -1,4 +1,4 @@
-package org.example.website_sellflower.service.Impl;
+package org.example.website_sellflower.service.impl;
 
 import org.example.website_sellflower.entity.Order;
 import org.example.website_sellflower.entity.OrderDetail;
@@ -23,7 +23,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<Order> getAllOrders() {
-        return repository.findAll();
+        return repository.getAllByOrderDateDesc();
     }
 
     @Override
@@ -114,6 +114,11 @@ public class OrderServiceImpl implements OrderService {
             e.printStackTrace();
             throw new RuntimeException("Không thể xóa đơn hàng: " + e.getMessage(), e);
         }
+    }
+
+    @Override
+    public List<Order> findByStatus(String status) {
+        return repository.findByStatus(status);
     }
 
     @Override

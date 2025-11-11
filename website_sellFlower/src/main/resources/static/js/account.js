@@ -63,8 +63,46 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
+        const saveBtn = profileForm.querySelector('.save-btn');
+        saveBtn.addEventListener('click', function(e) {
+            const updatedInputs = {};
+            inputs.forEach(input => {
+                if (input.value.trim() !== (defaultValues[input.id] || '').trim()) {
+                    updatedInputs[input.id] = input.value.trim();
+                }
+            });
+            if (Object.keys(updatedInputs).length > 0) {
+                updateProfile(updatedInputs).then(r => {
+                    if (r.success) {
+                        // Update default values
+                        Object.keys(updatedInputs).forEach(key => {
+                            defaultValues[key] = updatedInputs[key];
+                        });
+                        alert('Cập nhật thông tin thành công!');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 100);
+                    }else {
+                        alert('Cập nhật thông tin thất bại:');
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 100);
+                    }
+                });
+            }
+        });
     }
 });
+async function updateProfile(inputs) {
+    const response = await fetch('/account/update', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(inputs)
+    });
+    return response.json();
+}
 
 // Change password toggle button
 document.getElementById('changePasswordBtn')?.addEventListener('click', function() {
@@ -98,17 +136,17 @@ function validatePasswordChange() {
         return true;
     }
 
-    const oldPassword = document.getElementById('oldPassword').value.trim();
+    // const oldPassword = document.getElementById('oldPassword').value.trim();
     const newPassword = document.getElementById('newPassword').value.trim();
     const confirmPassword = document.getElementById('confirmPassword').value.trim();
 
     let isValid = true;
     clearPasswordErrors();
 
-    if (!oldPassword) {
-        document.getElementById('oldPasswordError').textContent = 'Vui lòng nhập mật khẩu cũ';
-        isValid = false;
-    }
+    // if (!oldPassword) {
+    //     document.getElementById('oldPasswordError').textContent = 'Vui lòng nhập mật khẩu cũ';
+    //     isValid = false;
+    // }
 
     if (!newPassword) {
         document.getElementById('newPasswordError').textContent = 'Vui lòng nhập mật khẩu mới';
@@ -130,56 +168,89 @@ function validatePasswordChange() {
 }
 
 // Profile form submission
-document.querySelector('.profile-form')?.addEventListener('submit', function(e) {
+document.querySelector('.profile-form')?.addEventListener('submit',  async function (e) {
     e.preventDefault();
 
     const passwordSection = document.getElementById('passwordChangeSection');
     const isPasswordChangeVisible = passwordSection && passwordSection.style.display !== 'none';
-
-    if (isPasswordChangeVisible) {
-        if (!validatePasswordChange()) {
-            return false;
-        }
-
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '/account/change-password';
-
-        const oldPasswordInput = document.createElement('input');
-        oldPasswordInput.type = 'hidden';
-        oldPasswordInput.name = 'oldPassword';
-        oldPasswordInput.value = document.getElementById('oldPassword').value;
-        form.appendChild(oldPasswordInput);
-
-        const newPasswordInput = document.createElement('input');
-        newPasswordInput.type = 'hidden';
-        newPasswordInput.name = 'newPassword';
-        newPasswordInput.value = document.getElementById('newPassword').value;
-        form.appendChild(newPasswordInput);
-
-        const confirmPasswordInput = document.createElement('input');
-        confirmPasswordInput.type = 'hidden';
-        confirmPasswordInput.name = 'confirmPassword';
-        confirmPasswordInput.value = document.getElementById('confirmPassword').value;
-        form.appendChild(confirmPasswordInput);
-
-        document.body.appendChild(form);
-        form.submit();
-        return false;
-    }
 
     const saveBtn = this.querySelector('.save-btn');
     const originalText = saveBtn.innerHTML;
 
     saveBtn.innerHTML = '<i class="fas fa-check"></i> Đã lưu!';
     saveBtn.style.backgroundColor = '#4a5a44';
-
     setTimeout(() => {
         saveBtn.innerHTML = originalText;
         saveBtn.style.backgroundColor = '';
-    }, 2000);
+    }, 500);
 
-    console.log('Profile updated');
+    if (isPasswordChangeVisible) {
+        if (!validatePasswordChange()) {
+            return false;
+        }
+        const inputs = {};
+        inputs['oldPassword'] = document.getElementById('oldPassword').value;
+        inputs['newPassword'] = document.getElementById('newPassword').value;
+
+        const response = await fetch('/account/change-password', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(inputs)
+        });
+        const result = await response.json();
+        if (result.success) {
+            alert('Đổi mật khẩu thành công!');
+            setTimeout(() => {
+                window.location.reload();
+            }, 100);
+        } else {
+            alert('Đổi mật khẩu thất bại: '+ result.message);
+            setTimeout(() => {
+                window.location.reload();
+            }, 100);
+        }
+
+        // const form = document.createElement('form');
+        // form.method = 'POST';
+        // form.action = '/account/change-password';
+        //
+        // const oldPasswordInput = document.createElement('input');
+        // oldPasswordInput.type = 'hidden';
+        // oldPasswordInput.name = 'oldPassword';
+        // oldPasswordInput.value = document.getElementById('oldPassword').value;
+        // form.appendChild(oldPasswordInput);
+        //
+        // const newPasswordInput = document.createElement('input');
+        // newPasswordInput.type = 'hidden';
+        // newPasswordInput.name = 'newPassword';
+        // newPasswordInput.value = document.getElementById('newPassword').value;
+        // form.appendChild(newPasswordInput);
+        //
+        // const confirmPasswordInput = document.createElement('input');
+        // confirmPasswordInput.type = 'hidden';
+        // confirmPasswordInput.name = 'confirmPassword';
+        // confirmPasswordInput.value = document.getElementById('confirmPassword').value;
+        // form.appendChild(confirmPasswordInput);
+        //
+        // document.body.appendChild(form);
+        // form.submit();
+        // return false;
+    }
+
+    // const saveBtn = this.querySelector('.save-btn');
+    // const originalText = saveBtn.innerHTML;
+    //
+    // saveBtn.innerHTML = '<i class="fas fa-check"></i> Đã lưu!';
+    // saveBtn.style.backgroundColor = '#4a5a44';
+    //
+    // setTimeout(() => {
+    //     saveBtn.innerHTML = originalText;
+    //     saveBtn.style.backgroundColor = '';
+    // }, 2000);
+
+    // console.log('Profile updated');
 });
 
 // Add address card
@@ -394,3 +465,45 @@ style.textContent = `
     }
 `;
 document.head.appendChild(style);
+
+window.addEventListener('DOMContentLoaded', function() {
+    const updateStatus = document.querySelectorAll('.updateStatus');
+   updateStatus.forEach(function(element) {
+       element.addEventListener('click', function() {
+           const orderId = this.getAttribute('data-order-id');
+           const newStatus = this.getAttribute('data-new-status');
+           if (confirm('Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng này không?')) {
+               updateOrderStatus(orderId, newStatus);
+           }
+       });
+   });
+});
+async function updateOrderStatus(orderId, status) {
+    try {
+        const response = await fetch(`/admin/api/orders/${orderId}/status`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: status })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert('Cập nhật trạng thái đơn hàng thành công!');
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+        } else {
+            alert('Cập nhật trạng thái đơn hàng thất bại: ' + data.message);
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
+            // Revert select value
+        }
+    } catch (error) {
+        console.error('Error updating order status:', error);
+        showToast('Có lỗi xảy ra khi cập nhật trạng thái đơn hàng', 'error');
+    }
+}

@@ -11,6 +11,8 @@ public interface OrderService {
     public Order updateOrder(Long id, Order order);
     public boolean deleteOrder(Long id);
 
+    public List<Order> findByStatus(String status);
+
     // ← THÊM MỚI
     public List<Order> findByAccountId(Long accountId);
 }

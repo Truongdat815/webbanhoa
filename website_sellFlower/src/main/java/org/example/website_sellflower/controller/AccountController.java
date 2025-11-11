@@ -6,12 +6,11 @@ import org.example.website_sellflower.entity.Order;
 import org.example.website_sellflower.service.AccountService;
 import org.example.website_sellflower.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -90,6 +89,108 @@ public class AccountController {
         model.addAttribute("recentOrderStatusClassMap", recentOrderStatusClassMap);
 
         return "account";
+    }
+
+    @PostMapping("/update")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateAccount(@RequestBody Map<String, String> inputs, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            // Lấy account từ session
+            Account currentAccount = (Account) session.getAttribute("account");
+            if (currentAccount == null) {
+                response.put("success", false);
+                response.put("message", "Phiên đăng nhập đã hết hạn");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
+
+            if (inputs.containsKey("address")) {
+                currentAccount.setAddress(inputs.get("address"));
+            }
+            if (inputs.containsKey("password")) {
+                String newPassword = inputs.get("password");
+                if (newPassword != null && !newPassword.isEmpty()) {
+                    currentAccount.setPassword(newPassword);
+                }
+            }
+            if (inputs.containsKey("username")) {
+                String username = inputs.get("username");
+                currentAccount.setUsername(username);
+            }
+
+            // Cập nhật thông tin từ inputs
+            if (inputs.containsKey("name")) {
+                String fullName = inputs.get("name");
+                currentAccount.setFullName(fullName);
+            }
+
+            if (inputs.containsKey("email")) {
+                currentAccount.setEmail(inputs.get("email"));
+            }
+
+            if (inputs.containsKey("phone")) {
+                currentAccount.setPhone(inputs.get("phone"));
+            }
+
+            // Lưu vào database
+            accountService.updateProfile(currentAccount);
+
+            // Cập nhật lại session
+            session.setAttribute("account", currentAccount);
+
+            response.put("success", true);
+            response.put("message", "Cập nhật thông tin thành công");
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Có lỗi xảy ra: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
+    @PostMapping("/change-password")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> changePassword(@RequestBody Map<String, String> inputs, HttpSession session) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            // Lấy account từ session
+            Account currentAccount = (Account) session.getAttribute("account");
+            if (currentAccount == null) {
+                response.put("success", false);
+                response.put("message", "Phiên đăng nhập đã hết hạn");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+            }
+
+            String oldPassword = inputs.get("oldPassword");
+            String newPassword = inputs.get("newPassword");
+
+            // Kiểm tra mật khẩu cũ
+            if (!currentAccount.getPassword().equals(oldPassword)) {
+                response.put("success", false);
+                response.put("message", "Mật khẩu cũ không đúng");
+                return ResponseEntity.badRequest().body(response);
+            }
+
+            // Cập nhật mật khẩu mới
+            currentAccount.setPassword(newPassword);
+            accountService.updateProfile(currentAccount);
+
+            // Cập nhật lại session
+            session.setAttribute("account", currentAccount);
+
+            response.put("success", true);
+            response.put("message", "Đổi mật khẩu thành công");
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            response.put("success", false);
+            response.put("message", "Có lỗi xảy ra: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 
     private String getStatusClass(String status) {

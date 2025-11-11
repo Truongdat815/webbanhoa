@@ -69,10 +69,10 @@
                     <i class="fas fa-user-circle"></i>
                     <span>Hồ sơ</span>
                 </a>
-                <a href="#addresses" class="nav-item" data-section="addresses">
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>Địa chỉ</span>
-                </a>
+<!--                <a href="#addresses" class="nav-item" data-section="addresses">-->
+<!--                    <i class="fas fa-map-marker-alt"></i>-->
+<!--                    <span>Địa chỉ</span>-->
+<!--                </a>-->
                 <a href="#settings" class="nav-item" data-section="settings">
                     <i class="fas fa-cog"></i>
                     <span>Cài đặt</span>
@@ -161,7 +161,9 @@
                             <td th:text="'#ORD-' + ${order.id}">#ORD-0001</td>
                             <td th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy') : ''}"></td>
                             <td>
-                                <span class="order-status-badge" th:classappend="${orderStatusClassMap != null && orderStatusClassMap.containsKey(order.id) ? orderStatusClassMap.get(order.id) : 'pending'}" th:text="${order.status != null ? #strings.replace(order.status, '_', ' ') : ''}"></span>
+<!--                                <span class="order-status-badge" th:classappend="${orderStatusClassMap != null && orderStatusClassMap.containsKey(order.id) ? orderStatusClassMap.get(order.id) : 'pending'}" th:text="${order.status != null ? #strings.replace(order.status, '_', ' ') : ''}"></span>-->
+                                <span class="order-status-badge" th:text="${order.getStatus()}"></span>
+                                <button th:if="${order.getStatus().equals('DELIVERY')}" class="view-details-btn updateStatus" th:data-new-status="COMPLETED" th:data-order-id="${order.id}">Xác nhận đã giao hàng</button>
                             </td>
                             <td th:if="${order.totalAmount != null}" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
                             <td th:if="${order.totalAmount == null}">0₫</td>
@@ -181,12 +183,20 @@
 
                 <form class="profile-form">
                     <div class="form-group full-width">
+                        <label for="username">Tên đăng nhập</label>
+                        <input type="text" id="username" name="username" th:value="${account.getUsername() != null ? account.getUsername()  : ''}" required>
+                    </div>
+                    <div class="form-group full-width">
                         <label for="name">Họ và tên</label>
                         <input type="text" id="name" name="name" th:value="${accountName != null ? accountName : ''}" required>
                     </div>
                     <div class="form-group full-width">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" th:value="${accountEmail != null ? accountEmail : ''}" required readonly>
+                        <input type="email" id="email" name="email" th:value="${accountEmail != null ? accountEmail : ''}" required >
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="address">Địa chỉ giao hàng</label>
+                        <input type="text" id="address" name="address" th:value="${account.getAddress() != null ? account.getAddress()  : ''}" required>
                     </div>
                     <div class="form-row">
                         <div class="form-group">
@@ -380,7 +390,7 @@
     </div>
 </footer>
 
-<script src="/js/cart-utils.js"></script>
+<!--<script src="/js/cart-utils.js"></script>-->
 <script src="/js/account.js"></script>
 </body>
 </html>

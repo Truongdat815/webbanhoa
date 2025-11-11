@@ -788,8 +788,9 @@ async function addToCart(productId, productName, productPrice, quantity, product
 }
 
 function updateCartCount(count) {
-    const cartCounts = document.querySelectorAll('.cart-count');
-    cartCounts.forEach(el => el.textContent = count);
+    const cartCount = document.querySelector('#cartCount');
+    cartCount.textContent = count;
+    // cartCounts.forEach(el => el.textContent = count);
 }
 // === ẨN SẢN PHẨM HẾT HÀNG (khi cập nhật stock) ===
 function hideOutOfStockProducts() {

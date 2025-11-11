@@ -164,6 +164,7 @@ function initProductInteractions() {
     });
 }
 
+
 // Quick view modal function
 function openQuickViewModal(productCard) {
     const modal = document.getElementById('quickViewModal');

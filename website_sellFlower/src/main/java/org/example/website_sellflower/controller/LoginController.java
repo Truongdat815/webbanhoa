@@ -39,7 +39,7 @@ public class LoginController {
                         HttpSession session) {
 
         Account acc = accountService.login(username, password);
-        if (acc != null) {
+        if (acc != null && acc.getStatus().equals("ACTIVE")) {
             session.setAttribute("account", acc);
 
             if ("ADMIN".equalsIgnoreCase(acc.getRole())) {

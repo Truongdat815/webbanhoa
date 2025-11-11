@@ -26,8 +26,8 @@ public class Product {
     @Column(name = "image_url", columnDefinition = "NVARCHAR(500)")
     private String imageUrl;
 
-    @Column(length = 100, columnDefinition = "NVARCHAR(100)")
-    private String category;
+//    @Column(length = 100, columnDefinition = "NVARCHAR(100)")
+//    private String category;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore
@@ -37,13 +37,13 @@ public class Product {
 
     }
 
-    public Product(String name, String description, Double price, Integer stockQuantity, String imageUrl, String category) {
+    public Product(String name, String description, Double price, Integer stockQuantity, String imageUrl, List<Review> reviews) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.stockQuantity = stockQuantity;
         this.imageUrl = imageUrl;
-        this.category = category;
+        this.reviews = reviews;
     }
 
     public Long getId() {
@@ -94,13 +94,6 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
 
     public List<Review> getReviews() {
         return reviews;

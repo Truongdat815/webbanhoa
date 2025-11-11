@@ -34,7 +34,7 @@ public class AdminController {
     // Kiểm tra quyền ADMIN
     private boolean isAdmin(HttpSession session) {
         Account account = (Account) session.getAttribute("account");
-        return account != null && "ADMIN".equals(account.getRole());
+        return account != null && "ADMIN".equals(account.getRole()) && "ACTIVE".equals(account.getStatus());
     }
 
     // Redirect nếu không phải admin
@@ -206,9 +206,11 @@ public class AdminController {
 
         try {
 //            boolean deleted = productService.deleteProduct(id);
-            Product deleted = productService.deleteProduct(id);
+            Product deleted = productService.findProductById(id);
             Map<String, Object> response = new HashMap<>();
             if (deleted != null) {
+                deleted.setStockQuantity(0);
+                productService.updateProduct(id, deleted);
                 response.put("success", true);
                 response.put("message", "Xóa sản phẩm thành công");
                 return ResponseEntity.ok(response);
@@ -241,6 +243,19 @@ public class AdminController {
 
         return "admin/orders";
     }
+//    @GetMapping("/orders/{status}")
+//    public String ordersByStatus(@PathVariable String status, HttpSession session, Model model) {
+//        String redirect = checkAdminAndRedirect(session);
+//        if (redirect != null) return redirect;
+//        Account account = (Account) session.getAttribute("account");
+//        model.addAttribute("isLoggedIn", true);
+//        model.addAttribute("userDisplayName", account.getFullName());
+//        model.addAttribute("isAdmin", true);
+//        List<Order> orders = orderService.findByStatus(status);
+//        model.addAttribute("orders", orders);
+//        model.addAttribute("filterStatus", status);
+//        return "admin/orders";
+//    }
 
     @GetMapping("/orders/{id}")
     public String orderDetail(@PathVariable Long id, HttpSession session, Model model) {
@@ -274,7 +289,7 @@ public class AdminController {
         return ResponseEntity.ok(orders);
     }
 
-    // API: Get Order by ID (for admin)
+//     API: Get Order by ID (for admin)
     @GetMapping("/api/orders/{id}")
     @ResponseBody
     public ResponseEntity<Order> getOrderById(@PathVariable Long id, HttpSession session) {
@@ -293,9 +308,9 @@ public class AdminController {
     @PutMapping("/api/orders/{id}/status")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> updateOrderStatus(@PathVariable Long id, @RequestBody Map<String, String> request, HttpSession session) {
-        if (!isAdmin(session)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+//        if (!isAdmin(session)) {
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+//        }
 
         try {
             String status = request.get("status");

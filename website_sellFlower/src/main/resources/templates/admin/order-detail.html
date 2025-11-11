@@ -89,18 +89,25 @@
                             </div>
                             <div class="info-item">
                                 <label>Trạng thái:</label>
-                                <select class="status-select" th:data-id="${order.id}" th:value="${order.status}">
-                                    <option value="pending_payment">Chờ thanh toán</option>
-                                    <option value="paid">Đã thanh toán</option>
-                                    <option value="processing">Đang xử lý</option>
-                                    <option value="shipped">Đang giao hàng</option>
-                                    <option value="delivered">Đã giao hàng</option>
-                                    <option value="cancelled">Đã hủy</option>
-                                </select>
+                                <span th:switch="${order.status}">
+                                    <span th:case="'REQUEST'">Chờ xác nhận</span>
+                                    <span th:case="'DELIVERY'">Đang giao</span>
+                                    <span th:case="'COMPLETED'">Đã hoàn thành</span>
+                                    <span th:case="'REJECTED'">Đã từ chối</span>
+                                    <span th:case="*">N/A</span>
+                                </span>
+<!--                                <select class="status-select" th:data-id="${order.id}" th:value="${order.status}">-->
+<!--                                    <option value="pending_payment">Chờ thanh toán</option>-->
+<!--                                    <option value="paid">Đã thanh toán</option>-->
+<!--                                    <option value="processing">Đang xử lý</option>-->
+<!--                                    <option value="shipped">Đang giao hàng</option>-->
+<!--                                    <option value="delivered">Đã giao hàng</option>-->
+<!--                                    <option value="cancelled">Đã hủy</option>-->
+<!--                                </select>-->
                             </div>
                             <div class="info-item">
                                 <label>Tổng tiền:</label>
-                                <span class="price" th:text="${order.totalAmount != null ? '₫' + #numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') : '₫0'}">₫0</span>
+                                <span class="price" th:text="${order.totalAmount != null ? '₫' + #numbers.formatDecimal(order.totalAmount +15000, 0, 'COMMA', 0, 'POINT') : '₫0'}">₫0</span>
                             </div>
                         </div>
                     </div>
@@ -150,9 +157,13 @@
                                     </tr>
                                 </tbody>
                                 <tfoot>
+                                <tr>
+                                    <td colspan="4" style="text-align:right; font-weight: 600;">Phí vận chuyển:</td>
+                                    <td style="font-weight: 700; color: #E95473;">₫15,000</td>
+                                </tr>
                                     <tr>
                                         <td colspan="4" style="text-align: right; font-weight: 600;">Tổng cộng:</td>
-                                        <td style="font-weight: 700; color: #E95473;" th:text="${order.totalAmount != null ? '₫' + #numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') : '₫0'}">₫0</td>
+                                        <td style="font-weight: 700; color: #E95473;" th:text="${order.totalAmount != null ? '₫' + #numbers.formatDecimal(order.totalAmount+15000, 0, 'COMMA', 0, 'POINT') : '₫0'}">₫0</td>
                                     </tr>
                                 </tfoot>
                             </table>

@@ -195,7 +195,7 @@ public class CartControllerUsingOrderEntities {
         int count = cart.stream().mapToInt(od -> od.getQuantity() == null ? 0 : od.getQuantity()).sum();
         resp.put("success", true);
         resp.put("message", "Đã thêm vào giỏ hàng");
-        resp.put("cartCount", count);
+        resp.put("cartCount", cart.size());
         return ResponseEntity.ok(resp);
     }
 
@@ -391,7 +391,7 @@ public class CartControllerUsingOrderEntities {
             Account fullAcc = accountService.findById(sessAcc.getId());
             order.setAccount(fullAcc);
             order.setOrderDate(LocalDateTime.now());
-            order.setStatus("processing");
+            order.setStatus("REQUEST");
             order.setPhone(fullAcc != null ? fullAcc.getPhone() : null);
             order.setShippingAddress(fullAcc != null ? fullAcc.getAddress() : null);
 
