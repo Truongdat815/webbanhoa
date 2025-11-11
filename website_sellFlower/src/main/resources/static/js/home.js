@@ -791,3 +791,23 @@ function updateCartCount(count) {
     const cartCounts = document.querySelectorAll('.cart-count');
     cartCounts.forEach(el => el.textContent = count);
 }
+// === ẨN SẢN PHẨM HẾT HÀNG (khi cập nhật stock) ===
+function hideOutOfStockProducts() {
+    document.querySelectorAll('.product-card[data-product-stock]').forEach(card => {
+        const stock = parseInt(card.getAttribute('data-product-stock') || 0);
+        if (stock <= 0) {
+            card.style.transition = 'all 0.3s ease';
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                card.style.display = 'none';
+            }, 300);
+        }
+    });
+}
+
+// Gọi khi load (phòng trường hợp HTML có render)
+document.addEventListener('DOMContentLoaded', hideOutOfStockProducts);
+
+// Gọi từ nơi khác (admin, cart)
+window.hideOutOfStock = hideOutOfStockProducts;

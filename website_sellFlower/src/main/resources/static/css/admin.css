@@ -899,6 +899,73 @@ body.admin-page .admin-main {
     color: #ffffff;
 }
 
+/* Status Toggle Button */
+.status-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.status-toggle:hover {
+    transform: scale(1.05);
+}
+
+.status-toggle:active {
+    transform: scale(0.95);
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.status-badge i {
+    font-size: 12px;
+}
+
+.status-active {
+    background-color: #10b981;
+    color: #ffffff;
+    border-color: #10b981;
+}
+
+.status-active:hover {
+    background-color: #059669;
+    border-color: #059669;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.status-inactive {
+    background-color: #ef4444;
+    color: #ffffff;
+    border-color: #ef4444;
+}
+
+.status-inactive:hover {
+    background-color: #dc2626;
+    border-color: #dc2626;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+}
+
+.status-badge.disabled {
+    background-color: #9ca3af;
+    color: #ffffff;
+    border-color: #9ca3af;
+    cursor: not-allowed;
+}
+
 /* Toast Notification */
 .toast {
     position: fixed;

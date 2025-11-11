@@ -98,13 +98,14 @@
                                 <th>Họ tên</th>
                                 <th>Số điện thoại</th>
                                 <th>Vai trò</th>
+                                <th>Trạng thái</th>
                                 <th>Ngày tạo</th>
                                 <th>Thao tác</th>
                             </tr>
                         </thead>
                         <tbody id="accountsTableBody">
                             <tr th:if="${accounts == null || accounts.isEmpty()}">
-                                <td colspan="8" class="text-center">
+                                <td colspan="9" class="text-center">
                                     <p>Không có tài khoản nào</p>
                                 </td>
                             </tr>
@@ -115,9 +116,45 @@
                                 <td th:text="${account.fullName != null ? account.fullName : 'N/A'}">Họ tên</td>
                                 <td th:text="${account.phone != null ? account.phone : 'N/A'}">SĐT</td>
                                 <td>
-                                    <span th:if="${account.role != null && account.role == 'ADMIN'}" class="badge badge-admin" th:text="${account.role}">ADMIN</span>
-                                    <span th:if="${account.role != null && account.role == 'USER'}" class="badge badge-user" th:text="${account.role}">USER</span>
-                                    <span th:if="${account.role == null}" class="badge badge-user">USER</span>
+                                    <span th:if="${account.role != null && account.role == 'ADMIN'}" 
+                                          class="badge badge-admin" 
+                                          th:data-role="ADMIN"
+                                          th:data-account-id="${account.id}"
+                                          th:text="${account.role}">ADMIN</span>
+                                    <span th:if="${account.role != null && account.role == 'USER'}" 
+                                          class="badge badge-user" 
+                                          th:data-role="USER"
+                                          th:data-account-id="${account.id}"
+                                          th:text="${account.role}">USER</span>
+                                    <span th:if="${account.role == null}" 
+                                          class="badge badge-user"
+                                          th:data-role="USER"
+                                          th:data-account-id="${account.id}">USER</span>
+                                </td>
+                                <td>
+                                    <!-- Status toggle chỉ hiển thị cho USER -->
+                                    <button th:if="${account.role == null || account.role == 'USER'}" 
+                                            class="status-toggle" 
+                                            th:data-account-id="${account.id}" 
+                                            th:data-username="${account.username}"
+                                            th:data-role="${account.role != null ? account.role : 'USER'}"
+                                            th:data-status="active"
+                                            title="Click để đổi trạng thái">
+                                        <span class="status-badge status-active">
+                                            <i class="fas fa-check-circle"></i>
+                                            Active
+                                        </span>
+                                    </button>
+                                    <!-- Hiển thị text "Active" cho ADMIN (không có button, không thể thay đổi) -->
+                                    <span th:if="${account.role != null && account.role == 'ADMIN'}" 
+                                          class="status-badge status-active admin-status" 
+                                          th:data-account-id="${account.id}"
+                                          th:data-role="ADMIN"
+                                          style="cursor: default;"
+                                          title="Tài khoản ADMIN luôn ở trạng thái Active">
+                                        <i class="fas fa-check-circle"></i>
+                                        Active
+                                    </span>
                                 </td>
                                 <td th:text="${account.createdDate != null ? #temporals.format(account.createdDate, 'dd/MM/yyyy HH:mm') : 'N/A'}">Ngày tạo</td>
                                 <td>
@@ -125,9 +162,6 @@
                                         <a th:href="@{/admin/accounts/edit/{id}(id=${account.id})}" class="btn-edit" title="Sửa">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <button class="btn-delete" th:data-id="${account.id}" th:data-name="${account.username}" title="Xóa" th:if="${account.role != 'ADMIN' || accounts.size() > 1}">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
                                     </div>
                                 </td>
                             </tr>
@@ -144,28 +178,6 @@
         </div>
     </main>
 
-    <!-- Delete Confirmation Modal -->
-    <div class="modal" id="deleteModal">
-        <div class="modal-overlay"></div>
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Xác nhận xóa</h3>
-                <button class="modal-close" id="closeDeleteModal">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p>Bạn có chắc chắn muốn xóa tài khoản <strong id="deleteAccountName"></strong>?</p>
-                <p class="text-warning">Hành động này không thể hoàn tác!</p>
-                <p class="text-warning" style="margin-top: 10px; font-size: 13px;">Lưu ý: Không thể xóa tài khoản admin cuối cùng.</p>
-            </div>
-            <div class="modal-footer">
-                <button class="btn-secondary" id="cancelDelete">Hủy</button>
-                <button class="btn-danger" id="confirmDelete">Xóa</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Toast Notification -->
     <div class="toast" id="toast"></div>
 
@@ -176,7 +188,7 @@
         </div>
     </footer>
 
-    <script src="/js/admin.js"></script>
+    <script th:src="@{/js/admin.js}"></script>
 </body>
 </html>
 

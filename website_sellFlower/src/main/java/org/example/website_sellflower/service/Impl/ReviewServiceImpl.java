@@ -1,4 +1,4 @@
-package org.example.website_sellflower.service.impl;
+package org.example.website_sellflower.service.Impl;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

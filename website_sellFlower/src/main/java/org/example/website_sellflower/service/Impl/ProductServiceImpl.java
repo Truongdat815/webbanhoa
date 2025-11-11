@@ -43,12 +43,27 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public boolean deleteProduct(Long id) {
-        if(productRepository.existsById(id)){
-            productRepository.deleteById(id);
-            return true;
+    public Product deleteProduct(Long id) {
+        try {
+            Product product = productRepository.findById(id).orElse(null);
+            if (product != null) {
+                // Check if product is used in any order
+                // If product has reviews, cascade will handle it
+                // But if product is in order_details, we need to handle it
+//                productRepository.delete(product);
+                product.setStockQuantity(0);
+                return productRepository.save(product);
+            }
+            return null;
+        } catch (Exception e) {
+            System.err.println("Error deleting product: " + e.getMessage());
+            e.printStackTrace();
+            // Check if it's a foreign key constraint error
+            if (e.getMessage() != null && e.getMessage().contains("foreign key")) {
+                throw new RuntimeException("Không thể xóa sản phẩm vì đã có đơn hàng sử dụng sản phẩm này", e);
+            }
+            throw new RuntimeException("Không thể xóa sản phẩm: " + e.getMessage(), e);
         }
-        return false;
     }
     // ← THÊM MỚI
     @Override
