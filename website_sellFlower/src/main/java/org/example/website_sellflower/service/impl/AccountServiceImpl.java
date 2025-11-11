@@ -1,4 +1,4 @@
-package org.example.website_sellflower.service.impl;
+package org.example.website_sellflower.service.Impl;
 
 import org.example.website_sellflower.service.AccountService;
 import org.springframework.stereotype.Service;

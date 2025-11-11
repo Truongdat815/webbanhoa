@@ -125,6 +125,12 @@ document.addEventListener('DOMContentLoaded', function() {
     if (roleFilter) {
         roleFilter.addEventListener('change', handleSearch);
     }
+
+    // Account Status Toggle (only on accounts page)
+    if (window.location.pathname.includes('/accounts')) {
+        initializeAccountStatus();
+        setupStatusToggleListeners();
+    }
 });
 
 // Delete Product Function
@@ -540,6 +546,139 @@ function checkEmptyState(visibleCount = null) {
     } else {
         emptyState.style.display = 'none';
     }
+}
+
+// ==================== ACCOUNT STATUS MANAGEMENT ====================
+
+// Initialize account status from localStorage
+function initializeAccountStatus() {
+    try {
+        const statusToggles = document.querySelectorAll('.status-toggle');
+        if (!statusToggles || statusToggles.length === 0) {
+            console.log('No status toggles found on this page');
+            return;
+        }
+        
+        statusToggles.forEach(toggle => {
+            try {
+                const accountId = toggle.getAttribute('data-account-id');
+                if (!accountId) {
+                    console.warn('Status toggle missing data-account-id attribute');
+                    return;
+                }
+
+                // Get status from localStorage, default to 'active' (or use data-status from HTML)
+                const defaultStatus = toggle.getAttribute('data-status') || 'active';
+                const savedStatus = localStorage.getItem(`account_status_${accountId}`) || defaultStatus;
+                
+                // Update data attribute
+                toggle.setAttribute('data-status', savedStatus);
+                
+                // Update display
+                updateStatusDisplay(toggle, savedStatus);
+            } catch (error) {
+                console.error('Error initializing status for toggle:', error);
+            }
+        });
+    } catch (error) {
+        console.error('Error in initializeAccountStatus:', error);
+    }
+}
+
+// Setup status toggle event listeners
+function setupStatusToggleListeners() {
+    try {
+        const statusToggles = document.querySelectorAll('.status-toggle');
+        if (!statusToggles || statusToggles.length === 0) {
+            console.log('No status toggles found to attach listeners');
+            return;
+        }
+        
+        statusToggles.forEach(toggle => {
+            try {
+                // Add click event listener directly to each toggle button
+                toggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const accountId = this.getAttribute('data-account-id');
+                    const username = this.getAttribute('data-username') || 'Tài khoản';
+                    
+                    if (!accountId) {
+                        console.error('Account ID not found for status toggle');
+                        return;
+                    }
+
+                    // Get current status from data attribute (which should be synced with localStorage)
+                    const currentStatus = this.getAttribute('data-status') || 'active';
+                    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+
+                    // Update status
+                    toggleAccountStatus(accountId, username, newStatus, this);
+                });
+            } catch (error) {
+                console.error('Error setting up listener for toggle:', error);
+            }
+        });
+    } catch (error) {
+        console.error('Error in setupStatusToggleListeners:', error);
+    }
+}
+
+// Toggle account status
+function toggleAccountStatus(accountId, username, newStatus, statusToggle) {
+    // Save to localStorage (hardcode)
+    localStorage.setItem(`account_status_${accountId}`, newStatus);
+    
+    // Update display
+    updateStatusDisplay(statusToggle, newStatus);
+    
+    // Update data attribute
+    statusToggle.setAttribute('data-status', newStatus);
+    
+    // Show notification
+    const statusText = newStatus === 'active' ? 'kích hoạt' : 'vô hiệu hóa';
+    showToast(`Đã ${statusText} tài khoản "${username}"`, 'success');
+}
+
+// Update status display
+function updateStatusDisplay(statusToggle, status) {
+    try {
+        if (!statusToggle) {
+            console.error('statusToggle element is null');
+            return;
+        }
+        
+        const statusBadge = statusToggle.querySelector('.status-badge');
+        if (!statusBadge) {
+            console.error('Status badge not found inside toggle');
+            return;
+        }
+
+        // Remove old classes
+        statusBadge.classList.remove('status-active', 'status-inactive');
+        
+        // Add new class
+        if (status === 'active') {
+            statusBadge.classList.add('status-active');
+            statusBadge.innerHTML = '<i class="fas fa-check-circle"></i> Active';
+        } else {
+            statusBadge.classList.add('status-inactive');
+            statusBadge.innerHTML = '<i class="fas fa-times-circle"></i> Inactive';
+        }
+    } catch (error) {
+        console.error('Error updating status display:', error);
+    }
+}
+
+// Get account status (for use in other parts of the app, e.g., login check)
+function getAccountStatus(accountId) {
+    return localStorage.getItem(`account_status_${accountId}`) || 'active';
+}
+
+// Check if account is active
+function isAccountActive(accountId) {
+    return getAccountStatus(accountId) === 'active';
 }
 
 // Add fadeOut animation
