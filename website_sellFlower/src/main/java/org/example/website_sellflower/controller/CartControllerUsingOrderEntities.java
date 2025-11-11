@@ -12,6 +12,7 @@ import org.example.website_sellflower.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -54,7 +55,21 @@ public class CartControllerUsingOrderEntities {
 
     // Return cart page (Thymeleaf template name "cart")
     @GetMapping({"", "/"})
-    public String viewCartPage() {
+    public String viewCartPage(Model model, HttpSession session) {
+        if (session.getAttribute("account") != null) {
+            Account account = (Account) session.getAttribute("account");
+            model.addAttribute("isLoggedIn", true);
+            model.addAttribute("userDisplayName",account.getFullName());
+            model.addAttribute("isAdmin", "ADMIN".equals(account.getRole()));
+            List<OrderDetail> cart = (List<OrderDetail>) session.getAttribute("cart");
+            if (cart != null) {
+                model.addAttribute("cartItemCount", cart.size());
+            }
+
+        } else {
+            model.addAttribute("isLoggedIn", false);
+            return "redirect:/login";
+        }
         return "cart";
     }
 
@@ -74,21 +89,81 @@ public class CartControllerUsingOrderEntities {
      * - quantity (optional, default 1)
      * - productName, price, imageUrl, stock  (optional — we ignore most, use DB snapshot)
      */
+//    @PostMapping("/add")
+//    public String handleFormAddToCart(@RequestParam("productId") Long productId,
+//                                      @RequestParam(value = "quantity", required = false, defaultValue = "1") Integer quantity,
+//                                      HttpSession session,
+//                                      HttpServletRequest request,
+//                                      RedirectAttributes redirectAttributes) {
+//        if (productId == null || quantity == null || quantity <= 0) {
+//            redirectAttributes.addFlashAttribute("cartMessage", "Tham số sản phẩm không hợp lệ");
+//            return "redirect:" + safeReferer(request);
+//        }
+//
+//        Product prod = productService.findProductById(productId);
+//        if (prod == null) {
+//            redirectAttributes.addFlashAttribute("cartMessage", "Sản phẩm không tồn tại");
+//            return "redirect:" + safeReferer(request);
+//        }
+//
+//        List<OrderDetail> cart = getCart(session);
+//
+//        Optional<OrderDetail> exist = cart.stream()
+//                .filter(od -> od.getProduct() != null && Objects.equals(od.getProduct().getId(), productId))
+//                .findFirst();
+//
+//        if (exist.isPresent()) {
+//            OrderDetail ex = exist.get();
+//            int newQty = ex.getQuantity() + quantity;
+//            Integer stock = prod.getStockQuantity();
+//            if (stock != null && newQty > stock) {
+//                ex.setQuantity(stock);
+//            } else {
+//                ex.setQuantity(newQty);
+//            }
+//        } else {
+//            OrderDetail item = new OrderDetail();
+//            Product pDetached = new Product();
+//            pDetached.setId(prod.getId());
+//            item.setProduct(pDetached);
+//            item.setQuantity(quantity);
+//            item.setPrice(prod.getPrice());
+//            cart.add(item);
+//        }
+//
+//        session.setAttribute(SESSION_CART, cart);
+//        int count = cart.stream().mapToInt(od -> od.getQuantity() == null ? 0 : od.getQuantity()).sum();
+//
+//        redirectAttributes.addFlashAttribute("cartMessage", "Đã thêm vào giỏ hàng");
+//        redirectAttributes.addFlashAttribute("cartCount", count);
+//
+//        return "redirect:" + safeReferer(request);
+//    }
     @PostMapping("/add")
-    public String handleFormAddToCart(@RequestParam("productId") Long productId,
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> handleFormAddToCart(@RequestParam("productId") Long productId,
                                       @RequestParam(value = "quantity", required = false, defaultValue = "1") Integer quantity,
                                       HttpSession session,
                                       HttpServletRequest request,
                                       RedirectAttributes redirectAttributes) {
+        Map<String, Object> resp = new HashMap<>();
         if (productId == null || quantity == null || quantity <= 0) {
-            redirectAttributes.addFlashAttribute("cartMessage", "Tham số sản phẩm không hợp lệ");
-            return "redirect:" + safeReferer(request);
+            resp.put("success", false);
+            resp.put("message", "Tham số sản phẩm không hợp lệ");
+            return ResponseEntity.badRequest().body(resp);
         }
 
         Product prod = productService.findProductById(productId);
         if (prod == null) {
-            redirectAttributes.addFlashAttribute("cartMessage", "Sản phẩm không tồn tại");
-            return "redirect:" + safeReferer(request);
+            resp.put("success", false);
+            resp.put("message", "Sản phẩm không tồn tại");
+            return ResponseEntity.badRequest().body(resp);
+        }
+
+        if (prod.getStockQuantity() != null && quantity > prod.getStockQuantity()) {
+            resp.put("success", false);
+            resp.put("message", "Số lượng vượt quá tồn kho");
+            return ResponseEntity.badRequest().body(resp);
         }
 
         List<OrderDetail> cart = getCart(session);
@@ -118,11 +193,10 @@ public class CartControllerUsingOrderEntities {
 
         session.setAttribute(SESSION_CART, cart);
         int count = cart.stream().mapToInt(od -> od.getQuantity() == null ? 0 : od.getQuantity()).sum();
-
-        redirectAttributes.addFlashAttribute("cartMessage", "Đã thêm vào giỏ hàng");
-        redirectAttributes.addFlashAttribute("cartCount", count);
-
-        return "redirect:" + safeReferer(request);
+        resp.put("success", true);
+        resp.put("message", "Đã thêm vào giỏ hàng");
+        resp.put("cartCount", count);
+        return ResponseEntity.ok(resp);
     }
 
     // Helper to get referer or fallback to /cart
@@ -182,59 +256,59 @@ public class CartControllerUsingOrderEntities {
     }
 
     // API: Add to cart: create detached OrderDetail carrying product.id, quantity and snapshot price
-    @PostMapping("/api/add")
-    @ResponseBody
-    public ResponseEntity<Map<String, Object>> apiAddToCart(@RequestParam("productId") Long productId,
-                                                            @RequestParam(value = "quantity", required = false, defaultValue = "1") Integer quantity,
-                                                            HttpSession session) {
-        Map<String, Object> resp = new HashMap<>();
-        if (productId == null || quantity == null || quantity <= 0) {
-            resp.put("success", false);
-            resp.put("message", "productId và quantity không hợp lệ");
-            return ResponseEntity.badRequest().body(resp);
-        }
-
-        Product prod = productService.findProductById(productId);
-        if (prod == null) {
-            resp.put("success", false);
-            resp.put("message", "Sản phẩm không tồn tại");
-            return ResponseEntity.badRequest().body(resp);
-        }
-
-        List<OrderDetail> cart = getCart(session);
-
-        // Try merge existing
-        Optional<OrderDetail> exist = cart.stream()
-                .filter(od -> od.getProduct() != null && Objects.equals(od.getProduct().getId(), productId))
-                .findFirst();
-
-        if (exist.isPresent()) {
-            OrderDetail ex = exist.get();
-            int newQty = ex.getQuantity() + quantity;
-            Integer stock = prod.getStockQuantity();
-            if (stock != null && newQty > stock) {
-                ex.setQuantity(stock);
-            } else {
-                ex.setQuantity(newQty);
-            }
-        } else {
-            OrderDetail item = new OrderDetail();
-            Product pDetached = new Product();
-            pDetached.setId(prod.getId());
-            item.setProduct(pDetached);
-            item.setQuantity(quantity);
-            item.setPrice(prod.getPrice());
-            cart.add(item);
-        }
-
-        session.setAttribute(SESSION_CART, cart);
-        int count = cart.stream().mapToInt(od -> od.getQuantity() == null ? 0 : od.getQuantity()).sum();
-
-        resp.put("success", true);
-        resp.put("message", "Đã thêm vào giỏ hàng");
-        resp.put("cartCount", count);
-        return ResponseEntity.ok(resp);
-    }
+//    @PostMapping("/api/add")
+//    @ResponseBody
+//    public ResponseEntity<Map<String, Object>> apiAddToCart(@RequestParam("productId") Long productId,
+//                                                            @RequestParam(value = "quantity", required = false, defaultValue = "1") Integer quantity,
+//                                                            HttpSession session) {
+//        Map<String, Object> resp = new HashMap<>();
+//        if (productId == null || quantity == null || quantity <= 0) {
+//            resp.put("success", false);
+//            resp.put("message", "productId và quantity không hợp lệ");
+//            return ResponseEntity.badRequest().body(resp);
+//        }
+//
+//        Product prod = productService.findProductById(productId);
+//        if (prod == null) {
+//            resp.put("success", false);
+//            resp.put("message", "Sản phẩm không tồn tại");
+//            return ResponseEntity.badRequest().body(resp);
+//        }
+//
+//        List<OrderDetail> cart = getCart(session);
+//
+//        // Try merge existing
+//        Optional<OrderDetail> exist = cart.stream()
+//                .filter(od -> od.getProduct() != null && Objects.equals(od.getProduct().getId(), productId))
+//                .findFirst();
+//
+//        if (exist.isPresent()) {
+//            OrderDetail ex = exist.get();
+//            int newQty = ex.getQuantity() + quantity;
+//            Integer stock = prod.getStockQuantity();
+//            if (stock != null && newQty > stock) {
+//                ex.setQuantity(stock);
+//            } else {
+//                ex.setQuantity(newQty);
+//            }
+//        } else {
+//            OrderDetail item = new OrderDetail();
+//            Product pDetached = new Product();
+//            pDetached.setId(prod.getId());
+//            item.setProduct(pDetached);
+//            item.setQuantity(quantity);
+//            item.setPrice(prod.getPrice());
+//            cart.add(item);
+//        }
+//
+//        session.setAttribute(SESSION_CART, cart);
+//        int count = cart.stream().mapToInt(od -> od.getQuantity() == null ? 0 : od.getQuantity()).sum();
+//
+//        resp.put("success", true);
+//        resp.put("message", "Đã thêm vào giỏ hàng");
+//        resp.put("cartCount", count);
+//        return ResponseEntity.ok(resp);
+//    }
 
     // Update quantity
     @PutMapping("/api/update")

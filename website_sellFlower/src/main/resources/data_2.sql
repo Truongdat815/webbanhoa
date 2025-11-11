@@ -62,33 +62,33 @@ INSERT INTO order_detail (order_id, product_id, quantity, price) VALUES
 (8, 10, 1, 70000); -- Hoa baby mix
 
 -- Insert more comprehensive reviews for high-rating analysis
-INSERT INTO review (product_id, account_id, rating, comment, review_date) VALUES
+INSERT INTO review (product_id, account_id, rating, comment, review_date, status) VALUES
 -- Existing reviews
-(1, 2, 5, N'Hoa rất đẹp và tươi, giao hàng nhanh!', CURRENT_TIMESTAMP),
-(2, 3, 4, N'Hoa tulip đẹp nhưng hơi nhỏ so với mong đợi', CURRENT_TIMESTAMP),
-(3, 2, 5, N'Hoa ly trắng rất thơm và đẹp, sẽ mua lại', CURRENT_TIMESTAMP),
+(1, 2, 5, N'Hoa rất đẹp và tươi, giao hàng nhanh!', CURRENT_TIMESTAMP, 'APPROVED'),
+(2, 3, 4, N'Hoa tulip đẹp nhưng hơi nhỏ so với mong đợi', CURRENT_TIMESTAMP, 'APPROVED'),
+(3, 2, 5, N'Hoa ly trắng rất thơm và đẹp, sẽ mua lại', CURRENT_TIMESTAMP, 'APPROVED'),
 -- More reviews for Hoa hồng đỏ (sản phẩm bán chạy nhất)
-(1, 1, 5, N'Hoa hồng đỏ tuyệt vời, khách hàng rất hài lòng!', CURRENT_TIMESTAMP),
-(1, 3, 5, N'Chất lượng tốt, màu sắc tươi sáng', CURRENT_TIMESTAMP),
+(1, 1, 5, N'Hoa hồng đỏ tuyệt vời, khách hàng rất hài lòng!', CURRENT_TIMESTAMP, 'APPROVED'),
+(1, 3, 5, N'Chất lượng tốt, màu sắc tươi sáng', CURRENT_TIMESTAMP, 'APPROVED'),
 -- Reviews cho Hoa tulip vàng
-(2, 1, 5, N'Hoa tulip vàng rất đẹp, ý nghĩa tốt', CURRENT_TIMESTAMP),
-(2, 2, 4, N'Hoa tươi nhưng cần cải thiện bao bì', CURRENT_TIMESTAMP),
+(2, 1, 5, N'Hoa tulip vàng rất đẹp, ý nghĩa tốt', CURRENT_TIMESTAMP, 'APPROVED'),
+(2, 2, 4, N'Hoa tươi nhưng cần cải thiện bao bì', CURRENT_TIMESTAMP, 'PENDING'),
 -- Reviews cho Hoa hướng dương (sản phẩm có rating cao)
-(5, 1, 5, N'Hoa hướng dương tràn đầy năng lượng, rất thích!', CURRENT_TIMESTAMP),
-(5, 2, 5, N'Màu vàng tươi sáng, mang lại cảm giác vui vẻ', CURRENT_TIMESTAMP),
-(5, 3, 5, N'Chất lượng tuyệt vời, sẽ giới thiệu cho bạn bè', CURRENT_TIMESTAMP),
+(5, 1, 5, N'Hoa hướng dương tràn đầy năng lượng, rất thích!', CURRENT_TIMESTAMP, 'APPROVED'),
+(5, 2, 5, N'Màu vàng tươi sáng, mang lại cảm giác vui vẻ', CURRENT_TIMESTAMP, 'APPROVED'),
+(5, 3, 5, N'Chất lượng tuyệt vời, sẽ giới thiệu cho bạn bè', CURRENT_TIMESTAMP, 'APPROVED'),
 -- Reviews cho Hoa lan tím (sản phẩm cao cấp)
-(9, 1, 5, N'Hoa lan tím sang trọng, xứng đáng với giá tiền', CURRENT_TIMESTAMP),
-(9, 2, 5, N'Chất lượng cao cấp, rất đẹp', CURRENT_TIMESTAMP),
+(9, 1, 5, N'Hoa lan tím sang trọng, xứng đáng với giá tiền', CURRENT_TIMESTAMP, 'APPROVED'),
+(9, 2, 5, N'Chất lượng cao cấp, rất đẹp', CURRENT_TIMESTAMP, 'APPROVED'),
 -- Reviews cho các sản phẩm khác
-(4, 1, 4, N'Hoa cúc họa mi xinh xắn, giá hợp lý', CURRENT_TIMESTAMP),
-(4, 2, 4, N'Hoa nhỏ nhưng dễ thương, phù hợp làm quà', CURRENT_TIMESTAMP),
-(6, 3, 5, N'Hoa hồng trắng tinh khôi, rất đẹp', CURRENT_TIMESTAMP),
-(7, 1, 4, N'Hoa tulip đỏ đậm đà, ý nghĩa tốt', CURRENT_TIMESTAMP),
-(8, 2, 4, N'Hoa cẩm chướng hồng thích hợp tặng mẹ', CURRENT_TIMESTAMP),
-(10, 3, 3, N'Hoa baby mix trang trí ổn nhưng hơi mỏng', CURRENT_TIMESTAMP),
-(11, 1, 4, N'Hoa đồng tiền cam tươi sáng', CURRENT_TIMESTAMP),
-(12, 2, 4, N'Hoa lavender thơm nhẹ, thư giãn', CURRENT_TIMESTAMP),
+(4, 1, 4, N'Hoa cúc họa mi xinh xắn, giá hợp lý', CURRENT_TIMESTAMP, 'APPROVED'),
+(4, 2, 4, N'Hoa nhỏ nhưng dễ thương, phù hợp làm quà', CURRENT_TIMESTAMP, 'PENDING'),
+(6, 3, 5, N'Hoa hồng trắng tinh khôi, rất đẹp', CURRENT_TIMESTAMP, 'APPROVED'),
+(7, 1, 4, N'Hoa tulip đỏ đậm đà, ý nghĩa tốt', CURRENT_TIMESTAMP, 'APPROVED'),
+(8, 2, 4, N'Hoa cẩm chướng hồng thích hợp tặng mẹ', CURRENT_TIMESTAMP, 'APPROVED'),
+(10, 3, 3, N'Hoa baby mix trang trí ổn nhưng hơi mỏng', CURRENT_TIMESTAMP, 'REJECTED'),
+(11, 1, 4, N'Hoa đồng tiền cam tươi sáng', CURRENT_TIMESTAMP, 'APPROVED'),
+(12, 2, 4, N'Hoa lavender thơm nhẹ, thư giãn', CURRENT_TIMESTAMP, 'APPROVED'),
 -- Thêm reviews cho sản phẩm chưa có hoặc cần thêm
-(3, 1, 5, N'Hoa ly trắng thuần khiết, rất ý nghĩa', CURRENT_TIMESTAMP),
-(3, 3, 4, N'Hoa ly đẹp nhưng giá hơi cao', CURRENT_TIMESTAMP);
+(3, 1, 5, N'Hoa ly trắng thuần khiết, rất ý nghĩa', CURRENT_TIMESTAMP, 'APPROVED'),
+(3, 3, 4, N'Hoa ly đẹp nhưng giá hơi cao', CURRENT_TIMESTAMP, 'PENDING');

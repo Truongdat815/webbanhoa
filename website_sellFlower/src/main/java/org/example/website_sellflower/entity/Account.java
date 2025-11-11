@@ -30,6 +30,9 @@ public class Account {
     private String address;
 
     @Column(length = 20)
+    private String status;
+
+    @Column(length = 20)
     private String role; // ADMIN / USER
 
     @Column(name = "created_date")
@@ -45,14 +48,15 @@ public class Account {
     public Account() {
 
     }
-    public Account(Long id, String username, String email, String password, String fullName, String phone, String address, String role, LocalDateTime createdDate, List<Order> orders, List<Review> reviews) {
-        this.id = id;
+
+    public Account(String username, String email, String password, String fullName, String phone, String address, String status, String role, LocalDateTime createdDate, List<Order> orders, List<Review> reviews) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.fullName = fullName;
         this.phone = phone;
         this.address = address;
+        this.status = status;
         this.role = role;
         this.createdDate = createdDate;
         this.orders = orders;
@@ -145,6 +149,14 @@ public class Account {
 
     public void setReviews(List<Review> reviews) {
         this.reviews = reviews;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     /**

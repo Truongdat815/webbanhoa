@@ -23,18 +23,21 @@ public class Review {
     @Column(length = 1000, columnDefinition = "NVARCHAR(1000)")
     private String comment;
 
+    @Column(length = 20)
+    private String status;
+
     @Column(name = "review_date")
     private LocalDateTime reviewDate;
 
     public  Review() {
     }
 
-    public Review(Long id, Product product, Account account, Integer rating, String comment, LocalDateTime reviewDate) {
-        this.id = id;
+    public Review(Product product, Account account, Integer rating, String comment, String status, LocalDateTime reviewDate) {
         this.product = product;
         this.account = account;
         this.rating = rating;
         this.comment = comment;
+        this.status = status;
         this.reviewDate = reviewDate;
     }
 
@@ -84,5 +87,13 @@ public class Review {
 
     public void setReviewDate(LocalDateTime reviewDate) {
         this.reviewDate = reviewDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

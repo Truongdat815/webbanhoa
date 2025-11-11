@@ -1,4 +1,4 @@
-package org.example.website_sellflower.controller.dto;
+package org.example.website_sellflower.entity.dto;
 
 public class CartItemView {
     private Long productId;

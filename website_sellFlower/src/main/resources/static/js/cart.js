@@ -558,4 +558,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     if (typeof updateCartCountInHeader === 'function') {
         updateCartCountInHeader();
     }
+
+    const updateCartBtn = document.getElementById('updateCartBtn');
+    updateCartBtn.addEventListener('click',  function() {
+        window.location.href = '/home';
+    });
 });
