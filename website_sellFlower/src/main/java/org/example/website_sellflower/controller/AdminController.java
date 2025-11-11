@@ -632,6 +632,20 @@ public class AdminController {
             return "redirect:/admin/accounts?error=Lỗi: " + e.getMessage();
         }
     }
+    @PostMapping("/account/update-status")
+    @ResponseBody
+    public ResponseEntity<String> updateAccountStatus(@RequestParam("id") Long id,
+                                       @RequestParam("status") String status, HttpSession session) {
+
+        try {
+            accountService.updateAccountStatus(id, status);
+            return ResponseEntity.ok("Cập nhật trạng thái thành công");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Lỗi khi cập nhật trạng thái tài khoản");
+        }
+
+    }
 
     // API: Delete Account
 //    @DeleteMapping("/api/accounts/{id}")

@@ -47,8 +47,14 @@ public class LoginController {
             }
             return "redirect:/home";
         } else {
-            model.addAttribute("error", "Sai tên đăng nhập hoặc mật khẩu!");
-            model.addAttribute("isLoggedIn", false); // thêm dòng này để tránh null
+            if (acc != null && acc.getStatus().equals("INACTIVE")) {
+                model.addAttribute("error", "Tài khoản không còn hoạt động!");
+                model.addAttribute("isLoggedIn", false);
+            }else{
+                model.addAttribute("error", "Sai tên đăng nhập hoặc mật khẩu!");
+                model.addAttribute("isLoggedIn", false); // thêm dòng này để tránh null
+            }
+
             return "login";
         }
     }
