@@ -37,13 +37,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const onAccountsPage = window.location.pathname.includes('/accounts');
         const onOrdersPage = window.location.pathname.includes('/orders');
 
+        // Skip delete for accounts page
+        if (onAccountsPage) {
+            return;
+        }
+
         let deleteType = 'product';
         let confirmMessage = `Bạn có chắc chắn muốn xóa sản phẩm "${itemName}"?`;
 
-        if (onAccountsPage) {
-            deleteType = 'account';
-            confirmMessage = `Bạn có chắc chắn muốn xóa tài khoản "${itemName}"?`;
-        } else if (onOrdersPage) {
+        if (onOrdersPage) {
             deleteType = 'order';
             confirmMessage = `Bạn có chắc chắn muốn xóa ${itemName}?`;
         }
@@ -54,9 +56,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         try {
-            if (deleteType === 'account') {
-                await deleteAccount(itemId);
-            } else if (deleteType === 'order') {
+            if (deleteType === 'order') {
                 await deleteOrder(itemId);
             } else {
                 await deleteProduct(itemId);
@@ -128,8 +128,45 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Account Status Toggle (only on accounts page)
     if (window.location.pathname.includes('/accounts')) {
+        // Build a set of ADMIN account IDs for quick lookup
+        const adminAccountIds = new Set();
+        const adminStatusBadges = document.querySelectorAll('.admin-status[data-role="ADMIN"]');
+        adminStatusBadges.forEach(badge => {
+            const accountId = badge.getAttribute('data-account-id');
+            if (accountId) {
+                adminAccountIds.add(accountId);
+            }
+        });
+        const adminBadges = document.querySelectorAll('.badge-admin[data-role="ADMIN"]');
+        adminBadges.forEach(badge => {
+            const accountId = badge.getAttribute('data-account-id');
+            if (accountId) {
+                adminAccountIds.add(accountId);
+            }
+        });
+        
+        // Ensure ADMIN accounts are always active before initializing
+        ensureAdminAccountsAlwaysActive();
         initializeAccountStatus();
         setupStatusToggleListeners();
+        
+        // Monitor for any changes to localStorage that might affect ADMIN status
+        // This is a safety measure to catch any programmatic changes
+        if (adminAccountIds.size > 0) {
+            const originalSetItem = localStorage.setItem;
+            localStorage.setItem = function(key, value) {
+                // If someone tries to set a status for an ADMIN account, override it
+                if (key && key.startsWith('account_status_')) {
+                    const accountId = key.replace('account_status_', '');
+                    if (adminAccountIds.has(accountId)) {
+                        // This is an ADMIN account, force status to 'active'
+                        value = 'active';
+                        console.warn(`Attempted to change ADMIN account (ID: ${accountId}) status. Status forced to "active".`);
+                    }
+                }
+                originalSetItem.apply(this, [key, value]);
+            };
+        }
     }
 });
 
@@ -553,6 +590,9 @@ function checkEmptyState(visibleCount = null) {
 // Initialize account status from localStorage
 function initializeAccountStatus() {
     try {
+        // First, ensure all ADMIN accounts in localStorage have status 'active'
+        ensureAdminAccountsAlwaysActive();
+        
         const statusToggles = document.querySelectorAll('.status-toggle');
         if (!statusToggles || statusToggles.length === 0) {
             console.log('No status toggles found on this page');
@@ -562,8 +602,19 @@ function initializeAccountStatus() {
         statusToggles.forEach(toggle => {
             try {
                 const accountId = toggle.getAttribute('data-account-id');
+                const role = toggle.getAttribute('data-role') || 'USER';
+                
                 if (!accountId) {
                     console.warn('Status toggle missing data-account-id attribute');
+                    return;
+                }
+
+                // Chỉ khởi tạo status cho USER, ADMIN luôn active
+                if (role === 'ADMIN') {
+                    // Force ADMIN status to always be 'active' in localStorage
+                    localStorage.setItem(`account_status_${accountId}`, 'active');
+                    toggle.setAttribute('data-status', 'active');
+                    updateStatusDisplay(toggle, 'active');
                     return;
                 }
 
@@ -585,6 +636,50 @@ function initializeAccountStatus() {
     }
 }
 
+// Ensure all ADMIN accounts always have 'active' status in localStorage
+function ensureAdminAccountsAlwaysActive() {
+    try {
+        // Method 1: Find all ADMIN status badges on the page
+        const adminStatusBadges = document.querySelectorAll('.admin-status[data-role="ADMIN"]');
+        adminStatusBadges.forEach(badge => {
+            const accountId = badge.getAttribute('data-account-id');
+            if (accountId) {
+                // Force ADMIN status to always be 'active' in localStorage
+                localStorage.setItem(`account_status_${accountId}`, 'active');
+            }
+        });
+        
+        // Method 2: Find all ADMIN role badges on the page
+        const adminBadges = document.querySelectorAll('.badge-admin[data-role="ADMIN"]');
+        adminBadges.forEach(badge => {
+            const accountId = badge.getAttribute('data-account-id');
+            if (accountId) {
+                // Force ADMIN status to always be 'active' in localStorage
+                localStorage.setItem(`account_status_${accountId}`, 'active');
+            }
+        });
+        
+        // Method 3: Check all localStorage keys for account_status_* and verify ADMIN accounts
+        // This is a safety measure to clean up any incorrect status values
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('account_status_')) {
+                const accountId = key.replace('account_status_', '');
+                // Check if this account ID belongs to an ADMIN by looking for admin-status or badge-admin elements
+                const adminStatusElement = document.querySelector(`.admin-status[data-account-id="${accountId}"]`);
+                const adminBadgeElement = document.querySelector(`.badge-admin[data-account-id="${accountId}"]`);
+                
+                if (adminStatusElement || adminBadgeElement) {
+                    // This is an ADMIN account, force status to 'active'
+                    localStorage.setItem(key, 'active');
+                }
+            }
+        }
+    } catch (error) {
+        console.error('Error ensuring ADMIN accounts are active:', error);
+    }
+}
+
 // Setup status toggle event listeners
 function setupStatusToggleListeners() {
     try {
@@ -603,9 +698,16 @@ function setupStatusToggleListeners() {
 
                     const accountId = this.getAttribute('data-account-id');
                     const username = this.getAttribute('data-username') || 'Tài khoản';
+                    const role = this.getAttribute('data-role') || 'USER';
                     
                     if (!accountId) {
                         console.error('Account ID not found for status toggle');
+                        return;
+                    }
+
+                    // Chỉ cho phép toggle status cho USER, không cho ADMIN
+                    if (role === 'ADMIN') {
+                        showToast('Không thể thay đổi trạng thái của tài khoản ADMIN', 'warning');
                         return;
                     }
 
@@ -627,6 +729,18 @@ function setupStatusToggleListeners() {
 
 // Toggle account status
 function toggleAccountStatus(accountId, username, newStatus, statusToggle) {
+    const role = statusToggle.getAttribute('data-role') || 'USER';
+    
+    // Đảm bảo chỉ toggle cho USER, không cho phép thay đổi status của ADMIN
+    if (role === 'ADMIN') {
+        showToast('Không thể thay đổi trạng thái của tài khoản ADMIN. Tài khoản ADMIN luôn ở trạng thái Active.', 'warning');
+        // Force ADMIN status to always be 'active'
+        localStorage.setItem(`account_status_${accountId}`, 'active');
+        statusToggle.setAttribute('data-status', 'active');
+        updateStatusDisplay(statusToggle, 'active');
+        return;
+    }
+    
     // Save to localStorage (hardcode)
     localStorage.setItem(`account_status_${accountId}`, newStatus);
     
@@ -638,7 +752,8 @@ function toggleAccountStatus(accountId, username, newStatus, statusToggle) {
     
     // Show notification
     const statusText = newStatus === 'active' ? 'kích hoạt' : 'vô hiệu hóa';
-    showToast(`Đã ${statusText} tài khoản "${username}"`, 'success');
+    const actionText = newStatus === 'inactive' ? 'Tài khoản này sẽ không thể đăng nhập được' : 'Tài khoản này có thể đăng nhập bình thường';
+    showToast(`Đã ${statusText} tài khoản "${username}". ${actionText}`, 'success');
 }
 
 // Update status display
@@ -672,13 +787,21 @@ function updateStatusDisplay(statusToggle, status) {
 }
 
 // Get account status (for use in other parts of the app, e.g., login check)
-function getAccountStatus(accountId) {
+function getAccountStatus(accountId, role) {
+    // ADMIN accounts are always active
+    if (role === 'ADMIN') {
+        return 'active';
+    }
     return localStorage.getItem(`account_status_${accountId}`) || 'active';
 }
 
 // Check if account is active
-function isAccountActive(accountId) {
-    return getAccountStatus(accountId) === 'active';
+function isAccountActive(accountId, role) {
+    // ADMIN accounts are always active
+    if (role === 'ADMIN') {
+        return true;
+    }
+    return getAccountStatus(accountId, role) === 'active';
 }
 
 // Add fadeOut animation

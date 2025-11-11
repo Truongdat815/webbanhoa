@@ -8,7 +8,7 @@ public interface ProductService {
     Product createProduct(Product product);
     List<Product> findAllProducts();
     Product updateProduct(Long id,Product product);
-    boolean deleteProduct(Long id);
+    Product deleteProduct(Long id);
     // ← THÊM MỚI
     Product findProductById(Long id);
 
