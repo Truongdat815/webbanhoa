@@ -89,43 +89,31 @@
                     </select>
                 </div>
 
-                <!-- Products Table -->
-                <div class="admin-table-container">
-                    <table class="admin-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Hình ảnh</th>
-                                <th>Tên sản phẩm</th>
-                                <th>Giá</th>
-                                <th>Số lượng</th>
-                                <th>Danh mục</th>
-                                <th>Thao tác</th>
-                            </tr>
-                        </thead>
-                        <tbody id="productsTableBody">
-                            <tr th:each="product : ${products}">
-                                <td th:text="${product.id}">1</td>
-                                <td>
-                                    <img th:src="${product.imageUrl}" th:alt="${product.name}" class="table-image">
-                                </td>
-                                <td th:text="${product.name}">Tên sản phẩm</td>
-                                <td th:text="${'₫' + #numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}">₫0</td>
-                                <td th:text="${product.stockQuantity}">0</td>
-                                <td th:text="${product.category}">Danh mục</td>
-                                <td>
-                                    <div class="action-buttons">
-                                        <a th:href="@{/admin/products/edit/{id}(id=${product.id})}" class="btn-edit" title="Sửa">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <button class="btn-delete" th:data-id="${product.id}" th:data-name="${product.name}" title="Xóa">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <!-- Products Grid (2 columns) -->
+                <div class="products-grid-admin" id="productsTableBody">
+                    <div class="product-card-admin" th:each="product : ${products}"
+                         th:data-name="${#strings.toLowerCase(product.name)}"
+                         th:data-category="${product.category}">
+                        <div class="product-card-media">
+                            <img th:src="${product.imageUrl}" th:alt="${product.name}" class="product-card-image">
+                        </div>
+                        <div class="product-card-info">
+                            <div class="product-card-title" th:text="${product.name}">Tên sản phẩm</div>
+                            <div class="product-card-meta">
+                                <span class="price" th:text="${'₫' + #numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')}">₫0</span>
+                                <span class="stock">SL: <span th:text="${product.stockQuantity}">0</span></span>
+                            </div>
+                            <div class="product-card-sub">Danh mục: <span th:text="${product.category}">Danh mục</span></div>
+                        </div>
+                        <div class="product-card-actions">
+                            <a th:href="@{/admin/products/edit/{id}(id=${product.id})}" class="btn-edit" title="Sửa">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <button class="btn-delete" th:data-id="${product.id}" th:data-name="${product.name}" title="Xóa">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Empty State -->

@@ -194,21 +194,23 @@ async function deleteProduct(productId) {
             // Remove row from table - find button first, then get parent row
             const deleteButton = document.querySelector(`.btn-delete[data-id="${productId}"]`);
             if (deleteButton) {
+                // Support both table row and grid card
                 const row = deleteButton.closest('tr');
-                if (row) {
-                    row.style.animation = 'fadeOut 0.3s ease-out';
+                const card = deleteButton.closest('.product-card-admin');
+                const target = row || card;
+                if (target) {
+                    target.style.animation = 'fadeOut 0.3s ease-out';
                     setTimeout(() => {
-                        row.remove();
-                        // Check if table is empty
-                        const productsTable = document.querySelector('#productsTableBody');
-                        if (productsTable) {
-                            const remainingRows = productsTable.querySelectorAll('tr');
+                        target.remove();
+                        // Check if list is empty
+                        const container = document.querySelector('#productsTableBody');
+                        if (container) {
+                            const remainingRows = container.querySelectorAll('tr, .product-card-admin');
                             checkEmptyState(remainingRows.length);
                         }
                     }, 300);
                 } else {
-                    console.error('Row not found for product:', productId);
-                    // Reload page to refresh
+                    console.error('Product element not found for:', productId);
                     setTimeout(() => window.location.reload(), 1000);
                 }
             } else {
@@ -469,24 +471,43 @@ function handleSearch() {
     const roleFilter = document.getElementById('roleFilter')?.value || '';
 
     // Products table
-    const productsTable = document.querySelector('#productsTableBody');
-    if (productsTable) {
-        const rows = productsTable.querySelectorAll('tr');
+    const productsContainer = document.querySelector('#productsTableBody');
+    if (productsContainer) {
+        const rows = productsContainer.querySelectorAll('tr');
+        const cards = productsContainer.querySelectorAll('.product-card-admin');
         let visibleCount = 0;
 
-        rows.forEach(row => {
-            const name = row.querySelector('td:nth-child(3)')?.textContent.toLowerCase() || '';
-            const category = row.querySelector('td:nth-child(6)')?.textContent || '';
-            const matchesSearch = name.includes(searchTerm);
-            const matchesCategory = !categoryFilter || category === categoryFilter;
+        if (rows.length > 0) {
+            rows.forEach(row => {
+                const name = row.querySelector('td:nth-child(3)')?.textContent.toLowerCase() || '';
+                const category = row.querySelector('td:nth-child(6)')?.textContent || '';
+                const matchesSearch = name.includes(searchTerm);
+                const matchesCategory = !categoryFilter || category === categoryFilter;
 
-            if (matchesSearch && matchesCategory) {
-                row.style.display = '';
-                visibleCount++;
-            } else {
-                row.style.display = 'none';
-            }
-        });
+                if (matchesSearch && matchesCategory) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+
+        if (cards.length > 0) {
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name') || '';
+                const category = card.getAttribute('data-category') || '';
+                const matchesSearch = name.includes(searchTerm);
+                const matchesCategory = !categoryFilter || category === categoryFilter;
+
+                if (matchesSearch && matchesCategory) {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
 
         checkEmptyState(visibleCount);
     }

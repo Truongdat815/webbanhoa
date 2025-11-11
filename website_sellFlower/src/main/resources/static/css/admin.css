@@ -160,7 +160,7 @@ body.admin-page .admin-main {
 .admin-sidebar {
     width: 260px;
     background-color: #ffffff;
-    border-radius: 4px;
+    border-radius: 16px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     height: fit-content;
     position: sticky;
@@ -567,6 +567,90 @@ body.admin-page .admin-main {
     object-fit: cover;
     border-radius: 6px;
     border: 1px solid #e0e0e0;
+}
+
+/* Products Grid (Admin) */
+.products-grid-admin {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.product-card-admin {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 160px 1fr auto;
+    gap: 16px;
+    align-items: center;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+}
+
+.product-card-media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-card-image {
+    width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    background: #fafafa;
+}
+
+.product-card-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.product-card-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.product-card-meta {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    color: #374151;
+    font-weight: 600;
+}
+
+.product-card-meta .price {
+    color: #E95473;
+}
+
+.product-card-sub {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.product-card-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+@media (max-width: 1024px) {
+    .products-grid-admin {
+        grid-template-columns: 1fr;
+    }
+
+    .product-card-admin {
+        grid-template-columns: 140px 1fr;
+    }
+
+    .product-card-actions {
+        grid-column: span 2;
+        justify-content: flex-end;
+    }
 }
 
 /* Action Buttons */
@@ -1086,3 +1170,44 @@ body.admin-page .admin-main {
     }
 }
 
+
+/* ===== Dashboard Charts (Rounded, soft UI) ===== */
+.admin-content {
+    border-radius: 24px;
+}
+
+.stats-chart-card {
+    background: #ffffff;
+    border-radius: 24px;
+    padding: 24px;
+    box-shadow: 0 20px 45px -25px rgba(15, 23, 42, 0.35);
+    margin-bottom: 24px;
+    border: 1px solid #e0e0e0;
+}
+
+.chart-header h2 {
+    font-size: 20px;
+    margin-bottom: 6px;
+}
+
+.chart-header span {
+    color: #64748b;
+    font-size: 13px;
+}
+
+/* Size the dashboard chart canvases for better aspect ratio */
+.stats-chart-card canvas {
+    width: 100% !important;
+    height: 360px !important;
+}
+
+/* Slightly smaller for the second chart card */
+.stats-chart-card + .stats-chart-card canvas {
+    height: 320px !important;
+}
+
+@media (max-width: 768px) {
+    .stats-chart-card canvas {
+        height: 280px !important;
+    }
+}
