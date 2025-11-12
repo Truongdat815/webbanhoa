@@ -13,7 +13,7 @@ import java.util.List;
 @Repository
 public interface ReviewRepository extends JpaRepository<Review, Long> {
     // ← THÊM MỚI: Tìm reviews theo productId với fetch join để load account
-    @Query("SELECT r FROM Review r LEFT JOIN FETCH r.account WHERE r.product.id = :productId AND r.status = 'APPROVED'")
+    @Query("SELECT r FROM Review r LEFT JOIN FETCH r.account WHERE r.product.id = :productId")
     List<Review> findByProductId(@Param("productId") Long productId);
 
     // Delete review by ID using native query

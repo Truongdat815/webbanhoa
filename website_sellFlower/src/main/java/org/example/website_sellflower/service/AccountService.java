@@ -22,5 +22,6 @@ public interface AccountService {
     public boolean existsByName(String name);
     public boolean existsByEmail(String email);
     public boolean existsByPhone(String phone);
+    public void updateAccountStatus(Long id, String status);
 
 }

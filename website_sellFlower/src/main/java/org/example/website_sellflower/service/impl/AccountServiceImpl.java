@@ -7,6 +7,7 @@ import org.example.website_sellflower.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -82,5 +83,15 @@ public class AccountServiceImpl implements AccountService {
     public boolean existsByPhone (String phone){
         return repository.findByPhone(phone).isPresent();
 
+    }
+
+    @Override
+    public void updateAccountStatus(Long id, String status) {
+        Optional<Account> optionalAccount = repository.findById(id);
+        if (optionalAccount.isPresent()) {
+            Account account = optionalAccount.get();
+            account.setStatus(status.toUpperCase());
+            repository.save(account);
+        }
     }
 }

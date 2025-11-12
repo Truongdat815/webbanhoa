@@ -233,53 +233,73 @@ function initTabs() {
 
 // Initialize rating stars for review form
 function initReviewRating() {
-    const ratingStars = document.querySelectorAll('.rating-stars-input i');
+    // CHỈ chọn sao trong form THÊM (dùng class riêng)
+    const ratingStars = document.querySelectorAll('.add-rating-stars i');
     const ratingInput = document.getElementById('reviewRating');
-    
-    if (!ratingStars.length || !ratingInput) return;
-    
-    let currentRating = parseInt(ratingInput.value) || 5;
-    
-    // Update stars display
+
+    // Kiểm tra tồn tại
+    if (!ratingStars.length || !ratingInput) {
+        console.warn('Rating stars or input not found!');
+        return;
+    }
+
+    // Lấy giá trị hiện tại, mặc định = 0 (chưa chọn)
+    let currentRating = parseInt(ratingInput.value, 10) || 0;
+
+
+     // Cập nhật giao diện sao
+
     function updateStars(rating) {
         ratingStars.forEach((star, index) => {
             if (index < rating) {
-                star.classList.add('filled', 'active');
                 star.classList.remove('far');
-                star.classList.add('fas');
+                star.classList.add('fas', 'filled');
             } else {
-                star.classList.remove('filled', 'active');
-                star.classList.remove('fas');
+                star.classList.remove('fas', 'filled');
                 star.classList.add('far');
             }
         });
     }
-    
-    // Initialize with default rating (5 stars)
-    updateStars(5);
-    ratingInput.value = 5;
-    currentRating = 5;
-    
-    // Add click event listeners
+
+    // Khởi tạo: không fill sao nếu chưa chọn
+    updateStars(currentRating);
+
+    // Xử lý click chọn sao
     ratingStars.forEach((star, index) => {
-        star.addEventListener('click', function() {
-            currentRating = index + 1;
-            ratingInput.value = currentRating;
+        const ratingValue = index + 1;
+
+        star.addEventListener('click', function () {
+            currentRating = ratingValue;
+            ratingInput.value = currentRating; // CẬP NHẬT INPUT
             updateStars(currentRating);
+            console.log('Rating selected:', currentRating); // Debug
         });
-        
-        star.addEventListener('mouseenter', function() {
-            updateStars(index + 1);
+
+        // Hover preview
+        star.addEventListener('mouseenter', function () {
+            updateStars(ratingValue);
         });
     });
-    
-    // Reset on mouse leave
-    const ratingContainer = document.querySelector('.rating-stars-input');
-    if (ratingContainer) {
-        ratingContainer.addEventListener('mouseleave', function() {
+
+    // Khi rời chuột: khôi phục trạng thái đã chọn
+    const container = document.querySelector('.add-rating-stars');
+    if (container) {
+        container.addEventListener('mouseleave', function () {
             updateStars(currentRating);
         });
     }
+}
+
+
+ // Validate form trước khi submit
+
+function validateReview() {
+    const rating = document.getElementById('reviewRating').value;
+    if (!rating || parseInt(rating) === 0) {
+        alert('Vui lòng chọn số sao đánh giá!');
+        return false;
+    }
+    return true;
 }
 
 // Scroll to reviews section smoothly

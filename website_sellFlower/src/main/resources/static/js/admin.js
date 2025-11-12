@@ -768,6 +768,22 @@ function setupStatusToggleListeners() {
 
 // Toggle account status
 function toggleAccountStatus(accountId, username, newStatus, statusToggle) {
+
+    fetch(`/admin/account/update-status?id=${accountId}&status=${newStatus}`, {
+        method: 'POST'
+    })
+        .then(response => {
+            if (!response.ok) throw new Error('Cập nhật thất bại');
+            return response.text();
+        })
+        .then(message => {
+            console.log(message);
+            showToast(`Đã ${statusText} tài khoản "${username}". ${actionText}`, 'success');
+        })
+        .catch(error => {
+            console.error(error);
+            showToast('Có lỗi xảy ra khi cập nhật trạng thái trong cơ sở dữ liệu.', 'error');
+        });
     const role = statusToggle.getAttribute('data-role') || 'USER';
     
     // Đảm bảo chỉ toggle cho USER, không cho phép thay đổi status của ADMIN
