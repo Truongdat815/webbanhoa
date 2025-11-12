@@ -94,4 +94,9 @@ public class AccountServiceImpl implements AccountService {
             repository.save(account);
         }
     }
+
+    @Override
+    public long countAccounts() {
+        return repository.count();
+    }
 }

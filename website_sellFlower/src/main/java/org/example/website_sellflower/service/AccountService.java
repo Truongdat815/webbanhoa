@@ -19,6 +19,8 @@ public interface AccountService {
     
     public boolean deleteAccount(Long id);
 
+    long countAccounts();
+
     public boolean existsByName(String name);
     public boolean existsByEmail(String email);
     public boolean existsByPhone(String phone);

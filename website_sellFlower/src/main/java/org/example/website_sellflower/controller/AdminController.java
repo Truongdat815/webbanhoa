@@ -3,6 +3,7 @@ package org.example.website_sellflower.controller;
 import jakarta.servlet.http.HttpSession;
 import org.example.website_sellflower.entity.Account;
 import org.example.website_sellflower.entity.Order;
+import org.example.website_sellflower.entity.OrderDetail;
 import org.example.website_sellflower.entity.Product;
 import org.example.website_sellflower.service.AccountService;
 import org.example.website_sellflower.service.OrderService;
@@ -14,8 +15,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
+import java.time.temporal.WeekFields;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -57,13 +68,215 @@ public class AdminController {
         model.addAttribute("userDisplayName", account.getFullName());
         model.addAttribute("isAdmin", true);
 
-        // Thống kê (sẽ được implement ở backend)
-        model.addAttribute("totalProducts", productService.findAllProducts().size());
-        model.addAttribute("totalOrders", orderService.getAllOrders().size());
-        // model.addAttribute("totalAccounts", accountService.findAll().size());
-        // model.addAttribute("totalRevenue", orderService.getTotalRevenue());
+        Map<String, Object> dashboardStats = buildDashboardStats();
+        model.addAttribute("dashboardStats", dashboardStats);
+
+        Map<String, Object> totals = (Map<String, Object>) dashboardStats.getOrDefault("totals", new HashMap<>());
+        model.addAttribute("totalProducts", ((Number) totals.getOrDefault("products", 0)).intValue());
+        model.addAttribute("totalOrders", ((Number) totals.getOrDefault("orders", 0)).longValue());
+        model.addAttribute("totalAccounts", ((Number) totals.getOrDefault("accounts", 0)).longValue());
+        model.addAttribute("totalRevenue", ((Number) totals.getOrDefault("revenue", 0)).doubleValue());
 
         return "admin/dashboard";
+    }
+
+    @GetMapping("/api/dashboard")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getDashboardStats(HttpSession session) {
+        if (!isAdmin(session)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        return ResponseEntity.ok(buildDashboardStats());
+    }
+
+    private Map<String, Object> buildDashboardStats() {
+        Map<String, Object> data = new HashMap<>();
+
+        List<Product> products = productService.findAllProducts();
+        List<Account> accounts = accountService.findAllAccounts();
+        List<Order> orders = orderService.getAllOrders();
+
+        int productCount = products != null ? products.size() : 0;
+        long accountCount = accounts != null ? accounts.size() : 0;
+        long orderCount = orderService.countOrders();
+        double totalRevenue = orderService.getTotalRevenue();
+
+        Map<String, Object> totals = new HashMap<>();
+        totals.put("products", productCount);
+        totals.put("orders", orderCount);
+        totals.put("accounts", accountCount);
+        totals.put("revenue", totalRevenue);
+        data.put("totals", totals);
+        data.put("products", productCount);
+        data.put("orders", orderCount);
+        data.put("accounts", accountCount);
+        data.put("revenue", totalRevenue);
+
+        Map<String, Object> totalsChart = new HashMap<>();
+        totalsChart.put("labels", List.of("Sản phẩm", "Tài khoản"));
+        totalsChart.put("values", List.of(productCount, (int) accountCount));
+        data.put("totalsChart", totalsChart);
+
+        data.put("revenueBreakdown", buildRevenueBreakdown(orders));
+        data.put("trends", buildTrendData(orders));
+
+        return data;
+    }
+
+    private Map<String, Object> buildTrendData(List<Order> orders) {
+        LocalDate now = LocalDate.now();
+        LinkedHashMap<String, Integer> monthly = initMonthlyBuckets(now);
+        LinkedHashMap<String, Integer> weekly = initWeeklyBuckets(now);
+        LinkedHashMap<String, Integer> daily = initDailyBuckets(now);
+
+        if (orders != null) {
+            WeekFields weekFields = WeekFields.of(Locale.getDefault());
+            LocalDate currentWeekStart = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
+            for (Order order : orders) {
+                if (order == null || order.getOrderDate() == null) {
+                    continue;
+                }
+
+                LocalDate orderDate = order.getOrderDate().toLocalDate();
+                accumulateMonthly(orderDate, now, monthly);
+                accumulateWeekly(orderDate, currentWeekStart, weekFields, weekly);
+                accumulateDaily(orderDate, now, daily);
+            }
+        }
+
+        Map<String, Object> trends = new HashMap<>();
+        trends.put("month", toSeries(monthly));
+        trends.put("week", toSeries(weekly));
+        trends.put("day", toSeries(daily));
+        return trends;
+    }
+
+    private LinkedHashMap<String, Integer> initMonthlyBuckets(LocalDate now) {
+        LinkedHashMap<String, Integer> buckets = new LinkedHashMap<>();
+        for (int i = 3; i >= 0; i--) {
+            LocalDate month = now.minusMonths(i);
+            buckets.put(String.format("Th%d", month.getMonthValue()), 0);
+        }
+        return buckets;
+    }
+
+    private LinkedHashMap<String, Integer> initWeeklyBuckets(LocalDate now) {
+        LinkedHashMap<String, Integer> buckets = new LinkedHashMap<>();
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        for (int i = 7; i >= 0; i--) {
+            LocalDate weekStart = now.minusWeeks(i).with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+            buckets.put(formatWeekLabel(weekStart, weekFields), 0);
+        }
+        return buckets;
+    }
+
+    private LinkedHashMap<String, Integer> initDailyBuckets(LocalDate now) {
+        LinkedHashMap<String, Integer> buckets = new LinkedHashMap<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM");
+        for (int i = 6; i >= 0; i--) {
+            LocalDate day = now.minusDays(i);
+            buckets.put(day.format(formatter), 0);
+        }
+        return buckets;
+    }
+
+    private void accumulateMonthly(LocalDate orderDate, LocalDate now, LinkedHashMap<String, Integer> monthly) {
+        long monthsDiff = ChronoUnit.MONTHS.between(orderDate.withDayOfMonth(1), now.withDayOfMonth(1));
+        if (monthsDiff >= 0 && monthsDiff <= 3) {
+            String key = String.format("Th%d", orderDate.getMonthValue());
+            monthly.computeIfPresent(key, (k, v) -> v + 1);
+        }
+    }
+
+    private void accumulateWeekly(LocalDate orderDate,
+                                  LocalDate currentWeekStart,
+                                  WeekFields weekFields,
+                                  LinkedHashMap<String, Integer> weekly) {
+        LocalDate orderWeekStart = orderDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        long weeksDiff = ChronoUnit.WEEKS.between(orderWeekStart, currentWeekStart);
+        if (weeksDiff >= 0 && weeksDiff <= 7) {
+            String key = formatWeekLabel(orderWeekStart, weekFields);
+            weekly.computeIfPresent(key, (k, v) -> v + 1);
+        }
+    }
+
+    private void accumulateDaily(LocalDate orderDate, LocalDate now, LinkedHashMap<String, Integer> daily) {
+        long daysDiff = ChronoUnit.DAYS.between(orderDate, now);
+        if (daysDiff >= 0 && daysDiff <= 6) {
+            String key = orderDate.format(DateTimeFormatter.ofPattern("dd/MM"));
+            daily.computeIfPresent(key, (k, v) -> v + 1);
+        }
+    }
+
+    private String formatWeekLabel(LocalDate weekStart, WeekFields weekFields) {
+        int weekNumber = weekStart.get(weekFields.weekOfWeekBasedYear());
+        int year = weekStart.get(weekFields.weekBasedYear());
+        return String.format("Tuần %02d/%d", weekNumber, year % 100);
+    }
+
+    private Map<String, Object> toSeries(LinkedHashMap<String, Integer> buckets) {
+        Map<String, Object> series = new HashMap<>();
+        series.put("labels", new ArrayList<>(buckets.keySet()));
+        series.put("values", new ArrayList<>(buckets.values()));
+        return series;
+    }
+
+    private List<Map<String, Object>> buildRevenueBreakdown(List<Order> orders) {
+        Map<Long, ProductRevenueSummary> revenueByProduct = new HashMap<>();
+
+        if (orders != null) {
+            for (Order order : orders) {
+                if (order == null || order.getOrderDetails() == null) {
+                    continue;
+                }
+
+                for (OrderDetail detail : order.getOrderDetails()) {
+                    if (detail == null || detail.getProduct() == null) {
+                        continue;
+                    }
+
+                    Product product = detail.getProduct();
+                    Long productId = product.getId();
+                    ProductRevenueSummary summary = revenueByProduct.computeIfAbsent(
+                            productId,
+                            id -> new ProductRevenueSummary(product.getName() != null ? product.getName() : "Sản phẩm " + id)
+                    );
+
+                    double price = detail.getPrice() != null ? detail.getPrice() : 0.0;
+                    int quantity = detail.getQuantity() != null ? detail.getQuantity() : 0;
+                    summary.revenue += price * quantity;
+                    summary.quantity += quantity;
+                }
+            }
+        }
+
+        List<Map<String, Object>> breakdown = new ArrayList<>();
+        revenueByProduct.entrySet().stream()
+                .sorted(Comparator.comparingDouble((Map.Entry<Long, ProductRevenueSummary> e) -> e.getValue().revenue).reversed())
+                .limit(12)
+                .forEach(entry -> {
+                    ProductRevenueSummary summary = entry.getValue();
+                    Map<String, Object> item = new HashMap<>();
+                    item.put("productId", entry.getKey());
+                    item.put("name", summary.name);
+                    item.put("revenue", summary.revenue);
+                    item.put("quantity", summary.quantity);
+                    breakdown.add(item);
+                });
+
+        return breakdown;
+    }
+
+    private static class ProductRevenueSummary {
+        final String name;
+        double revenue = 0.0;
+        int quantity = 0;
+
+        ProductRevenueSummary(String name) {
+            this.name = name;
+        }
     }
 
     // ==================== PRODUCT MANAGEMENT ====================

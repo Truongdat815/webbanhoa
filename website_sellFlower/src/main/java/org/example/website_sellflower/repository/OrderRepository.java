@@ -16,4 +16,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> getAllByOrderDateDesc();
 
     List<Order> findByStatus(String status);
+
+    @Query("SELECT COALESCE(SUM(o.totalAmount), 0) FROM Order o")
+    Double sumTotalAmount();
 }

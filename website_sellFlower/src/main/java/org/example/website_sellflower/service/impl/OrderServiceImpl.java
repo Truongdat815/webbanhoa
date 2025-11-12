@@ -125,4 +125,40 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> findByAccountId(Long accountId) {
         return repository.findByAccountId(accountId);
     }
+
+    @Override
+    public long countOrders() {
+        return repository.count();
+    }
+
+    @Override
+    public double getTotalRevenue() {
+        Double sum = repository.sumTotalAmount();
+        if (sum != null && sum > 0) {
+            return sum;
+        }
+
+        // Fallback: calculate from order details in case legacy records lack totalAmount
+        List<Order> all = repository.findAll();
+        if (all == null || all.isEmpty()) {
+            return 0.0;
+        }
+        return all.stream()
+                .mapToDouble(order -> {
+                    if (order.getTotalAmount() != null) {
+                        return order.getTotalAmount();
+                    }
+                    if (order.getOrderDetails() == null) {
+                        return 0.0;
+                    }
+                    return order.getOrderDetails().stream()
+                            .mapToDouble(detail -> {
+                                double price = detail.getPrice() != null ? detail.getPrice() : 0.0;
+                                int qty = detail.getQuantity() != null ? detail.getQuantity() : 0;
+                                return price * qty;
+                            })
+                            .sum();
+                })
+                .sum();
+    }
 }
