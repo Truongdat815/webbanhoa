@@ -41,7 +41,7 @@ public class AdminController {
     // Redirect nếu không phải admin
     private String checkAdminAndRedirect(HttpSession session) {
         if (!isAdmin(session)) {
-            return "redirect:/login?error=Không có quyền truy cập";
+            return "redirect:/login";
         }
         return null;
     }
