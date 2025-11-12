@@ -125,6 +125,10 @@
                                 <span th:text="${order.account.getFullName()}">Khách hàng</span>
                             </div>
                             <div class="info-item">
+                                <label>Tên người nhận:</label>
+                                <span th:text="${order.recipientName != null ? order.recipientName : order.account.getFullName()}">Tên người nhận</span>
+                            </div>
+                            <div class="info-item">
                                 <label>Email:</label>
                                 <span th:text="${order.account.getEmail()}">Email</span>
                             </div>

@@ -126,7 +126,15 @@
                                 <span class="order-id" th:text="'#ORD-' + ${order.id}">#ORD-</span>
                                 <span class="order-date" th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy') : ''}"></span>
                             </div>
-                            <div class="order-status" th:classappend="${recentOrderStatusClassMap != null && recentOrderStatusClassMap.containsKey(order.id) ? recentOrderStatusClassMap.get(order.id) : 'pending'}" th:text="${order.status != null ? #strings.replace(order.status, '_', ' ') : ''}"></div>
+                            <div class="order-status" th:classappend="${recentOrderStatusClassMap != null && recentOrderStatusClassMap.containsKey(order.id) ? recentOrderStatusClassMap.get(order.id) : 'pending'}">
+                                <span th:switch="${order.status}">
+                                    <span th:case="'REQUEST'">Chờ xác nhận</span>
+                                    <span th:case="'DELIVERY'">Đang giao</span>
+                                    <span th:case="'COMPLETED'">Đã hoàn thành</span>
+                                    <span th:case="'REJECTED'">Đã từ chối</span>
+                                    <span th:case="*">N/A</span>
+                                </span>
+                            </div>
                             <div class="order-total" th:if="${order.totalAmount != null}" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + '₫'"></div>
                             <div class="order-total" th:if="${order.totalAmount == null}">0₫</div>
                         </div>
@@ -162,8 +170,15 @@
                             <td th:text="'#ORD-' + ${order.id}">#ORD-0001</td>
                             <td th:text="${order.orderDate != null ? #temporals.format(order.orderDate, 'dd/MM/yyyy') : ''}"></td>
                             <td>
-<!--                                <span class="order-status-badge" th:classappend="${orderStatusClassMap != null && orderStatusClassMap.containsKey(order.id) ? orderStatusClassMap.get(order.id) : 'pending'}" th:text="${order.status != null ? #strings.replace(order.status, '_', ' ') : ''}"></span>-->
-                                <span class="order-status-badge" th:text="${order.getStatus()}"></span>
+                                <span class="order-status-badge">
+                                    <span th:switch="${order.status}">
+                                        <span th:case="'REQUEST'">Chờ xác nhận</span>
+                                        <span th:case="'DELIVERY'">Đang giao</span>
+                                        <span th:case="'COMPLETED'">Đã hoàn thành</span>
+                                        <span th:case="'REJECTED'">Đã từ chối</span>
+                                        <span th:case="*">N/A</span>
+                                    </span>
+                                </span>
                                 <button th:if="${order.getStatus().equals('DELIVERY')}" class="view-details-btn updateStatus" th:data-new-status="COMPLETED" th:data-order-id="${order.id}">Xác nhận đã giao hàng</button>
                             </td>
                             <td th:if="${order.totalAmount != null}" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
