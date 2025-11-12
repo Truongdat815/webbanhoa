@@ -1,4 +1,4 @@
-package org.example.website_sellflower.service.Impl;
+package org.example.website_sellflower.service.impl;
 
 import org.example.website_sellflower.entity.Order;
 import org.example.website_sellflower.entity.OrderDetail;
