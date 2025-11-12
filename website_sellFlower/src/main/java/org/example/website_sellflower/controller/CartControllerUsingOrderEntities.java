@@ -61,6 +61,8 @@ public class CartControllerUsingOrderEntities {
             model.addAttribute("isLoggedIn", true);
             model.addAttribute("userDisplayName",account.getFullName());
             model.addAttribute("isAdmin", "ADMIN".equals(account.getRole()));
+            model.addAttribute("defaultRecipientName", account.getFullName());
+            model.addAttribute("defaultShippingAddress", account.getAddress());
             List<OrderDetail> cart = (List<OrderDetail>) session.getAttribute("cart");
             if (cart != null) {
                 model.addAttribute("cartItemCount", cart.size());
@@ -380,7 +382,8 @@ public class CartControllerUsingOrderEntities {
     // Checkout: create Order in DB from cart
     @PostMapping("/api/checkout")
     @ResponseBody
-    public ResponseEntity<Map<String, Object>> apiCheckout(HttpSession session) {
+    public ResponseEntity<Map<String, Object>> apiCheckout(@RequestBody(required = false) Map<String, String> payload,
+                                                           HttpSession session) {
         Account sessAcc = (Account) session.getAttribute("account");
         Map<String, Object> resp = new HashMap<>();
         if (sessAcc == null) {
@@ -389,10 +392,19 @@ public class CartControllerUsingOrderEntities {
             return ResponseEntity.status(401).body(resp);
         }
 
+        String recipientName = payload != null ? payload.get("recipientName") : null;
+        String shippingAddressInput = payload != null ? payload.get("shippingAddress") : null;
+
         List<OrderDetail> cart = getCart(session);
         if (cart == null || cart.isEmpty()) {
             resp.put("success", false);
             resp.put("message", "Giỏ hàng trống");
+            return ResponseEntity.badRequest().body(resp);
+        }
+
+        if (recipientName == null || recipientName.trim().isEmpty()) {
+            resp.put("success", false);
+            resp.put("message", "Vui lòng nhập tên người nhận");
             return ResponseEntity.badRequest().body(resp);
         }
 
@@ -403,7 +415,14 @@ public class CartControllerUsingOrderEntities {
             order.setOrderDate(LocalDateTime.now());
             order.setStatus("REQUEST");
             order.setPhone(fullAcc != null ? fullAcc.getPhone() : null);
-            order.setShippingAddress(fullAcc != null ? fullAcc.getAddress() : null);
+            String finalShippingAddress;
+            if (shippingAddressInput != null && !shippingAddressInput.trim().isEmpty()) {
+                finalShippingAddress = shippingAddressInput.trim();
+            } else {
+                finalShippingAddress = fullAcc != null ? fullAcc.getAddress() : null;
+            }
+            order.setShippingAddress(finalShippingAddress);
+            order.setRecipientName(recipientName.trim());
 
             List<OrderDetail> detailsToSave = new ArrayList<>();
             for (OrderDetail detached : cart) {

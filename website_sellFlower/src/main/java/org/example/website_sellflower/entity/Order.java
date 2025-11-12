@@ -1,7 +1,6 @@
 package org.example.website_sellflower.entity;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,6 +27,9 @@ public class Order {
     @Column(name = "shipping_address", columnDefinition = "NVARCHAR(500)")
     private String shippingAddress;
 
+    @Column(name = "recipient_name", columnDefinition = "NVARCHAR(255)")
+    private String recipientName;
+
     @Column(columnDefinition = "NVARCHAR(20)")
     private String phone;
 
@@ -37,13 +39,14 @@ public class Order {
     public Order() {
     }
     public Order(Account account) {}
-    public Order(Long id, Account account, LocalDateTime orderDate, Double totalAmount, String status, String shippingAddress, String phone, List<OrderDetail> orderDetails) {
+    public Order(Long id, Account account, LocalDateTime orderDate, Double totalAmount, String status, String shippingAddress, String recipientName, String phone, List<OrderDetail> orderDetails) {
         this.id = id;
         this.account = account;
         this.orderDate = orderDate;
         this.totalAmount = totalAmount;
         this.status = status;
         this.shippingAddress = shippingAddress;
+        this.recipientName = recipientName;
         this.phone = phone;
         this.orderDetails = orderDetails;
     }
@@ -102,6 +105,14 @@ public class Order {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getRecipientName() {
+        return recipientName;
+    }
+
+    public void setRecipientName(String recipientName) {
+        this.recipientName = recipientName;
     }
 
     public List<OrderDetail> getOrderDetails() {

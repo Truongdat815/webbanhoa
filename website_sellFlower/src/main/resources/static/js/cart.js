@@ -460,10 +460,50 @@ document.getElementById('updateCartBtn')?.addEventListener('click', async functi
 });
 
 // Checkout confirmation modal
-function showCheckoutConfirmation() {
+function showCheckoutConfirmation(recipientName, shippingAddress) {
     return new Promise((resolve) => {
-        const confirmed = confirm('Bạn có chắc chắn muốn đặt hàng?\n\nĐơn hàng sẽ được tạo với địa chỉ và số điện thoại trong tài khoản của bạn.');
-        resolve(confirmed);
+        const modal = document.getElementById('checkoutConfirmModal');
+        const msg = document.getElementById('confirmMessage');
+        const okBtn = document.getElementById('confirmOkBtn');
+        const cancelBtn = document.getElementById('confirmCancelBtn');
+
+        if (!modal || !msg || !okBtn || !cancelBtn) {
+            // Fallback if modal not present
+            const confirmed = confirm(
+                `Bạn có chắc chắn muốn đặt hàng với thông tin:\n\n` +
+                `Người nhận: ${recipientName}\n` +
+                `Địa chỉ: ${shippingAddress}\n\n` +
+                `Đơn hàng sẽ được xử lý ngay sau khi xác nhận.`
+            );
+            resolve(confirmed);
+            return;
+        }
+
+        msg.textContent =
+            `Bạn có chắc chắn muốn đặt hàng với thông tin:\n\n` +
+            `Người nhận: ${recipientName}\n` +
+            `Địa chỉ: ${shippingAddress}\n\n` +
+            `Đơn hàng sẽ được xử lý ngay sau khi xác nhận.`;
+
+        // Open modal
+        modal.classList.add('show');
+
+        const cleanup = () => {
+            modal.classList.remove('show');
+            okBtn.removeEventListener('click', onOk);
+            cancelBtn.removeEventListener('click', onCancel);
+            modal.removeEventListener('click', onBackdrop);
+            document.removeEventListener('keydown', onEsc);
+        };
+        const onOk = () => { cleanup(); resolve(true); };
+        const onCancel = () => { cleanup(); resolve(false); };
+        const onBackdrop = (e) => { if (e.target === modal) onCancel(); };
+        const onEsc = (e) => { if (e.key === 'Escape') onCancel(); };
+
+        okBtn.addEventListener('click', onOk);
+        cancelBtn.addEventListener('click', onCancel);
+        modal.addEventListener('click', onBackdrop);
+        document.addEventListener('keydown', onEsc);
     });
 }
 
@@ -478,8 +518,40 @@ document.getElementById('checkoutBtn')?.addEventListener('click', async function
         return;
     }
 
+    const recipientNameInput = document.getElementById('recipientName');
+    const shippingAddressInput = document.getElementById('shippingAddress');
+    const checkoutError = document.getElementById('checkoutError');
+
+    const recipientName = recipientNameInput ? recipientNameInput.value.trim() : '';
+    const shippingAddress = shippingAddressInput ? shippingAddressInput.value.trim() : '';
+
+    if (checkoutError) {
+        checkoutError.style.display = 'none';
+        checkoutError.textContent = '';
+    }
+
+    if (!recipientName) {
+        if (checkoutError) {
+            checkoutError.textContent = 'Vui lòng nhập tên người nhận.';
+            checkoutError.style.display = 'block';
+        }
+        recipientNameInput?.focus();
+        showToast('Tên người nhận không được để trống.', 'warning');
+        return;
+    }
+
+    if (!shippingAddress) {
+        if (checkoutError) {
+            checkoutError.textContent = 'Vui lòng nhập địa chỉ giao hàng.';
+            checkoutError.style.display = 'block';
+        }
+        shippingAddressInput?.focus();
+        showToast('Địa chỉ giao hàng không được để trống.', 'warning');
+        return;
+    }
+
     // Show confirmation
-    const confirmed = await showCheckoutConfirmation();
+    const confirmed = await showCheckoutConfirmation(recipientName, shippingAddress);
     if (!confirmed) {
         return;
     }
@@ -492,10 +564,22 @@ document.getElementById('checkoutBtn')?.addEventListener('click', async function
     try {
         // Create order from cart
         const response = await fetch('/cart/api/checkout', {
-            method: 'POST'
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                recipientName,
+                shippingAddress
+            })
         });
 
-        const result = await response.json();
+        let result = {};
+        try {
+            result = await response.json();
+        } catch (parseError) {
+            result = { success: false, message: 'Không thể xử lý phản hồi từ máy chủ.' };
+        }
 
         if (result.success) {
             // Update cart count
@@ -513,7 +597,12 @@ document.getElementById('checkoutBtn')?.addEventListener('click', async function
             }, 2000);
         } else {
             // Show error message
-            showToast(result.message || 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.', 'error');
+            const errorMessage = result.message || 'Có lỗi xảy ra khi đặt hàng. Vui lòng thử lại.';
+            showToast(errorMessage, 'error');
+            if (checkoutError) {
+                checkoutError.textContent = errorMessage;
+                checkoutError.style.display = 'block';
+            }
 
             // Restore button
             this.innerHTML = originalText;

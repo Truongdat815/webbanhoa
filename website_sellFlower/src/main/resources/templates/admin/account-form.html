@@ -108,11 +108,15 @@
 
                             <div class="form-group">
                                 <label for="role">Vai trò <span class="required">*</span></label>
-                                <select id="role" th:value="${account.role}" required>
-                                    <option value="USER">USER</option>
+                                <select id="role"
+                                        th:value="${account.role != null ? account.role : 'ADMIN'}"
+                                        required>
                                     <option value="ADMIN">ADMIN</option>
                                 </select>
                                 <span class="error-message" id="roleError"></span>
+                                <small style="display: block; margin-top: 5px; color: #666; font-size: 12px;">
+                                    Tài khoản mới được tạo với quyền ADMIN.
+                                </small>
                             </div>
                         </div>
 

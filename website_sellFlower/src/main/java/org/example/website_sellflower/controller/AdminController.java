@@ -377,6 +377,7 @@ public class AdminController {
         model.addAttribute("isLoggedIn", true);
         model.addAttribute("userDisplayName", account.getFullName());
         model.addAttribute("isAdmin", true);
+        model.addAttribute("currentAccountId", account.getId());
 
         List<Account> accounts = accountService.findAllAccounts();
         model.addAttribute("accounts", accounts);
@@ -549,6 +550,14 @@ public class AdminController {
         }
 
         try {
+            Account currentAccount = (Account) session.getAttribute("account");
+            if (currentAccount == null || !Objects.equals(currentAccount.getId(), id)) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "Không có quyền chỉnh sửa tài khoản này");
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+            }
+
             Account existingAccount = accountService.findById(id);
             if (existingAccount == null) {
                 Map<String, Object> response = new HashMap<>();
@@ -565,9 +574,12 @@ public class AdminController {
                 existingAccount.setEmail(account.getEmail());
             }
             if (account.getPassword() != null && !account.getPassword().trim().isEmpty()) {
-                existingAccount.setPassword(account.getPassword());
+                boolean isSelfUpdate = currentAccount != null && Objects.equals(currentAccount.getId(), existingAccount.getId());
+                if (isSelfUpdate) {
+                    existingAccount.setPassword(account.getPassword());
+                }
             }
-            // Only update password if provided
+            // Password chỉ được cập nhật bởi chính chủ tài khoản
             if (account.getFullName() != null) {
                 existingAccount.setFullName(account.getFullName());
             }
