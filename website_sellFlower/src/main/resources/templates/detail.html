@@ -101,9 +101,9 @@
                     </div>
 
                     <div class="product-meta">
-                        <div class="meta-item" th:if="${product.category != null}">
+                        <div class="meta-item">
                             <span class="meta-label">Danh mục:</span>
-                            <span class="meta-value" th:text="${product.category}">Hoa hồng</span>
+                            <span class="meta-value">Hoa hồng</span>
                         </div>
                         <div class="meta-item">
                             <span class="meta-label">Tình trạng:</span>
@@ -111,10 +111,10 @@
                                   th:if="${product.stockQuantity > 0}" 
                                   th:text="'Còn hàng (' + ${product.stockQuantity} + ' sản phẩm)'" 
                                   style="color: #4caf50;">Còn hàng</span>
-                            <span class="meta-value stock-status" id="stockStatus" 
-                                  th:if="${product.stockQuantity == 0 || product.stockQuantity == null}" 
-                                  th:text="'Hết hàng'" 
-                                  style="color: #f44336;">Hết hàng</span>
+<!--                            <span class="meta-value stock-status" id="stockStatus" -->
+<!--                                  th:if="${product.stockQuantity == 0 || product.stockQuantity == null}" -->
+<!--                                  th:text="'Hết hàng'" -->
+<!--                                  style="color: #f44336;">Hết hàng</span>-->
                         </div>
                     </div>
 
