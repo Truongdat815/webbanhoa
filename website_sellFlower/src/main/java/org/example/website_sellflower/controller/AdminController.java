@@ -311,7 +311,6 @@ public class AdminController {
 //        if (!isAdmin(session)) {
 //            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 //        }
-
         try {
             String status = request.get("status");
             Order order = orderService.getOrderById(id);
@@ -588,6 +587,46 @@ public class AdminController {
             } else {
                 response.put("success", false);
                 response.put("message", "Không thể cập nhật tài khoản");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Lỗi: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    @PutMapping("/api/account/status")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateAccountStatus(@RequestBody Map<String, Object> request, HttpSession session) {
+        if (!isAdmin(session)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        try {
+            Long id = Long.valueOf(String.valueOf(request.get("id")));
+            String status = (String) request.get("status");
+
+            Account existingAccount = accountService.findById(id);
+            if (existingAccount == null) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "Không tìm thấy tài khoản");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+
+            existingAccount.setStatus(status);
+            boolean updated = accountService.updateProfile(existingAccount);
+
+            Map<String, Object> response = new HashMap<>();
+            if (updated) {
+                response.put("success", true);
+                response.put("message", "Cập nhật trạng thái tài khoản thành công");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "Không thể cập nhật trạng thái tài khoản");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
         } catch (Exception e) {

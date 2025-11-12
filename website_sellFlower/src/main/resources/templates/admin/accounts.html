@@ -138,12 +138,12 @@
                                             th:data-account-id="${account.id}" 
                                             th:data-username="${account.username}"
                                             th:data-role="${account.role != null ? account.role : 'USER'}"
-                                            th:data-status="active"
+                                            th:data-status="${account.getStatus()}"
                                             title="Click để đổi trạng thái">
-                                        <span class="status-badge status-active">
+                                        <p class="status-badge status-active">
                                             <i class="fas fa-check-circle"></i>
-                                            Active
-                                        </span>
+                                            <span th:text="${account.getStatus()}"></span>
+                                        </p>
                                     </button>
                                     <!-- Hiển thị text "Active" cho ADMIN (không có button, không thể thay đổi) -->
                                     <span th:if="${account.role != null && account.role == 'ADMIN'}" 

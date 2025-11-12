@@ -200,6 +200,9 @@ async function deleteProduct(productId) {
 
         if (data.success) {
             showToast(data.message || 'Xóa sản phẩm thành công', 'success');
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
             // Remove row from table - find button first, then get parent row
             const deleteButton = document.querySelector(`.btn-delete[data-id="${productId}"]`);
             // if (deleteButton) {
@@ -628,18 +631,18 @@ function initializeAccountStatus() {
     try {
         // First, ensure all ADMIN accounts in localStorage have status 'active'
         ensureAdminAccountsAlwaysActive();
-        
+
         const statusToggles = document.querySelectorAll('.status-toggle');
         if (!statusToggles || statusToggles.length === 0) {
             console.log('No status toggles found on this page');
             return;
         }
-        
+
         statusToggles.forEach(toggle => {
             try {
                 const accountId = toggle.getAttribute('data-account-id');
                 const role = toggle.getAttribute('data-role') || 'USER';
-                
+
                 if (!accountId) {
                     console.warn('Status toggle missing data-account-id attribute');
                     return;
@@ -650,19 +653,19 @@ function initializeAccountStatus() {
                     // Force ADMIN status to always be 'active' in localStorage
                     localStorage.setItem(`account_status_${accountId}`, 'active');
                     toggle.setAttribute('data-status', 'active');
-                    updateStatusDisplay(toggle, 'active');
+                    updateStatusDisplay(toggle, 'ACTIVE');
                     return;
                 }
 
                 // Get status from localStorage, default to 'active' (or use data-status from HTML)
-                const defaultStatus = toggle.getAttribute('data-status') || 'active';
-                const savedStatus = localStorage.getItem(`account_status_${accountId}`) || defaultStatus;
-                
+                const defaultStatus = toggle.getAttribute('data-status') || 'ACTIVE';
+                // const savedStatus = localStorage.getItem(`account_status_${accountId}`) || defaultStatus;
+
                 // Update data attribute
-                toggle.setAttribute('data-status', savedStatus);
-                
+                toggle.setAttribute('data-status', defaultStatus);
+
                 // Update display
-                updateStatusDisplay(toggle, savedStatus);
+                updateStatusDisplay(toggle, defaultStatus);
             } catch (error) {
                 console.error('Error initializing status for toggle:', error);
             }
@@ -748,8 +751,8 @@ function setupStatusToggleListeners() {
                     }
 
                     // Get current status from data attribute (which should be synced with localStorage)
-                    const currentStatus = this.getAttribute('data-status') || 'active';
-                    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+                    const currentStatus = this.getAttribute('data-status') || 'ACTIVE';
+                    const newStatus = currentStatus === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE';
 
                     // Update status
                     toggleAccountStatus(accountId, username, newStatus, this);
@@ -776,9 +779,21 @@ function toggleAccountStatus(accountId, username, newStatus, statusToggle) {
         updateStatusDisplay(statusToggle, 'active');
         return;
     }
-    
-    // Save to localStorage (hardcode)
-    localStorage.setItem(`account_status_${accountId}`, newStatus);
+
+    updateAccountStatusOnServer(accountId, newStatus).then(response => {
+        if (response && response.success) {
+            // Update localStorage
+            showToast(`Đã ${newStatus === 'active' ? 'kích hoạt' : 'vô hiệu hóa'} tài khoản "${username}".`, 'success');
+        }else {
+            showToast(response.message || 'Có lỗi xảy ra khi cập nhật trạng thái tài khoản trên server', 'error');
+            return;
+        }
+    }).catch(error => {
+        showToast('Có lỗi xảy ra khi cập nhật trạng thái tài khoản trên server: ' + error.message, 'error');
+        return;
+    });
+    // // Save to localStorage (hardcode)
+    // localStorage.setItem(`account_status_${accountId}`, newStatus);
     
     // Update display
     updateStatusDisplay(statusToggle, newStatus);
@@ -790,6 +805,21 @@ function toggleAccountStatus(accountId, username, newStatus, statusToggle) {
     const statusText = newStatus === 'active' ? 'kích hoạt' : 'vô hiệu hóa';
     const actionText = newStatus === 'inactive' ? 'Tài khoản này sẽ không thể đăng nhập được' : 'Tài khoản này có thể đăng nhập bình thường';
     showToast(`Đã ${statusText} tài khoản "${username}". ${actionText}`, 'success');
+}
+
+async function updateAccountStatusOnServer(accountId, newStatus) {
+    try {
+        const response = await fetch(`/admin/api/account/status`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status: newStatus.toUpperCase(), id: accountId })
+        });
+        return response.json();
+    } catch (error) {
+        alert('Có lỗi xảy ra khi cập nhật trạng thái tài khoản trên server: ' + error.message);
+    }
 }
 
 // Update status display
@@ -810,7 +840,7 @@ function updateStatusDisplay(statusToggle, status) {
         statusBadge.classList.remove('status-active', 'status-inactive');
         
         // Add new class
-        if (status === 'active') {
+        if (status === 'ACTIVE') {
             statusBadge.classList.add('status-active');
             statusBadge.innerHTML = '<i class="fas fa-check-circle"></i> Active';
         } else {
@@ -823,22 +853,22 @@ function updateStatusDisplay(statusToggle, status) {
 }
 
 // Get account status (for use in other parts of the app, e.g., login check)
-function getAccountStatus(accountId, role) {
-    // ADMIN accounts are always active
-    if (role === 'ADMIN') {
-        return 'active';
-    }
-    return localStorage.getItem(`account_status_${accountId}`) || 'active';
-}
-
-// Check if account is active
-function isAccountActive(accountId, role) {
-    // ADMIN accounts are always active
-    if (role === 'ADMIN') {
-        return true;
-    }
-    return getAccountStatus(accountId, role) === 'active';
-}
+// function getAccountStatus(accountId, role) {
+//     // ADMIN accounts are always active
+//     if (role === 'ADMIN') {
+//         return 'ACTIVE';
+//     }
+//     return localStorage.getItem(`account_status_${accountId}`) || 'ACTIVE';
+// }
+//
+// // Check if account is active
+// function isAccountActive(accountId, role) {
+//     // ADMIN accounts are always active
+//     if (role === 'ADMIN') {
+//         return true;
+//     }
+//     return getAccountStatus(accountId, role) === 'ACTIVE';
+// }
 
 // Add fadeOut animation
 const style = document.createElement('style');
