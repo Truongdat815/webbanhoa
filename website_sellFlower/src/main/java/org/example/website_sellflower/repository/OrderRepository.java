@@ -16,4 +16,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> getAllByOrderDateDesc();
 
     List<Order> findByStatus(String status);
+
+    @Query("SELECT SUM(o.totalAmount) FROM Order o WHERE o.status = 'COMPLETED'")
+    Double sumTotalAmount();
 }

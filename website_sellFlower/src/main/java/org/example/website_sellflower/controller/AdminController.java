@@ -701,6 +701,17 @@ public class AdminController {
 
     }
 
+    @GetMapping("/dashboard-data")
+    @ResponseBody
+    public Map<String, Object> getDashboardData() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("totalProducts", productService.findAllProducts().size());
+        data.put("totalOrders", orderService.getAllOrders().size());
+        data.put("totalAccounts", accountService.findAllAccounts().size());
+//        data.put("totalRevenue", orderService.totalOrder());
+        return data;
+    }
+
     // API: Delete Account
 //    @DeleteMapping("/api/accounts/{id}")
 //    @ResponseBody

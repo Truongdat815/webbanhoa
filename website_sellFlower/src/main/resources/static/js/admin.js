@@ -7,11 +7,11 @@ function showToast(message, type = 'success') {
 
     toast.textContent = message;
     toast.className = `toast ${type} show`;
-    
+
     // Add icon
     const icon = type === 'success' ? '✓' : type === 'error' ? '✕' : '⚠';
     toast.innerHTML = `<i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'times-circle' : 'exclamation-circle'}"></i> <span>${message}</span>`;
-    
+
     setTimeout(() => {
         toast.classList.remove('show');
     }, 3000);
@@ -71,12 +71,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const productForm = document.getElementById('productForm');
     if (productForm) {
         productForm.addEventListener('submit', handleProductSubmit);
-        
+
         // Image preview
         const imageUrlInput = document.getElementById('imageUrl');
         const imagePreview = document.getElementById('imagePreview');
         const previewImage = document.getElementById('previewImage');
-        
+
         if (imageUrlInput && imagePreview && previewImage) {
             imageUrlInput.addEventListener('input', function() {
                 if (this.value) {
@@ -158,12 +158,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 adminAccountIds.add(accountId);
             }
         });
-        
+
         // Ensure ADMIN accounts are always active before initializing
         ensureAdminAccountsAlwaysActive();
         initializeAccountStatus();
         setupStatusToggleListeners();
-        
+
         // Monitor for any changes to localStorage that might affect ADMIN status
         // This is a safety measure to catch any programmatic changes
         if (adminAccountIds.size > 0) {
@@ -574,11 +574,11 @@ function handleSearch() {
             const phone = row.querySelector('td:nth-child(5)')?.textContent.toLowerCase().trim() || '';
             const roleElement = row.querySelector('.badge');
             const role = roleElement ? roleElement.textContent.trim() : '';
-            
-            const matchesSearch = searchTerm === '' || 
-                username.includes(searchTerm) || 
-                email.includes(searchTerm) || 
-                fullName.includes(searchTerm) || 
+
+            const matchesSearch = searchTerm === '' ||
+                username.includes(searchTerm) ||
+                email.includes(searchTerm) ||
+                fullName.includes(searchTerm) ||
                 phone.includes(searchTerm);
             const matchesRole = !roleFilter || role.toUpperCase() === roleFilter.toUpperCase();
 
@@ -692,7 +692,7 @@ function ensureAdminAccountsAlwaysActive() {
                 localStorage.setItem(`account_status_${accountId}`, 'active');
             }
         });
-        
+
         // Method 2: Find all ADMIN role badges on the page
         const adminBadges = document.querySelectorAll('.badge-admin[data-role="ADMIN"]');
         adminBadges.forEach(badge => {
@@ -702,7 +702,7 @@ function ensureAdminAccountsAlwaysActive() {
                 localStorage.setItem(`account_status_${accountId}`, 'active');
             }
         });
-        
+
         // Method 3: Check all localStorage keys for account_status_* and verify ADMIN accounts
         // This is a safety measure to clean up any incorrect status values
         for (let i = 0; i < localStorage.length; i++) {
@@ -712,7 +712,7 @@ function ensureAdminAccountsAlwaysActive() {
                 // Check if this account ID belongs to an ADMIN by looking for admin-status or badge-admin elements
                 const adminStatusElement = document.querySelector(`.admin-status[data-account-id="${accountId}"]`);
                 const adminBadgeElement = document.querySelector(`.badge-admin[data-account-id="${accountId}"]`);
-                
+
                 if (adminStatusElement || adminBadgeElement) {
                     // This is an ADMIN account, force status to 'active'
                     localStorage.setItem(key, 'active');
@@ -732,7 +732,7 @@ function setupStatusToggleListeners() {
             console.log('No status toggles found to attach listeners');
             return;
         }
-        
+
         statusToggles.forEach(toggle => {
             try {
                 // Add click event listener directly to each toggle button
@@ -743,7 +743,7 @@ function setupStatusToggleListeners() {
                     const accountId = this.getAttribute('data-account-id');
                     const username = this.getAttribute('data-username') || 'Tài khoản';
                     const role = this.getAttribute('data-role') || 'USER';
-                    
+
                     if (!accountId) {
                         console.error('Account ID not found for status toggle');
                         return;
@@ -790,7 +790,7 @@ function toggleAccountStatus(accountId, username, newStatus, statusToggle) {
             showToast('Có lỗi xảy ra khi cập nhật trạng thái trong cơ sở dữ liệu.', 'error');
         });
     const role = statusToggle.getAttribute('data-role') || 'USER';
-    
+
     // Đảm bảo chỉ toggle cho USER, không cho phép thay đổi status của ADMIN
     if (role === 'ADMIN') {
         showToast('Không thể thay đổi trạng thái của tài khoản ADMIN. Tài khoản ADMIN luôn ở trạng thái Active.', 'warning');
@@ -815,13 +815,13 @@ function toggleAccountStatus(accountId, username, newStatus, statusToggle) {
     });
     // // Save to localStorage (hardcode)
     // localStorage.setItem(`account_status_${accountId}`, newStatus);
-    
+
     // Update display
     updateStatusDisplay(statusToggle, newStatus);
-    
+
     // Update data attribute
     statusToggle.setAttribute('data-status', newStatus);
-    
+
     // Show notification
     const statusText = newStatus === 'active' ? 'kích hoạt' : 'vô hiệu hóa';
     const actionText = newStatus === 'inactive' ? 'Tài khoản này sẽ không thể đăng nhập được' : 'Tài khoản này có thể đăng nhập bình thường';
@@ -850,7 +850,7 @@ function updateStatusDisplay(statusToggle, status) {
             console.error('statusToggle element is null');
             return;
         }
-        
+
         const statusBadge = statusToggle.querySelector('.status-badge');
         if (!statusBadge) {
             console.error('Status badge not found inside toggle');
@@ -859,7 +859,7 @@ function updateStatusDisplay(statusToggle, status) {
 
         // Remove old classes
         statusBadge.classList.remove('status-active', 'status-inactive');
-        
+
         // Add new class
         if (status === 'ACTIVE') {
             statusBadge.classList.add('status-active');
@@ -890,6 +890,108 @@ function updateStatusDisplay(statusToggle, status) {
 //     }
 //     return getAccountStatus(accountId, role) === 'ACTIVE';
 // }
+
+// ==================== TOTALS CHART - FINAL & SAFE VERSION ====================
+
+let totalsChart = null;
+
+async function loadTotalsChart() {
+    const canvas = document.getElementById('totalsChart');
+    if (!canvas) {
+        console.warn('Canvas #totalsChart không tồn tại');
+        return;
+    }
+
+    try {
+        console.log('Đang lấy dữ liệu từ /admin/dashboard-data...');
+        const response = await fetch('/admin/dashboard-data');
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+        const data = await response.json();
+        console.log('Dữ liệu dashboard:', data);
+
+        const labels = ['Sản phẩm', 'Đơn hàng', 'Tài khoản'];
+        const values = [
+            data.totalProducts || 0,
+            data.totalOrders || 0,
+            data.totalAccounts || 0,
+            // data.totalRevenue || 0
+        ];
+        const colors = ['#4e73df', '#e74a3b', '#f6c23e', '#1cc88a'];
+
+        // BƯỚC 1: Xóa hoàn toàn chart cũ
+        if (totalsChart) {
+            console.log('Hủy chart cũ...');
+            totalsChart.destroy();
+            totalsChart = null;
+        }
+
+        // BƯỚC 2: Xóa canvas context (Chart.js đôi khi giữ lại)
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // BƯỚC 3: Tạo chart mới
+        totalsChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Tổng số',
+                    data: values,
+                    backgroundColor: colors,
+                    borderRadius: 10,
+                    maxBarThickness: 50
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: { beginAtZero: true, ticks: { stepSize: 2 } },
+                    x: { grid: { display: false } }
+                },
+                animation: {
+                    onComplete: function () {
+                        const ctx = this.ctx;
+                        ctx.save();
+                        ctx.font = 'bold 13px Arial';
+                        ctx.fillStyle = '#333';
+                        ctx.textAlign = 'center';
+                        this.data.datasets.forEach((dataset, i) => {
+                            const meta = this.getDatasetMeta(i);
+                            meta.data.forEach((bar, index) => {
+                                let val = dataset.data[index];
+                                if (index === 3) val = val.toLocaleString('vi-VN') + '₫';
+                                ctx.fillText(val, bar.x, bar.y - 5);
+                            });
+                        });
+                        ctx.restore();
+                    }
+                }
+            }
+        });
+
+        console.log('Biểu đồ đã được vẽ thành công!');
+
+    } catch (error) {
+        console.error('Lỗi tải biểu đồ:', error);
+        // showToast đã được định nghĩa ở trên → an toàn
+        if (typeof showToast === 'function') {
+            showToast('Không thể tải biểu đồ: ' + error.message, 'error');
+        }
+    }
+}
+
+// CHẠY KHI TRANG LOAD
+document.addEventListener('DOMContentLoaded', function () {
+    const canvas = document.getElementById('totalsChart');
+    if (canvas) {
+        loadTotalsChart();
+        // Cập nhật mỗi 30 giây
+        setInterval(loadTotalsChart, 30000);
+    }
+});
 
 // Add fadeOut animation
 const style = document.createElement('style');
