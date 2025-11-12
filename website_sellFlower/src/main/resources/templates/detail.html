@@ -225,19 +225,21 @@
                             <div class="form-group">
                                 <label class="form-label">Đánh giá của bạn:</label>
                                 <div class="rating-input">
-                                    <input type="hidden" name="rating" id="reviewRating" value="5" required>
-                                    <div class="rating-stars-input" id="ratingStarsInput">
-                                        <i class="fas fa-star filled active" data-rating="1"></i>
-                                        <i class="fas fa-star filled active" data-rating="2"></i>
-                                        <i class="fas fa-star filled active" data-rating="3"></i>
-                                        <i class="fas fa-star filled active" data-rating="4"></i>
-                                        <i class="fas fa-star filled active" data-rating="5"></i>
+                                    <!-- value="0" -->
+                                    <input type="hidden" name="rating" id="reviewRating" value="0" required>
+                                    <div class="rating-stars-input add-rating-stars">
+                                        <!-- TẤT CẢ SAO RỖNG -->
+                                        <i class="far fa-star" data-rating="1"></i>
+                                        <i class="far fa-star" data-rating="2"></i>
+                                        <i class="far fa-star" data-rating="3"></i>
+                                        <i class="far fa-star" data-rating="4"></i>
+                                        <i class="far fa-star" data-rating="5"></i>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="form-label" for="reviewComment">Bình luận:</label>
-                                <textarea id="reviewComment" name="comment" class="form-textarea" placeholder="Nhập bình luận của bạn..." rows="6" required></textarea>
+                                <textarea id="reviewComment" name="comment" class="form-textarea" placeholder="Nhập bình luận..." rows="6" required></textarea>
                             </div>
                             <button type="submit" class="submit-review-btn">GỬI ĐÁNH GIÁ</button>
                         </form>
