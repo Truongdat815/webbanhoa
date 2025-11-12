@@ -140,7 +140,7 @@
                 </div>
             </div>
 
-            <!-- Orders Section - BỎ CỘT "HÀNH ĐỘNG" -->
+            <!-- Orders Section -->
             <div class="content-section" id="orders">
                 <h1 class="section-title">Đơn hàng của tôi</h1>
                 <div class="orders-table-container">
@@ -151,6 +151,7 @@
                             <th>Ngày</th>
                             <th>Trạng thái</th>
                             <th>Tổng tiền</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody id="ordersTableBody">
@@ -167,6 +168,9 @@
                             </td>
                             <td th:if="${order.totalAmount != null}" th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + '₫'"></td>
                             <td th:if="${order.totalAmount == null}">0₫</td>
+                            <td>
+                                <a style="text-decoration: none" th:href="@{'/account/order/detail/' + ${order.id}}" class="view-details-btn">Xem chi tiết</a>
+                            </td>
                         </tr>
                         </tbody>
                     </table>

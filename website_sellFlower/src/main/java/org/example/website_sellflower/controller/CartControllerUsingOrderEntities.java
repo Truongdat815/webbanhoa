@@ -195,7 +195,7 @@ public class CartControllerUsingOrderEntities {
         int count = cart.stream().mapToInt(od -> od.getQuantity() == null ? 0 : od.getQuantity()).sum();
         resp.put("success", true);
         resp.put("message", "Đã thêm vào giỏ hàng");
-        resp.put("cartCount", cart.size());
+        resp.put("cartCount", count);
         return ResponseEntity.ok(resp);
     }
 
@@ -309,6 +309,16 @@ public class CartControllerUsingOrderEntities {
 //        resp.put("cartCount", count);
 //        return ResponseEntity.ok(resp);
 //    }
+    @GetMapping("/api/count")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> apiGetCartCount(HttpSession session) {
+        Map<String, Object> resp = new HashMap<>();
+        List<OrderDetail> cart = getCart(session);
+        int count = cart.stream().mapToInt(d -> d.getQuantity() == null ? 0 : d.getQuantity()).sum();
+        resp.put("success", true);
+        resp.put("count", count);
+        return ResponseEntity.ok(resp);
+    }
 
     // Update quantity
     @PutMapping("/api/update")

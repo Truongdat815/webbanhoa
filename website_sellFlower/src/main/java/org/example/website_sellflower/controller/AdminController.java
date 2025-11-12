@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Controller
 @RequestMapping("/admin")
@@ -264,6 +265,9 @@ public class AdminController {
 
         Account account = (Account) session.getAttribute("account");
         Order order = orderService.getOrderById(id);
+//        if ((account == null || !Objects.equals(account.getId(), order.getAccount().getId())) || !"ADMIN".equals(account.getRole())) {
+//            return "redirect:/login?error=Không có quyền truy cập";
+//        }
         
         if (order == null) {
             return "redirect:/admin/orders";
@@ -293,11 +297,10 @@ public class AdminController {
     @GetMapping("/api/orders/{id}")
     @ResponseBody
     public ResponseEntity<Order> getOrderById(@PathVariable Long id, HttpSession session) {
+        Order order = orderService.getOrderById(id);
         if (!isAdmin(session)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-
-        Order order = orderService.getOrderById(id);
         if (order != null) {
             return ResponseEntity.ok(order);
         }

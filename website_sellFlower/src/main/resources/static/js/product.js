@@ -32,33 +32,33 @@ function renderStars(selector, rating) {
 }
 
 // Function to create product card HTML
-function createProductCard(product) {
-    return `
-        <div class="product-card" data-product-id="${product.id}" data-product-name="${product.name}" data-product-price="${product.price}" data-product-image="${product.imageUrl}" data-product-stock="${product.stockQuantity}">
-            <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
-                <img src="${product.imageUrl}" alt="${product.name}" class="product-image">
-                <div class="product-overlay">
-                    <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
-                </div>
-            </div>
-            <div class="product-info">
-                <h3 class="product-name">${product.name}</h3>
-                <div class="product-price-container">
-                    <span class="product-price">${formatPrice(product.price)}</span>
-                </div>
-                <div class="quantity-selector">
-                    <button class="qty-btn minus-btn">-</button>
-                    <input type="number" value="1" min="1" max="${product.stockQuantity}" class="qty-input">
-                    <button class="qty-btn plus-btn">+</button>
-                </div>
-                <button class="add-to-cart-btn">
-                    <span>THÊM VÀO GIỎ</span>
-                    <i class="fas fa-shopping-bag"></i>
-                </button>
-            </div>
-        </div>
-    `;
-}
+// function createProductCard(product) {
+//     return `
+//         <div class="product-card" data-product-id="${product.id}" data-product-name="${product.name}" data-product-price="${product.price}" data-product-image="${product.imageUrl}" data-product-stock="${product.stockQuantity}">
+//             <div class="product-image-container" onclick="goToProductDetail(this.closest('.product-card'))">
+//                 <img src="${product.imageUrl}" alt="${product.name}" class="product-image">
+//                 <div class="product-overlay">
+//                     <button class="quick-view-btn" onclick="event.stopPropagation(); openQuickViewModal(this.closest('.product-card'))">Xem nhanh</button>
+//                 </div>
+//             </div>
+//             <div class="product-info">
+//                 <h3 class="product-name">${product.name}</h3>
+//                 <div class="product-price-container">
+//                     <span class="product-price">${formatPrice(product.price)}</span>
+//                 </div>
+//                 <div class="quantity-selector">
+//                     <button class="qty-btn minus-btn">-</button>
+//                     <input type="number" value="1" min="1" max="${product.stockQuantity}" class="qty-input">
+//                     <button class="qty-btn plus-btn">+</button>
+//                 </div>
+//                 <button class="add-to-cart-btn">
+//                     <span>THÊM VÀO GIỎ</span>
+//                     <i class="fas fa-shopping-bag"></i>
+//                 </button>
+//             </div>
+//         </div>
+//     `;
+// }
 
 // Function to load and display products FROM BACKEND API
 // NOTE: This function is no longer needed as products are now rendered server-side via Thymeleaf

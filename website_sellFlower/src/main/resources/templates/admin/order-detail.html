@@ -16,7 +16,8 @@
             <div class="logo">
                 <a href="/admin">
                     <h1>FIAMA</h1>
-                    <span class="admin-badge">ADMIN</span>
+                    <span th:if="${isAdmin == true}" class="admin-badge">ADMIN</span>
+                    <span th:if="${isAdmin == false}" class="admin-badge">Người dùng</span>
                 </a>
             </div>
             <div class="admin-user-info">
@@ -37,11 +38,11 @@
     <main class="admin-main">
         <div class="admin-container">
             <!-- Sidebar -->
-            <aside class="admin-sidebar">
+            <aside class="admin-sidebar" th:if="${isAdmin == true}">
                 <div class="sidebar-header">
                     <h2><i class="fas fa-shield-alt"></i> Admin Panel</h2>
                 </div>
-                <nav class="sidebar-nav">
+                <nav class="sidebar-nav" >
                     <a href="/admin" class="nav-item">
                         <i class="fas fa-home"></i>
                         <span>Dashboard</span>
@@ -68,7 +69,11 @@
                         <h1>Chi tiết Đơn hàng #<span th:text="${order.id}">1</span></h1>
                         <p>Thông tin chi tiết đơn hàng</p>
                     </div>
-                    <a href="/admin/orders" class="btn-secondary">
+                    <a th:if="${isAdmin == true}" href="/admin/orders" class="btn-secondary">
+                        <i class="fas fa-arrow-left"></i>
+                        Quay lại
+                    </a>
+                    <a th:if="${isAdmin == false}" href="/account" class="btn-secondary">
                         <i class="fas fa-arrow-left"></i>
                         Quay lại
                     </a>

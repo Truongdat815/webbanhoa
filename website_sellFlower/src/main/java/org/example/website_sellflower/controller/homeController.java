@@ -30,7 +30,8 @@ public class homeController {
             model.addAttribute("topProminentProducts", productService.getTopProminentProducts(6));
             List<OrderDetail> cart = (List<OrderDetail>) session.getAttribute("cart");
             if (cart != null) {
-                model.addAttribute("cartItemCount", cart.size());
+                int count = cart.stream().mapToInt(d -> d.getQuantity() == null ? 0 : d.getQuantity()).sum();
+                model.addAttribute("cartItemCount", count);
             }
 
         } else {

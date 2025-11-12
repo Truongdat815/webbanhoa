@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Controller
@@ -89,6 +90,22 @@ public class AccountController {
         model.addAttribute("recentOrderStatusClassMap", recentOrderStatusClassMap);
 
         return "account";
+    }
+    @GetMapping("/order/detail/{orderId}")
+    public String showOrderDetail(@PathVariable("orderId") Long orderId, Model model, HttpSession session) {
+        Account account = (Account) session.getAttribute("account");
+        if (account == null) {
+            return "redirect:/login";
+        }
+        Order order = orderService.getOrderById(orderId);
+        if (!Objects.equals(account.getId(), order.getAccount().getId()) && !"ADMIN".equals(account.getRole())) {
+            return "redirect:/login?error=access_denied";
+        }
+        model.addAttribute("order", order);
+        model.addAttribute("isLoggedIn", true);
+        model.addAttribute("userDisplayName", account.getFullName());
+        model.addAttribute("isAdmin", "ADMIN".equals(account.getRole()));
+        return "admin/order-detail";
     }
 
     @PostMapping("/update")

@@ -23,32 +23,58 @@ async function updateCartCountInHeader() {
 }
 
 // Add item to cart
-async function addToCart(productId, productName, price, quantity, imageUrl, stock) {
+// async function addToCart(productId, productName, price, quantity, imageUrl, stock) {
+//     try {
+//         // Đảm bảo stock là một số hoặc null
+//         const validStock = (stock !== null && stock !== undefined) ? stock : 'null';
+//
+//         const response = await fetch('/cart/api/add', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/x-www-form-urlencoded',
+//             },
+//             body: `productId=${productId}&productName=${encodeURIComponent(productName)}&price=${price}&quantity=${quantity}&imageUrl=${encodeURIComponent(imageUrl)}&stock=${validStock}`
+//         });
+//
+//         if (!response.ok) throw new Error('Failed to add to cart');
+//
+//         const result = await response.json();
+//         if (result.success) {
+//             // Update cart count in header
+//             updateCartCountInHeader();
+//             return { success: true, message: result.message, cartCount: result.cartCount };
+//         } else {
+//             return { success: false, message: result.message };
+//         }
+//     } catch (error) {
+//         console.error('Error adding to cart:', error);
+//         return { success: false, message: 'Có lỗi xảy ra khi thêm vào giỏ hàng' };
+//     }
+// }
+async function addToCart(productId, productName, productPrice, quantity, productImage, productStock) {
     try {
-        // Đảm bảo stock là một số hoặc null
-        const validStock = (stock !== null && stock !== undefined) ? stock : 'null';
-        
-        const response = await fetch('/cart/api/add', {
+        const response = await fetch('/cart/add', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/x-www-form-urlencoded'
             },
-            body: `productId=${productId}&productName=${encodeURIComponent(productName)}&price=${price}&quantity=${quantity}&imageUrl=${encodeURIComponent(imageUrl)}&stock=${validStock}`
+            body: new URLSearchParams({
+                productId,
+                quantity
+            })
         });
-        
-        if (!response.ok) throw new Error('Failed to add to cart');
-        
-        const result = await response.json();
-        if (result.success) {
-            // Update cart count in header
+
+        const data = await response.json();
+
+        // Nếu backend trả về số lượng giỏ hàng -> cập nhật hiển thị
+        if (data.cartCount !== undefined) {
             updateCartCountInHeader();
-            return { success: true, message: result.message, cartCount: result.cartCount };
-        } else {
-            return { success: false, message: result.message };
         }
+
+        return data;
     } catch (error) {
-        console.error('Error adding to cart:', error);
-        return { success: false, message: 'Có lỗi xảy ra khi thêm vào giỏ hàng' };
+        console.error('Error calling addToCart:', error);
+        return { success: false, message: 'Không thể kết nối tới máy chủ!' };
     }
 }
 
