@@ -109,12 +109,13 @@
                                     <button class="btn-update-status" th:data-id="${order.id}" th:data-status="DELIVERY">Xác nhận</button>
                                 </td>
                                 <td th:if="${order.status.equals('DELIVERY')}" class="status-select" th:value="${order.getStatus()}">Đang giao</td>
+                                <td th:if="${order.status.equals('REJECTED')}" class="status-select" th:value="${order.getStatus()}">Đã từ chối</td>
                                 <td>
                                     <div class="action-buttons">
                                         <a  th:href="@{/admin/orders/{id}(id=${order.id})}" class="btn-view" title="Xem chi tiết">
                                             <i class="fas fa-eye"></i>
                                         </a>
-                                        <button th:if="${order.status.equals('REQUEST')}" class="btn-delete" th:data-id="${order.id}" th:data-name="${'Đơn hàng #' + order.id}" title="Xóa đơn hàng">
+                                        <button th:if="${order.status.equals('REQUEST')}" class="btn-delete" th:data-id="${order.id}" th:data-name="${'Đơn hàng #' + order.id}" title="Từ chối đơn hàng">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>

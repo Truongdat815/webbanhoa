@@ -19,7 +19,6 @@ function showToast(message, type = 'success') {
 
 // ==================== PRODUCT MANAGEMENT ====================
 
-// Delete Product
 document.addEventListener('DOMContentLoaded', function() {
     // Delete Product/Account/Order Confirmation
     document.addEventListener('click', async function(e) {
@@ -111,6 +110,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const orderId = this.getAttribute('data-id');
             const status = this.getAttribute('data-status');
             updateOrderStatus(orderId, status);
+        });
+    });
+    const rejectOrderButtons = document.querySelectorAll('#ordersTableBody .btn-delete[data-id]');
+    rejectOrderButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            rejectOrder(e.target.getAttribute('data-id'));
         });
     });
 
@@ -284,14 +289,14 @@ async function deleteAccount(accountId) {
 }
 
 // Delete Order Function
-async function deleteOrder(orderId) {
+async function rejectOrder(orderId) {
     try {
-        console.log('Deleting order:', orderId);
-        const response = await fetch(`/admin/api/orders/${orderId}`, {
-            method: 'DELETE',
+        const response = await fetch(`/admin/api/orders/${orderId}/status`, {
+            method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             }
+            ,            body: JSON.stringify({ status: 'REJECTED' })
         });
 
         if (!response.ok) {
@@ -303,7 +308,7 @@ async function deleteOrder(orderId) {
         console.log('Delete order response:', data);
 
         if (data.success) {
-            showToast(data.message || 'Xóa đơn hàng thành công', 'success');
+            showToast(data.message || 'Từ chối đơn hàng thành công', 'success');
             // Remove row from table
             const deleteButton = document.querySelector(`.btn-delete[data-id="${orderId}"]`);
             if (deleteButton) {
@@ -322,12 +327,12 @@ async function deleteOrder(orderId) {
                 } else {
                     console.error('Row not found for order:', orderId);
                     // Reload page to refresh
-                    setTimeout(() => window.location.reload(), 1000);
+                    setTimeout(() => window.location.reload(), 500);
                 }
             } else {
                 console.error('Delete button not found for order:', orderId);
                 // Reload page to refresh
-                setTimeout(() => window.location.reload(), 1000);
+                setTimeout(() => window.location.reload(), 500);
             }
         } else {
             showToast(data.message || 'Có lỗi xảy ra khi xóa đơn hàng', 'error');
