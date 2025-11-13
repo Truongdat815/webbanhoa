@@ -16,6 +16,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query("SELECT r FROM Review r LEFT JOIN FETCH r.account WHERE r.product.id = :productId")
     List<Review> findByProductId(@Param("productId") Long productId);
 
+    @Query("SELECT r FROM Review r LEFT JOIN FETCH r.account LEFT JOIN FETCH r.product WHERE r.product.id = :productId AND r.status = 'APPROVED' ORDER BY r.reviewDate DESC")
+    List<Review> findByProductIdOrderByReviewDateDesc(Long productId);
+
     // Delete review by ID using native query
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     @Transactional

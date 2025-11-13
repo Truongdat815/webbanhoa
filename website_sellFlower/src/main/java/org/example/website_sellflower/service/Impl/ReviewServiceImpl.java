@@ -99,7 +99,7 @@ public class ReviewServiceImpl implements ReviewService {
     // ← THÊM MỚI
     @Override
     public List<Review> findByProductId(Long productId) {
-        return reviewRepository.findByProductId(productId);
+        return reviewRepository.findByProductIdOrderByReviewDateDesc(productId);
     }
 
     @Override
