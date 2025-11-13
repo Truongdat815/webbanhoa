@@ -163,6 +163,36 @@ public class AdminController {
         }
 
         try {
+            if (product.getName() == null || product.getName().trim().isEmpty()) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "Tên sản phẩm không được để trống");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            if (product.getPrice() == null || product.getPrice() < 0) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "Giá sản phẩm không hợp lệ");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            if (product.getStockQuantity() == null || product.getStockQuantity() < 0) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "Số lượng tồn kho không hợp lệ");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            if (product.getImageUrl() == null || product.getImageUrl().trim().isEmpty()) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "URL hình ảnh không được để trống");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            if (product.getDescription() == null || product.getDescription().trim().isEmpty()) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "Mô tả sản phẩm không được để trống");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
             Product created = productService.createProduct(product);
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
@@ -186,6 +216,36 @@ public class AdminController {
         }
 
         try {
+            if (product.getName() == null || product.getName().trim().isEmpty()) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "Tên sản phẩm không được để trống");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            if (product.getPrice() == null || product.getPrice() < 0) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "Giá sản phẩm không hợp lệ");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            if (product.getStockQuantity() == null || product.getStockQuantity() < 0) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "Số lượng tồn kho không hợp lệ");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            if (product.getImageUrl() == null || product.getImageUrl().trim().isEmpty()) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "URL hình ảnh không được để trống");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+            if (product.getDescription() == null || product.getDescription().trim().isEmpty()) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "Mô tả sản phẩm không được để trống");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
             Product updated = productService.updateProduct(id, product);
             if (updated != null) {
                 Map<String, Object> response = new HashMap<>();
