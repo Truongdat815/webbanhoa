@@ -18,12 +18,12 @@ INSERT INTO product (name, description, price, stock_quantity, image_url) VALUES
 
 -- Insert sample accounts
 INSERT INTO account (username, email, password, full_name, phone, address, role, created_date,status) VALUES
-                                                                                                          ('admin', 'admin@flowershop.com', '12345', N'Administrator', '0901234567', N'123 Đường Nguyễn Văn Linh, TP.HCM', 'ADMIN', CURRENT_TIMESTAMP, 'ACTIVE'),
-                                                                                                          ('user1', 'user1@email.com', '123456', N'Nguyễn Văn A', '0987654321', N'456 Đường Lê Lợi, TP.HCM', 'USER', CURRENT_TIMESTAMP, 'ACTIVE'),
-                                                                                                          ('user2', 'user2@email.com', '12345678', N'Trần Thị B', '0912345678', N'789 Đường Trần Hưng Đạo, TP.HCM', 'USER', CURRENT_TIMESTAMP, 'ACTIVE'),
-                                                                                                          ('user3', 'user3@email.com', 'password123', N'Lê Văn C', '0923456789', N'101 Đường Pasteur, Quận 1, TP.HCM', 'USER', CURRENT_TIMESTAMP, 'ACTIVE'),
-                                                                                                          ('user4', 'user4@email.com', 'mypass456', N'Phạm Thị D', '0934567890', N'202 Đường Điện Biên Phủ, Quận 3, TP.HCM', 'USER', CURRENT_TIMESTAMP, 'ACTIVE'),
-                                                                                                          ('user5', 'user5@email.com', 'secure789', N'Hoàng Minh E', '0945678901', N'303 Đường Võ Văn Tần, Quận 3, TP.HCM', 'USER', CURRENT_TIMESTAMP, 'ACTIVE');
+                                                                                                          (N'admin', 'admin@flowershop.com', '12345', N'Administrator', '0901234567', N'123 Đường Nguyễn Văn Linh, TP.HCM', 'ADMIN', CURRENT_TIMESTAMP, 'ACTIVE'),
+                                                                                                          (N'user1', 'user1@email.com', '123456', N'Nguyễn Văn A', '0987654321', N'456 Đường Lê Lợi, TP.HCM', 'USER', CURRENT_TIMESTAMP, 'ACTIVE'),
+                                                                                                          (N'user2', 'user2@email.com', '12345678', N'Trần Thị B', '0912345678', N'789 Đường Trần Hưng Đạo, TP.HCM', 'USER', CURRENT_TIMESTAMP, 'ACTIVE'),
+                                                                                                          (N'user3', 'user3@email.com', 'password123', N'Lê Văn C', '0923456789', N'101 Đường Pasteur, Quận 1, TP.HCM', 'USER', CURRENT_TIMESTAMP, 'ACTIVE'),
+                                                                                                          (N'user4', 'user4@email.com', 'mypass456', N'Phạm Thị D', '0934567890', N'202 Đường Điện Biên Phủ, Quận 3, TP.HCM', 'USER', CURRENT_TIMESTAMP, 'ACTIVE'),
+                                                                                                          (N'user5', 'user5@email.com', 'secure789', N'Hoàng Minh E', '0945678901', N'303 Đường Võ Văn Tần, Quận 3, TP.HCM', 'USER', CURRENT_TIMESTAMP, 'ACTIVE');
 
 -- Insert sample orders (không sử dụng account_id = 1 do admin không mua hàng)
 INSERT INTO order_table (account_id, order_date, total_amount, status, shipping_address, phone, recipient_name) VALUES
@@ -36,7 +36,7 @@ INSERT INTO order_table (account_id, order_date, total_amount, status, shipping_
 (3, CURRENT_TIMESTAMP, 190000, 'COMPLETED', N'789 Đường Trần Hưng Đạo, TP.HCM', '0912345678', N'Hồ Văn B'),
 (4, CURRENT_TIMESTAMP, 410000, 'COMPLETED', N'101 Đường Pasteur, Quận 1, TP.HCM', '0923456789', N'La Thị E'),
 (5, CURRENT_TIMESTAMP, 350000, 'COMPLETED', N'202 Đường Điện Biên Phủ, Quận 3, TP.HCM', '0934567890', N'Trần Nguyên D'),
-(6, CURRENT_TIMESTAMP, 220000, 'COMPLETED', N'303 Đường Võ Văn Tần, Quận 3, TP.HCM', '0945678901', 'Hoàng Lê E');
+(6, CURRENT_TIMESTAMP, 220000, 'COMPLETED', N'303 Đường Võ Văn Tần, Quận 3, TP.HCM', '0945678901', N'Hoàng Lê E');
 
 -- Insert sample order details (more comprehensive data for best-selling analysis)
 INSERT INTO order_detail (order_id, product_id, quantity, price) VALUES

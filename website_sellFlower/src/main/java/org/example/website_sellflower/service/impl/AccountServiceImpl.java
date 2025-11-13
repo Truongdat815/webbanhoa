@@ -1,4 +1,4 @@
-package org.example.website_sellflower.service.Impl;
+package org.example.website_sellflower.service.impl;
 
 import org.example.website_sellflower.service.AccountService;
 import org.springframework.stereotype.Service;
@@ -27,6 +27,9 @@ public class AccountServiceImpl implements AccountService {
         account.setPhone(phone);
         account.setPassword(password);
         account.setAddress(address);
+        account.setRole("USER");
+        account.setStatus("ACTIVE");
+        account.setCreatedDate(java.time.LocalDateTime.now());
 
         repository.save(account);
         return true;

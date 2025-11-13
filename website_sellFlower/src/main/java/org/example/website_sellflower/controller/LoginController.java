@@ -27,8 +27,13 @@ public class LoginController {
         boolean isLoggedIn = (acc != null);
 
         model.addAttribute("isLoggedIn", isLoggedIn);
-        model.addAttribute("error", error);
-
+        if (error != null) {
+            if (error.equals("access_denied")) {
+                model.addAttribute("error", "Không có quyền truy cập trang này!");
+            }else {
+                model.addAttribute("error", error);
+            }
+        }
         return "login";
     }
 

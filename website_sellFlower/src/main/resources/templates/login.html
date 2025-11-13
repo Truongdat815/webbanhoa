@@ -52,7 +52,7 @@
                 <p>Chào mừng trở lại FIAMA</p>
             </div>
 
-            <div class="error-message" id="errorMessage" th:if="${error}" th:text="${error}"></div>
+            <div class="error-message" id="errorMessage" th:if="${error != null}" th:text="${error}"></div>
 
             <form class="login-form" th:action="@{/login}" method="post">
                 <div class="form-group">

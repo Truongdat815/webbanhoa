@@ -315,8 +315,12 @@ public class AdminController {
 //            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 //        }
         try {
-            String status = request.get("status");
             Order order = orderService.getOrderById(id);
+            Account account = (Account) session.getAttribute("account");
+            if (!Objects.equals(account.getId(), order.getAccount().getId()) && !"ADMIN".equals(account.getRole())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+            String status = request.get("status");
             if (order != null) {
                 order.setStatus(status);
                 Order updated = orderService.updateOrder(id, order);

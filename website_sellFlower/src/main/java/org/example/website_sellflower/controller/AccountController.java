@@ -44,9 +44,15 @@ public class AccountController {
         List<Order> orders = orderService.findByAccountId(account.getId());
 
         // Calculate stats
-        double totalSpending = orders.stream()
-                .mapToDouble(order -> order.getTotalAmount() != null ? order.getTotalAmount() : 0.0)
-                .sum();
+//        double totalSpending = orders.stream()
+//                .mapToDouble(order -> order.getTotalAmount() != null ? order.getTotalAmount() : 0.0)
+//                .sum();
+        double totalSpending = 0;
+        for (Order order : orders) {
+            if (order.getTotalAmount() != null && order.getStatus().equals("COMPLETED")) {
+                totalSpending += order.getTotalAmount();
+            }
+        }
         int rewardPoints = (int) (totalSpending / 1000); // Mỗi 1000đ = 1 điểm
 
         // Get recent orders (last 5)
