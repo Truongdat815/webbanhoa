@@ -891,7 +891,7 @@ function updateStatusDisplay(statusToggle, status) {
 //     return getAccountStatus(accountId, role) === 'ACTIVE';
 // }
 
-// ==================== TOTALS CHART - FINAL & SAFE VERSION ====================
+// ==================== TOTALS CHART====================
 
 let totalsChart = null;
 
@@ -903,7 +903,6 @@ async function loadTotalsChart() {
     }
 
     try {
-        console.log('Đang lấy dữ liệu từ /admin/dashboard-data...');
         const response = await fetch('/admin/dashboard-data');
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
@@ -914,23 +913,22 @@ async function loadTotalsChart() {
         const values = [
             data.totalProducts || 0,
             data.totalOrders || 0,
-            data.totalAccounts || 0,
+            data.totalAccounts || 0
             // data.totalRevenue || 0
         ];
-        const colors = ['#4e73df', '#e74a3b', '#f6c23e', '#1cc88a'];
+        const colors = ['#4e73df', '#e74a3b', '#f6c23e'];
 
-        // BƯỚC 1: Xóa hoàn toàn chart cũ
+        //Xóa hoàn toàn chart cũ
         if (totalsChart) {
-            console.log('Hủy chart cũ...');
             totalsChart.destroy();
             totalsChart = null;
         }
 
-        // BƯỚC 2: Xóa canvas context (Chart.js đôi khi giữ lại)
+        //Xóa canvas context (Chart.js đôi khi giữ lại)
         const ctx = canvas.getContext('2d');
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // BƯỚC 3: Tạo chart mới
+        //Tạo chart mới
         totalsChart = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -963,7 +961,7 @@ async function loadTotalsChart() {
                             meta.data.forEach((bar, index) => {
                                 let val = dataset.data[index];
                                 if (index === 3) val = val.toLocaleString('vi-VN') + '₫';
-                                ctx.fillText(val, bar.x, bar.y - 5);
+                                ctx.fillText(val, bar.x, bar.y - 1);
                             });
                         });
                         ctx.restore();
@@ -988,8 +986,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const canvas = document.getElementById('totalsChart');
     if (canvas) {
         loadTotalsChart();
-        // Cập nhật mỗi 30 giây
-        setInterval(loadTotalsChart, 30000);
     }
 });
 
