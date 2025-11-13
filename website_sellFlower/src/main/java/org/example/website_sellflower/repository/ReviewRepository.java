@@ -21,4 +21,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Transactional
     @Query(value = "DELETE FROM [review] WHERE id = :id", nativeQuery = true)
     int deleteReviewByIdNative(@Param("id") Long id);
+
+    // Thêm method tìm review theo status
+    @Query("SELECT r FROM Review r LEFT JOIN FETCH r.account LEFT JOIN FETCH r.product WHERE r.status = :status ORDER BY r.reviewDate DESC")
+    List<Review> findByStatus(@Param("status") String status);
 }

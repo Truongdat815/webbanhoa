@@ -75,19 +75,19 @@
                         <h2>Thống kê tổng quan</h2>
                         <span>Hiển thị theo tổng số hiện tại</span>
                     </div>
-                    <div style="position: relative; height: 300px; margin-top: 20px;">
-                        <canvas id="totalsChart"></canvas>
+                    <div style="position: relative; min-height: 300px; margin-top: 20px;">
+                        <canvas id="totalsChart" th:attr="data-total-account=${totalAccounts},data-total-products=${totalProducts},data-total-orders=${totalOrders}"></canvas>
                     </div>
                 </div>
 
                 <!-- Orders Trend -->
-                <div class="stats-chart-card">
-                    <div class="chart-header">
-                        <h2>Đơn hàng theo tháng</h2>
-                        <span>6 tháng gần nhất</span>
-                    </div>
-                    <canvas id="ordersTrendChart"></canvas>
-                </div>
+<!--                <div class="stats-chart-card">-->
+<!--                    <div class="chart-header">-->
+<!--                        <h2>Đơn hàng theo tháng</h2>-->
+<!--                        <span>6 tháng gần nhất</span>-->
+<!--                    </div>-->
+<!--                    <canvas id="ordersTrendChart"></canvas>-->
+<!--                </div>-->
             </div>
         </div>
     </main>
@@ -103,13 +103,6 @@
     <script src="/js/admin.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const totals = {
-                products: 14,
-                orders: 10,
-                accounts: 6,
-                revenue: 0
-            };
-
             function createGradient(ctx, colorFrom, colorTo) {
                 const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
                 gradient.addColorStop(0, colorFrom);
@@ -137,67 +130,73 @@
                 }
             };
 
-            // const totalsCanvas = document.getElementById('totalsChart');
-            // if (totalsCanvas) {
-            //     const ctx = totalsCanvas.getContext('2d');
-            //
-            //     const dataValues = [totals.products, totals.orders, totals.accounts, totals.revenue];
-            //     const maxValue = Math.max(...dataValues, 10); // ít nhất 10 để có chỗ
-            //
-            //     new Chart(ctx, {
-            //         type: 'bar',
-            //         data: {
-            //             labels: ['Sản phẩm', 'Đơn hàng', 'Tài khoản', 'Doanh thu'],
-            //             datasets: [{
-            //                 data: dataValues,
-            //                 backgroundColor: [
-            //                     createGradient(ctx, '#6B7CFF', '#8AA2FF'),
-            //                     createGradient(ctx, '#FF6B88', '#FFA1B3'),
-            //                     createGradient(ctx, '#4FC3F7', '#9BE7FF'),
-            //                     createGradient(ctx, '#43e97b', '#9ef7c9')
-            //                 ],
-            //                 borderRadius: 18,
-            //                 borderSkipped: false,
-            //                 maxBarThickness: 72
-            //             }]
-            //         },
-            //         options: {
-            //             maintainAspectRatio: false,
-            //             layout: {
-            //                 padding: { top: 30, right: 16, left: 8, bottom: 8 }
-            //             },
-            //             plugins: {
-            //                 legend: { display: false },
-            //                 tooltip: { enabled: true }
-            //             },
-            //             animation: { duration: 600, easing: 'easeOutQuart' },
-            //             interaction: { mode: 'nearest', intersect: true },
-            //             scales: {
-            //                 x: {
-            //                     grid: { display: false, drawBorder: false },
-            //                     ticks: {
-            //                         color: '#64748b',
-            //                         font: { weight: 600 }
-            //                     }
-            //                 },
-            //                 y: {
-            //                     beginAtZero: true,
-            //                     max: maxValue + 4, // Tự động chừa chỗ cho số cao nhất
-            //                     ticks: {
-            //                         precision: 0,
-            //                         color: '#94a3b8',
-            //                         stepSize: 2
-            //                     },
-            //                     grid: {
-            //                         color: 'rgba(148,163,184,0.2)',
-            //                         drawBorder: false
-            //                     }
-            //                 }
-            //             }
-            //         },
-            //         plugins: [valueLabelPlugin]
-            //     });
-            // }
+            const totalsCanvas = document.getElementById('totalsChart');
+            if (totalsCanvas) {
+                const ctx = totalsCanvas.getContext('2d');
+                const totals = {
+                    products: parseInt(totalsCanvas.getAttribute('data-total-products')) || 0,
+                    orders: parseInt(totalsCanvas.getAttribute('data-total-orders')) || 0,
+                    accounts: parseInt(totalsCanvas.getAttribute('data-total-account')) || 0,
+                    revenue: 0
+                };
+                const dataValues = [totals.products, totals.orders, totals.accounts, totals.revenue];
+                const maxValue = Math.max(...dataValues, 10); // ít nhất 10 để có chỗ
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Sản phẩm', 'Đơn hàng', 'Tài khoản'],
+                        datasets: [{
+                            data: dataValues,
+                            backgroundColor: [
+                                createGradient(ctx, '#6B7CFF', '#8AA2FF'),
+                                createGradient(ctx, '#FF6B88', '#FFA1B3'),
+                                createGradient(ctx, '#4FC3F7', '#9BE7FF'),
+                                createGradient(ctx, '#43e97b', '#9ef7c9')
+                            ],
+                            borderRadius: 18,
+                            borderSkipped: false,
+                            maxBarThickness: 72
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: { top: 30, right: 16, left: 8, bottom: 8 }
+                        },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: { enabled: true }
+                        },
+                        animation: { duration: 600, easing: 'easeOutQuart' },
+                        interaction: { mode: 'nearest', intersect: true },
+                        scales: {
+                            x: {
+                                maxValue: maxValue +3,
+                                grid: { display: false, drawBorder: false },
+                                ticks: {
+                                    color: '#64748b',
+                                    font: { weight: 600 }
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                max: maxValue + 4, // Tự động chừa chỗ cho số cao nhất
+                                ticks: {
+                                    precision: 0,
+                                    color: '#94a3b8',
+                                    stepSize: 2
+                                },
+                                grid: {
+                                    color: 'rgba(148,163,184,0.2)',
+                                    drawBorder: false
+                                }
+                            }
+                        }
+                    },
+                    plugins: [valueLabelPlugin]
+                });
+            }
 
        // Hardcoded trend data (tạm thời)
        const trendLabels = ['Th1', 'Th2', 'Th3', 'Th4', 'Th5', 'Th6'];

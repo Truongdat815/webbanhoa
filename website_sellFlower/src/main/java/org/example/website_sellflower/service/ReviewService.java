@@ -13,4 +13,9 @@ public interface ReviewService {
 
     // ← THÊM MỚI
     List<Review> findByProductId(Long productId);
+
+    // Thêm methods cho admin quản lý review
+    List<Review> findByStatus(String status);
+    Review updateReviewStatus(Long id, String status);
+    List<Review> findPendingReviews();
 }

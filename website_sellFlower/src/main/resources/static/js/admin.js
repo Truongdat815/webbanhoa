@@ -893,99 +893,99 @@ function updateStatusDisplay(statusToggle, status) {
 
 // ==================== TOTALS CHART====================
 
-let totalsChart = null;
-
-async function loadTotalsChart() {
-    const canvas = document.getElementById('totalsChart');
-    if (!canvas) {
-        console.warn('Canvas #totalsChart không tồn tại');
-        return;
-    }
-
-    try {
-        const response = await fetch('/admin/dashboard-data');
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-        const data = await response.json();
-        console.log('Dữ liệu dashboard:', data);
-
-        const labels = ['Sản phẩm', 'Đơn hàng', 'Tài khoản'];
-        const values = [
-            data.totalProducts || 0,
-            data.totalOrders || 0,
-            data.totalAccounts || 0
-            // data.totalRevenue || 0
-        ];
-        const colors = ['#4e73df', '#e74a3b', '#f6c23e'];
-
-        //Xóa hoàn toàn chart cũ
-        if (totalsChart) {
-            totalsChart.destroy();
-            totalsChart = null;
-        }
-
-        //Xóa canvas context (Chart.js đôi khi giữ lại)
-        const ctx = canvas.getContext('2d');
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        //Tạo chart mới
-        totalsChart = new Chart(ctx, {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Tổng số',
-                    data: values,
-                    backgroundColor: colors,
-                    borderRadius: 10,
-                    maxBarThickness: 50
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: {
-                    y: { beginAtZero: true, ticks: { stepSize: 2 } },
-                    x: { grid: { display: false } }
-                },
-                animation: {
-                    onComplete: function () {
-                        const ctx = this.ctx;
-                        ctx.save();
-                        ctx.font = 'bold 13px Arial';
-                        ctx.fillStyle = '#333';
-                        ctx.textAlign = 'center';
-                        this.data.datasets.forEach((dataset, i) => {
-                            const meta = this.getDatasetMeta(i);
-                            meta.data.forEach((bar, index) => {
-                                let val = dataset.data[index];
-                                if (index === 3) val = val.toLocaleString('vi-VN') + '₫';
-                                ctx.fillText(val, bar.x, bar.y - 1);
-                            });
-                        });
-                        ctx.restore();
-                    }
-                }
-            }
-        });
-
-        console.log('Biểu đồ đã được vẽ thành công!');
-
-    } catch (error) {
-        console.error('Lỗi tải biểu đồ:', error);
-        // showToast đã được định nghĩa ở trên → an toàn
-        if (typeof showToast === 'function') {
-            showToast('Không thể tải biểu đồ: ' + error.message, 'error');
-        }
-    }
-}
+// let totalsChart = null;
+//
+// async function loadTotalsChart() {
+//     const canvas = document.getElementById('totalsChart');
+//     if (!canvas) {
+//         console.warn('Canvas #totalsChart không tồn tại');
+//         return;
+//     }
+//
+//     try {
+//         const response = await fetch('/admin/dashboard-data');
+//         if (!response.ok) throw new Error(`HTTP ${response.status}`);
+//
+//         const data = await response.json();
+//         console.log('Dữ liệu dashboard:', data);
+//
+//         const labels = ['Sản phẩm', 'Đơn hàng', 'Tài khoản'];
+//         const values = [
+//             data.totalProducts || 0,
+//             data.totalOrders || 0,
+//             data.totalAccounts || 0
+//             // data.totalRevenue || 0
+//         ];
+//         const colors = ['#4e73df', '#e74a3b', '#f6c23e'];
+//
+//         //Xóa hoàn toàn chart cũ
+//         if (totalsChart) {
+//             totalsChart.destroy();
+//             totalsChart = null;
+//         }
+//
+//         //Xóa canvas context (Chart.js đôi khi giữ lại)
+//         const ctx = canvas.getContext('2d');
+//         ctx.clearRect(0, 0, canvas.width, canvas.height);
+//
+//         //Tạo chart mới
+//         totalsChart = new Chart(ctx, {
+//             type: 'bar',
+//             data: {
+//                 labels: labels,
+//                 datasets: [{
+//                     label: 'Tổng số',
+//                     data: values,
+//                     backgroundColor: colors,
+//                     borderRadius: 10,
+//                     maxBarThickness: 50
+//                 }]
+//             },
+//             options: {
+//                 responsive: true,
+//                 maintainAspectRatio: false,
+//                 plugins: { legend: { display: false } },
+//                 scales: {
+//                     y: { beginAtZero: true, ticks: { stepSize: 2 } },
+//                     x: { grid: { display: false } }
+//                 },
+//                 animation: {
+//                     onComplete: function () {
+//                         const ctx = this.ctx;
+//                         ctx.save();
+//                         ctx.font = 'bold 13px Arial';
+//                         ctx.fillStyle = '#333';
+//                         ctx.textAlign = 'center';
+//                         this.data.datasets.forEach((dataset, i) => {
+//                             const meta = this.getDatasetMeta(i);
+//                             meta.data.forEach((bar, index) => {
+//                                 let val = dataset.data[index];
+//                                 if (index === 3) val = val.toLocaleString('vi-VN') + '₫';
+//                                 ctx.fillText(val, bar.x, bar.y - 1);
+//                             });
+//                         });
+//                         ctx.restore();
+//                     }
+//                 }
+//             }
+//         });
+//
+//         console.log('Biểu đồ đã được vẽ thành công!');
+//
+//     } catch (error) {
+//         console.error('Lỗi tải biểu đồ:', error);
+//         // showToast đã được định nghĩa ở trên → an toàn
+//         if (typeof showToast === 'function') {
+//             showToast('Không thể tải biểu đồ: ' + error.message, 'error');
+//         }
+//     }
+// }
 
 // CHẠY KHI TRANG LOAD
 document.addEventListener('DOMContentLoaded', function () {
     const canvas = document.getElementById('totalsChart');
     if (canvas) {
-        loadTotalsChart();
+        // loadTotalsChart();
     }
 });
 

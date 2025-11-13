@@ -4,9 +4,11 @@ import jakarta.servlet.http.HttpSession;
 import org.example.website_sellflower.entity.Account;
 import org.example.website_sellflower.entity.Order;
 import org.example.website_sellflower.entity.Product;
+import org.example.website_sellflower.entity.Review;
 import org.example.website_sellflower.service.AccountService;
 import org.example.website_sellflower.service.OrderService;
 import org.example.website_sellflower.service.ProductService;
+import org.example.website_sellflower.service.ReviewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,9 @@ public class AdminController {
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private ReviewService reviewService;
 
     // Kiểm tra quyền ADMIN
     private boolean isAdmin(HttpSession session) {
@@ -57,13 +62,18 @@ public class AdminController {
         model.addAttribute("userDisplayName", account.getFullName());
         model.addAttribute("isAdmin", true);
 
-        // Thống kê (sẽ được implement ở backend)
+        // Thống kê
         model.addAttribute("totalProducts", productService.findAllProducts().size());
         model.addAttribute("totalOrders", orderService.getAllOrders().size());
-        // model.addAttribute("totalAccounts", accountService.findAll().size());
-        // model.addAttribute("totalRevenue", orderService.getTotalRevenue());
+        model.addAttribute("totalAccounts", accountService.findAllAccounts().size());
+        model.addAttribute("totalRevenue", orderService.totalOrder()); // Thêm tổng doanh thu
 
-        return "admin/dashboard";
+        // Thêm reviews chờ duyệt
+        List<Review> pendingReviews = reviewService.findPendingReviews();
+        model.addAttribute("pendingReviews", pendingReviews);
+        model.addAttribute("totalPendingReviews", pendingReviews.size());
+
+        return "admin/dashboard_BE";
     }
 
     // ==================== PRODUCT MANAGEMENT ====================
@@ -705,6 +715,109 @@ public class AdminController {
 
     }
 
+    // ==================== REVIEW MANAGEMENT ====================
+    @GetMapping("/reviews")
+    public String reviews(HttpSession session, Model model) {
+        String redirect = checkAdminAndRedirect(session);
+        if (redirect != null) return redirect;
+
+        Account account = (Account) session.getAttribute("account");
+        model.addAttribute("isLoggedIn", true);
+        model.addAttribute("userDisplayName", account.getFullName());
+        model.addAttribute("isAdmin", true);
+
+        List<Review> allReviews = reviewService.findAllReviews();
+        List<Review> pendingReviews = reviewService.findPendingReviews();
+
+        model.addAttribute("allReviews", allReviews);
+        model.addAttribute("pendingReviews", pendingReviews);
+
+        return "admin/reviews";
+    }
+
+    // API: Get All Reviews (for admin)
+    @GetMapping("/api/reviews")
+    @ResponseBody
+    public ResponseEntity<List<Review>> getAllReviews(HttpSession session) {
+        if (!isAdmin(session)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        List<Review> reviews = reviewService.findAllReviews();
+        return ResponseEntity.ok(reviews);
+    }
+
+    // API: Get Pending Reviews
+    @GetMapping("/api/reviews/pending")
+    @ResponseBody
+    public ResponseEntity<List<Review>> getPendingReviews(HttpSession session) {
+        if (!isAdmin(session)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        List<Review> pendingReviews = reviewService.findPendingReviews();
+        return ResponseEntity.ok(pendingReviews);
+    }
+
+    // API: Update Review Status
+    @PutMapping("/api/reviews/{id}/status")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> updateReviewStatus(@PathVariable Long id, @RequestBody Map<String, String> request, HttpSession session) {
+        if (!isAdmin(session)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        try {
+            String status = request.get("status");
+            Review updated = reviewService.updateReviewStatus(id, status);
+
+            Map<String, Object> response = new HashMap<>();
+            if (updated != null) {
+                response.put("success", true);
+                response.put("message", "Cập nhật trạng thái review thành công");
+                response.put("review", updated);
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "Không tìm thấy review");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Lỗi: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
+    // API: Delete Review
+    @DeleteMapping("/api/reviews/{id}")
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> deleteReview(@PathVariable Long id, HttpSession session) {
+        if (!isAdmin(session)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        try {
+            boolean deleted = reviewService.deleteReview(id);
+            Map<String, Object> response = new HashMap<>();
+            if (deleted) {
+                response.put("success", true);
+                response.put("message", "Xóa review thành công");
+                return ResponseEntity.ok(response);
+            } else {
+                response.put("success", false);
+                response.put("message", "Không tìm thấy review");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            }
+        } catch (Exception e) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Lỗi: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+    }
+
     @GetMapping("/dashboard-data")
     @ResponseBody
     public Map<String, Object> getDashboardData() {
@@ -712,55 +825,9 @@ public class AdminController {
         data.put("totalProducts", productService.findAllProducts().size());
         data.put("totalOrders", orderService.getAllOrders().size());
         data.put("totalAccounts", accountService.findAllAccounts().size());
-//        data.put("totalRevenue", orderService.totalOrder());
+        data.put("totalRevenue", orderService.totalOrder());
+        data.put("totalPendingReviews", reviewService.findPendingReviews().size());
         return data;
     }
-
-    // API: Delete Account
-//    @DeleteMapping("/api/accounts/{id}")
-//    @ResponseBody
-//    public ResponseEntity<Map<String, Object>> deleteAccount(@PathVariable Long id, HttpSession session) {
-//        if (!isAdmin(session)) {
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//        }
-//
-//        try {
-//            Account accountToDelete = accountService.findById(id);
-//            if (accountToDelete == null) {
-//                Map<String, Object> response = new HashMap<>();
-//                response.put("success", false);
-//                response.put("message", "Không tìm thấy tài khoản");
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-//            }
-//
-//            // Prevent deleting the last admin account
-//            if ("ADMIN".equals(accountToDelete.getRole())) {
-//                List<Account> allAccounts = accountService.findAllAccounts();
-//                long adminCount = allAccounts.stream()
-//                    .filter(acc -> "ADMIN".equals(acc.getRole()))
-//                    .count();
-//                if (adminCount <= 1) {
-//                    Map<String, Object> response = new HashMap<>();
-//                    response.put("success", false);
-//                    response.put("message", "Không thể xóa tài khoản admin cuối cùng");
-//                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-//                }
-//            }
-//
-//            // Delete account using repository
-//            // Note: We need to add delete method or use repository directly
-//            accountService.deleteAccount(id);
-//
-//            Map<String, Object> response = new HashMap<>();
-//            response.put("success", true);
-//            response.put("message", "Xóa tài khoản thành công");
-//            return ResponseEntity.ok(response);
-//        } catch (Exception e) {
-//            Map<String, Object> response = new HashMap<>();
-//            response.put("success", false);
-//            response.put("message", "Lỗi: " + e.getMessage());
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-//        }
-//    }
 }
 

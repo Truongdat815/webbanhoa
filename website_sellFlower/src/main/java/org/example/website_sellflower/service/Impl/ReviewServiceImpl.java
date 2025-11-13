@@ -106,4 +106,26 @@ public class ReviewServiceImpl implements ReviewService {
     public Review findReviewById(Long id) {
         return reviewRepository.findById(id).orElse(null);
     }
+
+    // Thêm methods cho admin quản lý review
+    @Override
+    public List<Review> findByStatus(String status) {
+        return reviewRepository.findByStatus(status);
+    }
+
+    @Override
+    public Review updateReviewStatus(Long id, String status) {
+        Optional<Review> existingReview = reviewRepository.findById(id);
+        if(existingReview.isPresent()){
+            Review review = existingReview.get();
+            review.setStatus(status);
+            return reviewRepository.save(review);
+        }
+        return null;
+    }
+
+    @Override
+    public List<Review> findPendingReviews() {
+        return reviewRepository.findByStatus("PENDING");
+    }
 }

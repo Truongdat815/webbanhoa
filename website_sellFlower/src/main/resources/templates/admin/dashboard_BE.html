@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - FIAMA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/home.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body class="admin-page">
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="admin-header-content">
+            <div class="logo">
+                <a href="/admin">
+                    <h1>FIAMA</h1>
+                    <span class="admin-badge">ADMIN</span>
+                </a>
+            </div>
+            <div class="admin-user-info">
+                <div class="user-dropdown">
+                    <a href="#" class="user-link">
+                        <i class="fas fa-user-shield"></i>
+                        <span th:text="${userDisplayName}">Admin</span>
+                    </a>
+                    <div class="dropdown-menu">
+                        <a href="/home">Trang chủ</a>
+                        <a href="/logout">Đăng xuất</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Main Content -->
+    <main class="admin-main">
+        <div class="admin-container">
+            <!-- Sidebar -->
+            <aside class="admin-sidebar">
+                <div class="sidebar-header">
+                    <h2><i class="fas fa-shield-alt"></i> Admin Panel</h2>
+                </div>
+                <nav class="sidebar-nav">
+                    <a href="/admin" class="nav-item active">
+                        <i class="fas fa-home"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="/admin/products" class="nav-item">
+                        <i class="fas fa-box"></i>
+                        <span>Sản phẩm</span>
+                    </a>
+                    <a href="/admin/orders" class="nav-item">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Đơn hàng</span>
+                    </a>
+                    <a href="/admin/accounts" class="nav-item">
+                        <i class="fas fa-users"></i>
+                        <span>Tài khoản</span>
+                    </a>
+                </nav>
+            </aside>
+
+            <!-- Content Area -->
+            <div class="admin-content">
+                <div class="content-header">
+                    <h1>Dashboard</h1>
+                    <p>Quản lý hệ thống</p>
+                </div>
+
+                <!-- Stats Chart -->
+                <div class="stats-chart-card">
+                    <div class="chart-header">
+                        <h2>Thống kê tổng quan</h2>
+                        <span>Hiển thị theo tổng số hiện tại</span>
+                    </div>
+                    <div style="position: relative; min-height: 300px; margin-top: 20px;">
+                        <canvas id="totalsChart" th:attr="data-total-account=${totalAccounts},data-total-products=${totalProducts},data-total-orders=${totalOrders},data-total-revenue=${totalRevenue}"></canvas>
+                    </div>
+                </div>
+
+                <!-- Revenue Card -->
+                <div class="stats-chart-card" style="margin-top: 20px;">
+                    <div class="chart-header">
+                        <h2><i class="fas fa-money-bill-wave" style="color: #10b981; margin-right: 8px;"></i>Tổng Doanh Thu</h2>
+                        <span>Doanh thu từ các đơn hàng đã hoàn thành</span>
+                    </div>
+                    <div style="padding: 20px; text-align: center;">
+                        <div style="font-size: 48px; font-weight: bold; color: #10b981; margin-bottom: 10px;">
+                            <span th:text="${#numbers.formatDecimal(totalRevenue, 0, 'COMMA', 0, 'POINT')}">0</span>
+                            <span style="font-size: 24px; color: #64748b; margin-left: 8px;">VNĐ</span>
+                        </div>
+                        <div style="background: linear-gradient(90deg, #10b981, #34d399); height: 8px; border-radius: 4px; margin: 20px 0;"></div>
+                        <p style="color: #64748b; font-size: 14px; margin: 0;">
+                            <i class="fas fa-chart-line" style="margin-right: 5px;"></i>
+                            Cập nhật theo thời gian thực
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Pending Reviews Card -->
+                <div class="stats-chart-card" style="margin-top: 20px;">
+                    <div class="chart-header">
+                        <h2><i class="fas fa-star-half-alt" style="color: #f59e0b; margin-right: 8px;"></i>Đánh Giá Cần Duyệt</h2>
+                        <span th:text="|${totalPendingReviews} đánh giá đang chờ xử lý|">0 đánh giá đang chờ xử lý</span>
+                    </div>
+                    <div class="reviews-container" style="max-height: 400px; overflow-y: auto; padding: 16px;">
+                        <!-- No Reviews Message -->
+                        <div th:if="${#lists.isEmpty(pendingReviews)}" class="no-reviews" style="text-align: center; padding: 40px 20px;">
+                            <i class="fas fa-check-circle" style="font-size: 48px; color: #10b981; margin-bottom: 16px;"></i>
+                            <h3 style="color: #64748b; margin: 0 0 8px 0;">Tuyệt vời!</h3>
+                            <p style="color: #9ca3af; margin: 0;">Không có đánh giá nào cần duyệt</p>
+                        </div>
+
+                        <!-- Reviews List -->
+                        <div th:each="review : ${pendingReviews}" class="review-item"
+                             style="border: 1px solid #e5e7eb; border-radius: 12px; padding: 16px; margin-bottom: 12px; background: #fff; transition: all 0.2s ease;">
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
+                                <!-- Review Content -->
+                                <div style="flex: 1;">
+                                    <!-- Customer & Rating -->
+                                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+                                        <div style="width: 40px; height: 40px; background: linear-gradient(135deg, #3b82f6, #8b5cf6); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                                            <span th:text="${review.account.fullName?.substring(0,1)?.toUpperCase()}">U</span>
+                                        </div>
+                                        <div>
+                                            <strong th:text="${review.account.fullName}" style="color: #1f2937;">Tên khách hàng</strong>
+                                            <div class="rating-stars" style="display: flex; gap: 2px; margin-top: 2px;">
+                                                <span th:each="i : ${#numbers.sequence(1, 5)}"
+                                                      th:class="${i <= review.rating} ? 'star filled' : 'star'"
+                                                      style="color: #f59e0b; font-size: 16px;">★</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Product Info -->
+                                    <div style="background: #f8fafc; padding: 8px 12px; border-radius: 8px; margin: 8px 0;">
+                                        <p style="margin: 0; color: #64748b; font-size: 13px; font-weight: 500;">
+                                            <i class="fas fa-box" style="margin-right: 5px;"></i>
+                                            Sản phẩm: <span th:text="${review.product.name}" style="color: #1f2937;">Tên sản phẩm</span>
+                                        </p>
+                                    </div>
+
+                                    <!-- Review Comment -->
+                                    <p th:text="${review.comment}" style="margin: 12px 0; color: #374151; line-height: 1.5; font-size: 14px;">Nội dung đánh giá</p>
+
+                                    <!-- Review Date -->
+                                    <p style="margin: 0; color: #9ca3af; font-size: 12px;">
+                                        <i class="fas fa-clock" style="margin-right: 5px;"></i>
+                                        <span th:text="${#temporals.format(review.reviewDate, 'dd/MM/yyyy HH:mm')}">01/01/2025 10:00</span>
+                                    </p>
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div style="display: flex; flex-direction: column; gap: 8px; flex-shrink: 0;">
+                                    <button class="btn-approve-review"
+                                            th:data-id="${review.id}"
+                                            style="background: linear-gradient(135deg, #10b981, #34d399); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);">
+                                        <i class="fas fa-check" style="margin-right: 5px;"></i>Chấp nhận
+                                    </button>
+                                    <button class="btn-reject-review"
+                                            th:data-id="${review.id}"
+                                            style="background: linear-gradient(135deg, #ef4444, #f87171); color: white; border: none; padding: 10px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);">
+                                        <i class="fas fa-times" style="margin-right: 5px;"></i>Từ chối
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- View All Link -->
+<!--                    <div style="text-align: center; margin-top: 16px; padding-top: 16px; border-top: 1px solid #e5e7eb;" th:if="${!#lists.isEmpty(pendingReviews)}">-->
+<!--                        <a href="/admin/reviews" style="color: #3b82f6; text-decoration: none; font-weight: 600; padding: 8px 16px; border-radius: 6px; transition: all 0.2s ease;">-->
+<!--                            <i class="fas fa-arrow-right" style="margin-left: 5px;"></i>-->
+<!--                            Xem tất cả đánh giá-->
+<!--                        </a>-->
+<!--                    </div>-->
+                </div>
+
+                <!-- Orders Trend -->
+<!--                <div class="stats-chart-card">-->
+<!--                    <div class="chart-header">-->
+<!--                        <h2>Đơn hàng theo tháng</h2>-->
+<!--                        <span>6 tháng gần nhất</span>-->
+<!--                    </div>-->
+<!--                    <canvas id="ordersTrendChart"></canvas>-->
+<!--                </div>-->
+            </div>
+        </div>
+    </main>
+
+    <!-- Admin Footer -->
+    <footer class="admin-footer">
+        <div class="admin-footer-content">
+            <p>&copy; 2025 FIAMA Admin Panel. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/admin.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function createGradient(ctx, colorFrom, colorTo) {
+                const gradient = ctx.createLinearGradient(0, 0, 0, ctx.canvas.height);
+                gradient.addColorStop(0, colorFrom);
+                gradient.addColorStop(1, colorTo);
+                return gradient;
+            }
+
+            const valueLabelPlugin = {
+                id: 'valueLabelPlugin',
+                afterDatasetsDraw(chart) {
+                    const {ctx} = chart;
+                    chart.data.datasets.forEach((dataset, i) => {
+                        const meta = chart.getDatasetMeta(i);
+                        meta.data.forEach((bar, index) => {
+                            const value = dataset.data[index];
+                            ctx.save();
+                            ctx.fillStyle = '#334155';
+                            ctx.font = '600 12px Inter, system-ui, -apple-system, Segoe UI, Roboto';
+                            ctx.textAlign = 'center';
+                            ctx.textBaseline = 'bottom';
+                            ctx.fillText(String(value), bar.x, bar.y - 6);
+                            ctx.restore();
+                        });
+                    });
+                }
+            };
+
+            const totalsCanvas = document.getElementById('totalsChart');
+            if (totalsCanvas != null) {
+                const ctx = totalsCanvas.getContext('2d');
+                const totals = {
+                    products: parseInt(totalsCanvas.getAttribute('data-total-products')) || 0,
+                    orders: parseInt(totalsCanvas.getAttribute('data-total-orders')) || 0,
+                    accounts: parseInt(totalsCanvas.getAttribute('data-total-account')) || 0,
+                };
+                const dataValues = [totals.products, totals.orders, totals.accounts];
+                const maxValue = Math.max(...dataValues, 10);
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Sản phẩm', 'Đơn hàng', 'Tài khoản'],
+                        datasets: [{
+                            data: dataValues,
+                            backgroundColor: [
+                                createGradient(ctx, '#6B7CFF', '#8AA2FF'),
+                                createGradient(ctx, '#FF6B88', '#FFA1B3'),
+                                createGradient(ctx, '#4FC3F7', '#9BE7FF')
+                            ],
+                            borderRadius: 18,
+                            borderSkipped: false,
+                            maxBarThickness: 72
+                        }]
+                    },
+                    options: {
+                        maintainAspectRatio: false,
+                        layout: {
+                            padding: {top: 30, right: 16, left: 8, bottom: 8}
+                        },
+                        plugins: {
+                            legend: {display: false},
+                            tooltip: {
+                                enabled: true,
+                                callbacks: {
+                                    label: function (context) {
+                                        if (context.label === 'Doanh thu (k)') {
+                                            return 'Doanh thu: ' + (totals.revenue).toLocaleString('vi-VN') + ' VNĐ';
+                                        }
+                                        return context.label + ': ' + context.parsed.y;
+                                    }
+                                }
+                            }
+                        },
+                        animation: {duration: 600, easing: 'easeOutQuart'},
+                        interaction: {mode: 'nearest', intersect: true},
+                        scales: {
+                            x: {
+                                maxValue: maxValue + 3,
+                                grid: {display: false, drawBorder: false},
+                                ticks: {
+                                    color: '#64748b',
+                                    font: {weight: 600}
+                                }
+                            },
+                            y: {
+                                beginAtZero: true,
+                                max: maxValue + 4,
+                                ticks: {
+                                    precision: 0,
+                                    color: '#94a3b8',
+                                    stepSize: 2
+                                },
+                                grid: {
+                                    color: 'rgba(148,163,184,0.2)',
+                                    drawBorder: false
+                                }
+                            }
+                        }
+                    },
+                    plugins: [valueLabelPlugin]
+                });
+            }
+
+            // Xử lý nút chấp nhận/từ chối review
+            document.addEventListener('click', function (e) {
+                if (e.target.classList.contains('btn-approve-review')) {
+                    const reviewId = e.target.getAttribute('data-id');
+                    updateReviewStatus(reviewId, 'APPROVED', e.target);
+                } else if (e.target.classList.contains('btn-reject-review')) {
+                    const reviewId = e.target.getAttribute('data-id');
+                    updateReviewStatus(reviewId, 'REJECTED', e.target);
+                }
+            });
+
+            function updateReviewStatus(reviewId, status, buttonElement) {
+                // Disable button để tránh click nhiều lần
+                buttonElement.disabled = true;
+                buttonElement.style.opacity = '0.6';
+
+                fetch(`/admin/api/reviews/${reviewId}/status`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({status: status})
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Remove review item from UI với animation
+                            const reviewItem = buttonElement.closest('.review-item');
+                            reviewItem.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                            reviewItem.style.opacity = '0';
+                            reviewItem.style.transform = 'translateX(20px)';
+
+                            setTimeout(() => {
+                                reviewItem.remove();
+
+                                // Check if no more pending reviews
+                                const reviewsContainer = document.querySelector('.reviews-container');
+                                const remainingReviews = reviewsContainer.querySelectorAll('.review-item');
+                                if (remainingReviews.length === 0) {
+                                    reviewsContainer.innerHTML = `
+                                    <div class="no-reviews" style="text-align: center; padding: 40px 20px;">
+                                        <i class="fas fa-check-circle" style="font-size: 48px; color: #10b981; margin-bottom: 16px;"></i>
+                                        <h3 style="color: #64748b; margin: 0 0 8px 0;">Tuyệt vời!</h3>
+                                        <p style="color: #9ca3af; margin: 0;">Không có đánh giá nào cần duyệt</p>
+                                    </div>
+                                `;
+                                }
+
+                                // Update counter
+                                const counterSpan = document.querySelector('.chart-header span');
+                                const currentCount = parseInt(counterSpan.textContent.match(/\d+/)[0]) - 1;
+                                counterSpan.textContent = `${currentCount} đánh giá đang chờ xử lý`;
+                            }, 300);
+
+                            // Show success message
+                            showNotification('Cập nhật trạng thái review thành công', 'success');
+                        } else {
+                            showNotification('Cập nhật trạng thái thất bại', 'error');
+                            // Re-enable button
+                            buttonElement.disabled = false;
+                            buttonElement.style.opacity = '1';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showNotification('Có lỗi xảy ra khi cập nhật trạng thái', 'error');
+                        // Re-enable button
+                        buttonElement.disabled = false;
+                        buttonElement.style.opacity = '1';
+                    });
+            }
+
+            function showNotification(message, type) {
+                // Create notification element
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    color: white;
+                    font-weight: 500;
+                    z-index: 10000;
+                    transition: all 0.3s ease;
+                    background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                `;
+                notification.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check' : 'exclamation-triangle'}" style="margin-right: 8px;"></i>
+                    ${message}
+                `;
+
+                document.body.appendChild(notification);
+
+                // Auto remove after 3 seconds
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transform = 'translateX(100%)';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 300);
+                }, 3000);
+            }
+
+            // Add hover effects for buttons
+            const style = document.createElement('style');
+            style.textContent = `
+                .btn-approve-review:hover {
+                    background: linear-gradient(135deg, #059669, #10b981) !important;
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3) !important;
+                }
+
+                .btn-reject-review:hover {
+                    background: linear-gradient(135deg, #dc2626, #ef4444) !important;
+                    transform: translateY(-1px);
+                    box-shadow: 0 4px 8px rgba(239, 68, 68, 0.3) !important;
+                }
+
+                .review-item:hover {
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                    border-color: #d1d5db;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+
+       // ...existing code...
+    </script>
+</body>
+</html>

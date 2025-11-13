@@ -1086,7 +1086,7 @@ body.admin-page .admin-main {
 /* Size the dashboard chart canvases for better aspect ratio */
 .stats-chart-card canvas {
     width: 100% !important;
-    height: 360px !important;
+    /*height: 360px !important;*/
 }
 
 /* Slightly smaller for the second chart card */
