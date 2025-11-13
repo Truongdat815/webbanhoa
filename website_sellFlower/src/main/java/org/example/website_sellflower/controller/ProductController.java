@@ -141,6 +141,7 @@ public class ProductController {
             review.setAccount(account);
             review.setRating(rating);
             review.setComment(comment);
+            review.setStatus("PENDING");
             review.setReviewDate(LocalDateTime.now());
 
             reviewService.createReview(review);
