@@ -125,4 +125,9 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> findByAccountId(Long accountId) {
         return repository.findByAccountId(accountId);
     }
+
+    @Override
+    public double totalOrder() {
+        return repository.sumTotalAmount();
+    }
 }

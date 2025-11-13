@@ -15,4 +15,6 @@ public interface OrderService {
 
     // ← THÊM MỚI
     public List<Order> findByAccountId(Long accountId);
+
+    public double totalOrder();
 }

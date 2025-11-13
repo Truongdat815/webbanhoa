@@ -41,7 +41,7 @@ public class AdminController {
     // Redirect nếu không phải admin
     private String checkAdminAndRedirect(HttpSession session) {
         if (!isAdmin(session)) {
-            return "redirect:/login?error=Không có quyền truy cập";
+            return "redirect:/login";
         }
         return null;
     }
@@ -703,6 +703,17 @@ public class AdminController {
                     .body("Lỗi khi cập nhật trạng thái tài khoản");
         }
 
+    }
+
+    @GetMapping("/dashboard-data")
+    @ResponseBody
+    public Map<String, Object> getDashboardData() {
+        Map<String, Object> data = new HashMap<>();
+        data.put("totalProducts", productService.findAllProducts().size());
+        data.put("totalOrders", orderService.getAllOrders().size());
+        data.put("totalAccounts", accountService.findAllAccounts().size());
+//        data.put("totalRevenue", orderService.totalOrder());
+        return data;
     }
 
     // API: Delete Account

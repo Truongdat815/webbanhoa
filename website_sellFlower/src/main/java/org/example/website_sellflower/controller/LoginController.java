@@ -57,7 +57,7 @@ public class LoginController {
                 model.addAttribute("isLoggedIn", false);
             }else{
                 model.addAttribute("error", "Sai tên đăng nhập hoặc mật khẩu!");
-                model.addAttribute("isLoggedIn", false); // thêm dòng này để tránh null
+                model.addAttribute("isLoggedIn", false);
             }
 
             return "login";
